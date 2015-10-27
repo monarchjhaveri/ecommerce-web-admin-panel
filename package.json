@@ -5,8 +5,6 @@
   "scripts": {
     "start": "node ./bin/www",
     "clean": "node ./bin/build/clean",
-    "browserify": "node ./bin/build/browserify",
-    "copy-assets": "node ./bin/build/copyAssets",
     "build": "node ./bin/build/clean && node ./bin/build/browserify && node ./bin/build/copyAssets"
   },
   "dependencies": {
@@ -17,7 +15,7 @@
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "jet-api": "*"
+    "jet-api": "git:ssh://git@bitbucket.org:alateos/jet.com.git#0.0.1"
   },
   "devDependencies": {
     "browserify": "^12.0.0",
