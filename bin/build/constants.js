@@ -8,7 +8,7 @@ module.exports = {
             dest: destRootFolder
         },
         javascript: {
-            entryFile: srcRootFolder + "/javascript/main.js",
+            entryFile: srcRootFolder + "/javascript/main.jsx",
             destinationFile: destRootFolder + "/bundle.js"
         },
         html: {
