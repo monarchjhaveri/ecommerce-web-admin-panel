@@ -1,12 +1,16 @@
-module.exports = {
+var helper = {
     /**
      *
-     * @param {String[]} allowedArray
+     * @param {String[]} _blacklistedArray
      */
-  buildAllowExtensionRegex: function(allowedArray) {
-        var regexFormat = ".*\\.(THE_PLACE_HOLDER)$";
-        var a = allowedArray.join("|");
+  buildBlacklistedFiletypeRegex: function(_blacklistedArray) {
+        var blacklistedArray = _blacklistedArray instanceof Array ? _blacklistedArray : [_blacklistedArray];
+
+        var regexFormat = "^[^.]+$|\\.(?!(THE_PLACE_HOLDER)$)([^.]+$)";
+        var a = blacklistedArray.join("|");
         var regexString = regexFormat.replace("THE_PLACE_HOLDER", a);
         return new RegExp(regexString);
   }
 };
+
+module.exports = helper;
