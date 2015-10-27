@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "clean": "node ./bin/build/clean",
     "browserify": "node ./bin/build/browserify",
-    "copy-assets": "node ./bin/build/copyAssets"
+    "copy-assets": "node ./bin/build/copyAssets",
+    "build": "node ./bin/build/clean && node ./bin/build/browserify && node ./bin/build/copyAssets"
   },
   "dependencies": {
     "body-parser": "~1.13.2",

@@ -1,5 +1,6 @@
 var constants = require("./constants");
 var browserify = require("browserify");
+
 var fs = require('fs');
 
 var writer = fs.createWriteStream(constants.filepaths.javascript.destinationFile);
