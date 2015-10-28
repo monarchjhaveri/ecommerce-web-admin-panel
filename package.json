@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "clean": "node ./bin/build/clean",
-    "build": "node ./bin/build/clean && node ./bin/build/browserify && node ./bin/build/copyAssets"
+    "build": "node ./bin/build/clean && node ./bin/build/copyAssets && node ./bin/build/browserify"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -26,6 +26,7 @@
     "fs-extra": "^0.26.0",
     "ncp": "^2.0.0",
     "reactify": "^1.1.1",
-    "redux-devtools": "^2.1.5"
+    "redux-devtools": "^2.1.5",
+    "watchify": "^3.5.0"
   }
 }
