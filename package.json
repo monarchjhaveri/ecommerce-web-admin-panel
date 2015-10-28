@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "clean": "node ./bin/build/clean",
-    "build": "node ./bin/build/clean && node ./bin/build/copyAssets && node ./bin/build/browserify"
+    "build": "node ./bin/build/clean && node ./bin/build/copyAssets && node ./bin/build/browserify",
+    "watch": "node ./bin/build/clean && node ./bin/build/copyAssets && node ./bin/build/watchify"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
