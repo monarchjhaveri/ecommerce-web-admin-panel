@@ -1,7 +1,7 @@
 var ActionTypes = {
-    GET_PRODUCTS: {
-        type: "GET_PRODUCTS"
-    }
+    "GET_SKUS": "GET_SKUS"
 };
+
+
 
 module.exports = ActionTypes;
