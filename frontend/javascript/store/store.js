@@ -1,3 +1,5 @@
+var Immutable = require("immutable");
+
 var createStore = require('redux').createStore;
 var productsReducer = require("./reducers/productsReducer");
 
@@ -13,6 +15,6 @@ function reducer(state, action) {
     };
 }
 
-var Store = createStore(reducer, initialState);
+var store = createStore(reducer, initialState);
 
-module.exports = Store;
+module.exports = store;

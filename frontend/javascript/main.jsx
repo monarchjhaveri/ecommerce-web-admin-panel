@@ -3,25 +3,22 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Provider = require('react-redux').Provider;
 
+var store = require("./store/store");
+var ProductAC = require("./actions/ProductAC");
+
 var App = require("./App.jsx");
 
-function productStore() {
-    return [
-        {"sku": "123456"}
-    ]
-}
+console.log("initial state", store.getState());
 
-var initialState = {
-    products: []
-};
-
-var store = createStore(productStore,initialState);
-window.top.store = store;
+var unsubscribe = store.subscribe(function() {
+   console.log(store.getState());
+});
 
 
-ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
-    window.document.getElementById('content')
-);
+//
+//ReactDOM.render(
+//    <Provider store={store}>
+//        <App />
+//    </Provider>,
+//    window.document.getElementById('content')
+//);
