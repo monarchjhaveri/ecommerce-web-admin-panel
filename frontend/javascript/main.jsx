@@ -14,6 +14,9 @@ var unsubscribe = store.subscribe(function() {
    console.log(store.getState());
 });
 
+store.dispatch(ProductAC.fetchAll());
+window.store = store;
+
 
 //
 //ReactDOM.render(

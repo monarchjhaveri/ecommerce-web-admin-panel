@@ -1,9 +1,10 @@
 var ActionTypes = require("./ActionTypes");
 
 module.exports = {
-    list: function() {
+    fetchAll: function() {
         return {
-            type: ActionTypes.PRODUCTS.LIST
+            type: ActionTypes.PRODUCTS.FETCH_ALL,
+            payload: [1]
         }
     }
 };

@@ -1,6 +1,6 @@
 var ActionTypes = {
     "PRODUCTS": {
-        "LIST": "PRODUCTS.LIST"
+        "FETCH_ALL": "PRODUCTS.FETCH_ALL"
     }
 
 };
