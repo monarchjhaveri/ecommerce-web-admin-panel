@@ -4,7 +4,9 @@ module.exports = {
     fetchAll: function() {
         return {
             type: ActionTypes.PRODUCTS.FETCH_ALL,
-            payload: [1]
+            payload: [{
+                "sku": "123"
+            }]
         }
     }
 };

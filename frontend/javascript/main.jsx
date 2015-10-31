@@ -6,7 +6,7 @@ var Provider = require('react-redux').Provider;
 var store = require("./store/store");
 var ProductAC = require("./actions/ProductAC");
 
-var App = require("./App.jsx");
+var ProductsViewContainer = require("./containers/ProductsViewContainer");
 
 console.log("initial state", store.getState());
 
@@ -18,10 +18,10 @@ store.dispatch(ProductAC.fetchAll());
 window.store = store;
 
 
-//
-//ReactDOM.render(
-//    <Provider store={store}>
-//        <App />
-//    </Provider>,
-//    window.document.getElementById('content')
-//);
+
+ReactDOM.render(
+    <Provider store={store}>
+        <ProductsViewContainer />
+    </Provider>,
+    window.document.getElementById('content')
+);
