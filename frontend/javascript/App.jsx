@@ -1,5 +1,5 @@
 var React = require("react");
-var ProductsView = require("./containers/ProductsView/ProductsView.jsx");
+var ProductsView = require("./views/ProductsView.jsx");
 
 var App = React.createClass({ displayName: "App",
     render: function() {
