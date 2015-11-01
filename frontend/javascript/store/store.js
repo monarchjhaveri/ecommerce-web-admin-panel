@@ -1,6 +1,8 @@
 var Immutable = require("immutable");
 
 var createStore = require('redux').createStore;
+var applyMiddleware = require('redux').applyMiddleware;
+var thunk = require("redux-thunk");
 var productsReducer = require("./reducers/productsReducer");
 var skusReducer = require("./reducers/skusReducer");
 
@@ -18,6 +20,10 @@ function reducer(state, action) {
     };
 }
 
-var store = createStore(reducer, initialState);
+var createStoreWithMiddeware = applyMiddleware(
+    thunk
+)(createStore);
+
+var store = createStoreWithMiddeware(reducer, initialState);
 
 module.exports = store;
