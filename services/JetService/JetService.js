@@ -21,15 +21,23 @@ JetService.connect = function(_user, _pass) {
     });
 };
 
-JetService.getAllSkus = function(callback) {
-    if (notLoggedIn("getAllSkus", callback)) return;
+JetService.getProductsList = function(callback) {
+    if (notLoggedIn("getProductsList", callback)) return;
     JetApi.products.list(authData.id_token, function(listErr, listData){
         if (listErr || !listData || !listData.sku_urls) {
             console.error(listErr);
             callback(new Error("Failed to get list of SKU's from Jet.com API"));
         }
 
-        callback(null, SkuParserHelper.extractSkuFromUrls(listData.sku_urls));
+        var skus = SkuParserHelper.extractSkuFromUrls(listData.sku_urls);
+
+        var products = skus.map(function(d) {
+            return {
+                sku: d
+            }
+        });
+
+        callback(null, products);
     });
 };
 

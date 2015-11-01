@@ -9,7 +9,7 @@ module.exports = function skusReducer(state, action) {
     }
 
     switch (action.type) {
-        case ActionTypes.SKUS.FETCH_ALL:
+        case ActionTypes.SKUS.FETCH_ALL_SUCCESS:
             return Immutable.List(action.payload);
         default:
             return state;

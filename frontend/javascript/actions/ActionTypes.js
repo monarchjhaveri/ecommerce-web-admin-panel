@@ -3,7 +3,9 @@ var ActionTypes = {
         "GET_DETAILS": "PRODUCTS.GET_DETAILS"
     },
     "SKUS": {
-        "FETCH_ALL": "SKUS.FETCH_ALL"
+        "FETCH_ALL_STARTED": "SKUS.FETCH_ALL_STARTED",
+        "FETCH_ALL_SUCCESS": "SKUS.FETCH_ALL_SUCCESS",
+        "FETCH_ALL_FAILURE": "SKUS.FETCH_ALL_FAILURE"
     }
 
 };

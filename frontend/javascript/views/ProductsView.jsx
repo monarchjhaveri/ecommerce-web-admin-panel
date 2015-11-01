@@ -21,6 +21,7 @@ function _createProductsViewArray(products) {
     }
 
     return products.map(function(d) {
+        console.log(d);
         return (
             <Product
                 key={d.sku}
