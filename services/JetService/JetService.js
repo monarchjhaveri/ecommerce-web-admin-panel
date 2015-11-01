@@ -33,6 +33,20 @@ JetService.getAllSkus = function(callback) {
     });
 };
 
+JetService.getDetails = function(sku, callback) {
+
+    if (notLoggedIn("getDetails", callback)) return;
+
+    JetApi.products.getDetails(sku, authData.id_token, function(getDetailsErr, data){
+        if (getDetailsErr) {
+            console.error(getDetailsErr);
+            callback(new Error("Failed to get list of SKU's from Jet.com API"));
+        }
+
+        callback(null, data);
+    });
+};
+
 /**
  *
  * @param {!String} actionName

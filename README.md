@@ -1,9 +1,22 @@
 ###Setup:
 
+#Database setup:
+IMPORTANT Note: In production, make sure you change the PASSWORD to something a little more secure!
+
+Run the following commands:
+```
+CREATE DATABASE ecommerce;
+CREATE USER 'ecommerce' IDENTIFIED BY 'PASSWORD';
+GRANT ALL PRIVILEGES ON ecommerce.* TO 'ecommerce';
+
+```
+
 0. Clone this repo then run the following commands in the root folder:
 1. `npm install`
 2. `npm run build`
 3. `npm start` and open localhost:3000 in your browser.
+
+##
 
 
 ###Making changes:

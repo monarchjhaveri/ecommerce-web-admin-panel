@@ -4,7 +4,8 @@ var ProductsResource = require("../resources/Products");
 var JetService = require('../services/JetService/JetService');
 
 /* GET products listing. */
-router.get('/skus', ProductsResource.getAllSkus);
+router.get('/', ProductsResource.getAllSkus);
+router.get('/:sku', ProductsResource.getDetails);
 
 module.exports = router;
 
