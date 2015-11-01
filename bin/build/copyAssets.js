@@ -2,7 +2,7 @@ var constants = require("./constants");
 var ncp = require('ncp').ncp;
 var helper = require('./_helper');
 
-var BLACKLISTED_FILETYPES = ["js", "jsx"];
+var BLACKLISTED_FILETYPES = ["js", "jsx", "scss", "css"];
 var options = {
     filter: helper.buildBlacklistedFiletypeRegex(BLACKLISTED_FILETYPES)
 };

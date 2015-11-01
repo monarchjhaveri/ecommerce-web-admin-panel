@@ -21,8 +21,7 @@ GRANT ALL PRIVILEGES ON ecommerce.* TO 'ecommerce';
 
 ###Making changes:
 
-`npm run watch` - Enables livereload of javascript and jsx files (only the ones in the `require` tree whose root is main.jsx):
-
+`npm run watch` - Enables livereload of SCSS files, as well as javascript and jsx files (only the ones in the `require` tree whose root is main.jsx):
 
 The `frontend` folder gets compiled to the `public` folder.
 
