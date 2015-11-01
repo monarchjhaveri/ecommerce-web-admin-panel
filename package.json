@@ -15,7 +15,7 @@
     "express": "~4.13.1",
     "immutable": "^3.7.5",
     "jade": "~1.11.0",
-    "jet-api": "git:ssh://git@bitbucket.org:alateos/jet.com.git#0.0.1",
+    "jet-api": ">=0.0.1",
     "jquery": "^2.1.4",
     "morgan": "~1.6.1",
     "react-dom": "^0.14.0",

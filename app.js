@@ -1,5 +1,7 @@
-if (process.env.NODE_ENV === 'dev') {
-  require('dotenv').load();
+
+if (process.env.NODE_ENV !== 'production') {
+  var dotenv = require('dotenv');
+  dotenv.config();
 }
 
 

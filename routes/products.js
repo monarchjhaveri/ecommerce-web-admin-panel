@@ -1,12 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var ProductsResource = require("../resources/Products");
 var JetService = require('../services/JetService/JetService');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-    JetService.listSkus()
-        .then(_resolveSuccess(res), _throwError).catch(_throwError);
-});
+/* GET products listing. */
+router.get('/skus', ProductsResource.getAllSkus);
 
 module.exports = router;
 
