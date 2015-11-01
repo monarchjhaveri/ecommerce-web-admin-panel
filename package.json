@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "clean": "node ./bin/build/clean",
     "build": "node ./bin/build/clean && node ./bin/build/copyAssets && node ./bin/build/browserify",
-    "watch": "node ./bin/build/clean && node ./bin/build/copyAssets && node ./bin/build/watchify"
+    "watch": "node ./bin/build/clean && node ./bin/build/copyAssets && node ./bin/build/watch"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -19,6 +19,7 @@
     "jquery": "^2.1.4",
     "morgan": "~1.6.1",
     "mysql": "^2.9.0",
+    "node-sass": "^3.4.1",
     "react-dom": "^0.14.0",
     "react-redux": "^4.0.0",
     "redux": "^3.0.4",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "browserify": "^12.0.0",
+    "chokidar": "^1.2.0",
     "dotenv": "^1.2.0",
     "fs-extra": "^0.26.0",
     "ncp": "^2.0.0",

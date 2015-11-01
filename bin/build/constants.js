@@ -13,6 +13,11 @@ module.exports = {
         },
         html: {
             src: __dirname + "/../../frontend/index.html"
+        },
+        scss: {
+            root: srcRootFolder + "/style/",
+            src: srcRootFolder + "/style/style.scss",
+            dest: destRootFolder + "/style.css"
         }
     }
 };
