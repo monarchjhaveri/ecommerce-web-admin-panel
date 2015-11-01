@@ -4,7 +4,7 @@ var ReactDOM = require('react-dom');
 var Provider = require('react-redux').Provider;
 
 var store = require("./store/store");
-var ProductAC = require("./actions/ProductAC");
+var SkusAC = require("./actions/SkusAC");
 
 var ProductsViewContainer = require("./containers/ProductsViewContainer");
 
@@ -14,7 +14,7 @@ var unsubscribe = store.subscribe(function() {
    console.log(store.getState());
 });
 
-store.dispatch(ProductAC.fetchAll());
+store.dispatch(SkusAC.fetchAll());
 window.store = store;
 
 

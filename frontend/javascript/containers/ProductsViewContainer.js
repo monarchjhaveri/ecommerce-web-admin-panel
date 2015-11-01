@@ -4,7 +4,8 @@ var ProductsView = require("../views/ProductsView.jsx");
 function mapStateToProps(state) {
     console.log("mapStateToProps called with", state);
     return {
-        products: state.products
+        products: state.products,
+        skus: state.skus
     }
 }
 

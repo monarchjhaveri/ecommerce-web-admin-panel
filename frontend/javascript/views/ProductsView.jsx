@@ -7,7 +7,7 @@ var ProductsView = React.createClass({
    render: function() {
        return (
            <div>
-               {_createProductsViewArray(this.props.products)}
+               {_createProductsViewArray(this.props.skus)}
            </div>
        )
    }

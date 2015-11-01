@@ -1,16 +1,16 @@
 var Immutable = require("immutable");
 var ActionTypes = require("../../actions/ActionTypes");
 
-var defaultState = Immutable.Map({});
+var defaultState = Immutable.List([]);
 
-module.exports = function productsReducer(state, action) {
+module.exports = function skusReducer(state, action) {
     if (typeof state === 'undefined') {
         return defaultState;
     }
 
     switch (action.type) {
-        case ActionTypes.PRODUCTS.GET_DETAILS:
-            return state.set(action.payload.sku, action.payload);
+        case ActionTypes.SKUS.FETCH_ALL:
+            return Immutable.List(action.payload);
         default:
             return state;
     }
