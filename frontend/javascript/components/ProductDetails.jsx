@@ -16,20 +16,69 @@ var React = require("react");
     "sub_status":[]
 }
 */
+var fields = [
+    {
+        className: "product-title",
+        label: "Product Title",
+        property: "product_title"
+    },
+    {
+        className: "merchant-sku",
+        label: "Merchant SKU",
+        property: "merchant_sku"
+    },
+    {
+        className: "asin",
+        label: "ASIN",
+        property: "ASIN"
+    },
+    {
+        className: "multipack-quantity",
+        label: "Multipack Quantity",
+        property: "multipack_quantity"
+    },
+    {
+        className: "sku-last-update",
+        label: "SKU Last Updated",
+        property: "sku_last_update",
+        valueRenderFactory: function(value, data) {
+            return value;
+        }
+    },
+    {
+        className: "status",
+        label: "Status",
+        property: "status"
+    },
+    {
+        className: "sub-status",
+        label: "Sub Status",
+        property: "sub_status"
+    }
+];
 var ProductDetails = React.createClass({ displayName: "ProductDetails",
     propTypes: {
         product: React.PropTypes.object
     },
-    getMerchantSku: function() {
-      return this.props.product && this.props.product.merchant_sku;
+    renderFields(product) {
+        var renderedDOM = [];
+        for (var i = 0; i < fields.length; i++) {
+            var f = fields[i];
+            var key = f.property;
+            var className = f.className;
+            var label = f.label;
+            var value = f.valueRenderFactory ? f.valueRenderFactory(product[f.property], product) : product[f.property];
+            renderedDOM.push(
+                <div key={key} className={className}> {label}: {value}</div>
+            );
+        }
+        return renderedDOM;
     },
     getContent: function() {
         var self = this;
         if (self.props.product) {
             return (
-                <div className="product-details-view">
-                    <div className="merchant-sku">Merchant SKU: {self.getMerchantSku()}</div>
-                </div>
+                self.renderFields(self.props.product)
             );
         } else {
             return null;
