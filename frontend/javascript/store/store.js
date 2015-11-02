@@ -10,13 +10,15 @@ var ActionTypes = require("../actions/ActionTypes");
 
 var initialState = Immutable.Map({
     skus: Immutable.List([]),
-    products: Immutable.Map({})
+    products: Immutable.Map({}),
+    loading: true
 });
 
 function reducer(state, action) {
     return {
         skus: skusReducer(state.skus, action),
-        productDetails: productDetailsReducer(state.productDetails, action)
+        productDetails: productDetailsReducer(state.productDetails, action),
+        loading: true
     };
 }
 

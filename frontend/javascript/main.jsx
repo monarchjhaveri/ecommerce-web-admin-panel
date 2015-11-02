@@ -9,6 +9,7 @@ var Header = require("./layout/Header");
 var Footer = require("./layout/Footer");
 
 var ProductsViewContainer = require("./containers/ProductsViewContainer");
+var LoadingModalContainer = require("./containers/LoadingModalContainer");
 
 console.log("initial state", store.getState());
 
@@ -29,6 +30,7 @@ ReactDOM.render(
                 <ProductsViewContainer />
             </div>
             <Footer />
+            <LoadingModalContainer />
         </div>
     </Provider>,
     window.document.getElementById('content')

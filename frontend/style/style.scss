@@ -21,3 +21,29 @@
     overflow-y: scroll;
   }
 }
+
+.loading-modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.2);
+  z-index: 1031; //Because Bootstrap header/footer are z-index 1030
+  .loading-message {
+    top: 50%;
+    left: 50%;
+    height: 100px;
+    width: 200px;
+    margin: -50px 0 0 -100px;
+    background-color: rgba(0,0,0,0.75);
+    color: white;
+    position: fixed;
+    span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
