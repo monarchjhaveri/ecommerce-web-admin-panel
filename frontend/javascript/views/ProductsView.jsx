@@ -6,7 +6,7 @@ var Product = require ("./../components/Product.jsx");
 var ProductsView = React.createClass({
    render: function() {
        return (
-           <div>
+           <div className="products-view">
                {_createProductsViewArray(this.props.skus)}
            </div>
        )

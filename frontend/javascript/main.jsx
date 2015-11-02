@@ -5,7 +5,7 @@ var Provider = require('react-redux').Provider;
 
 var store = require("./store/store");
 var SkusAC = require("./actions/SkusAC");
-
+var Header = require("./layout/Header");
 var ProductsViewContainer = require("./containers/ProductsViewContainer");
 
 console.log("initial state", store.getState());
@@ -21,7 +21,12 @@ window.store = store;
 
 ReactDOM.render(
     <Provider store={store}>
-        <ProductsViewContainer />
+        <div class="content-wrapper">
+            <Header />
+            <div className="view-wrapper">
+                <ProductsViewContainer />
+            </div>
+        </div>
     </Provider>,
     window.document.getElementById('content')
 );
