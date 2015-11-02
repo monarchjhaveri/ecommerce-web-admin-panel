@@ -3,7 +3,7 @@ var React = require("react");
 var SkuSelectList = React.createClass({ displayName: "SkuSelectList",
     propTypes: {
         skus: React.PropTypes.object.isRequired,
-        selectedSku: React.PropTypes.string.isRequired,
+        selectedSku: React.PropTypes.string,
         onSelectChange: React.PropTypes.func.isRequired
     },
     render: function() {
@@ -25,7 +25,7 @@ function _createSkusArray(skus, selectedSku, onSelectChange) {
         var className = "sku-select-list-item";
         className = selectedSku === d.sku ? className + " selected" : className;
         return (
-            <div className={className} onClick={returnSkuFunctionBuilder(d, onSelectChange)}>
+            <div key={d.sku} className={className} onClick={returnSkuFunctionBuilder(d, onSelectChange)}>
                 {d.sku}
             </div>
         )
