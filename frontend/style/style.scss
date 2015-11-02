@@ -10,9 +10,14 @@
 
 .view {
   height:  100%;
-  overflow-y: scroll;
 }
 
 .products-view {
-
+  .sku-select-list {
+    position: absolute;
+    width: 150px;
+    text-overflow: ellipsis;
+    height: 100%;
+    overflow-y: scroll;
+  }
 }
