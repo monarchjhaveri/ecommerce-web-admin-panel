@@ -5,6 +5,7 @@ var applyMiddleware = require('redux').applyMiddleware;
 var thunk = require("redux-thunk");
 var productDetailsReducer = require("./reducers/productDetailsReducer");
 var loadingReducer = require("./reducers/loadingReducer");
+var selectionReducer = require("./reducers/selectionReducer");
 var skusReducer = require("./reducers/skusReducer");
 
 var ActionTypes = require("../actions/ActionTypes");
@@ -12,14 +13,16 @@ var ActionTypes = require("../actions/ActionTypes");
 var initialState = Immutable.Map({
     skus: Immutable.List([]),
     products: Immutable.Map({}),
-    loading: true
+    loading: true,
+    selectedSku: null
 });
 
 function reducer(state, action) {
     return {
         skus: skusReducer(state.skus, action),
         productDetails: productDetailsReducer(state.productDetails, action),
-        loading: loadingReducer(state.loading, action)
+        loading: loadingReducer(state.loading, action),
+        selectedSku: selectionReducer(state.selectedSku, action)
     };
 }
 

@@ -17,15 +17,15 @@ var SkuSelectList = React.createClass({ displayName: "SkuSelectList",
 
 
 function _createSkusArray(skus, selectedSku, onSelectChange) {
-    console.log("_createSkusArray called with", skus);
     if (!skus) {
         return [];
     }
 
     return skus.map(function(d) {
-        console.log(d);
+        var className = "sku-select-list-item";
+        className = selectedSku === d.sku ? className + " selected" : className;
         return (
-            <div className="sku-select-list-item" onClick={returnSkuFunctionBuilder(d, onSelectChange)}>
+            <div className={className} onClick={returnSkuFunctionBuilder(d, onSelectChange)}>
                 {d.sku}
             </div>
         )

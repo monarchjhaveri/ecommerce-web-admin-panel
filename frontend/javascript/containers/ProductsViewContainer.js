@@ -2,10 +2,10 @@ var connect = require("react-redux").connect;
 var ProductsView = require("../views/ProductsView.jsx");
 
 function mapStateToProps(state) {
-    console.log("mapStateToProps called with", state);
     return {
         productDetails: state.productDetails,
-        skus: state.skus
+        skus: state.skus,
+        selectedSku: state.selectedSku
     }
 }
 

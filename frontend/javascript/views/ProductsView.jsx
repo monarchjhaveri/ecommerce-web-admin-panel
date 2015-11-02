@@ -4,12 +4,16 @@ var Immutable = require("immutable");
 var Product = require ("./../components/Product.jsx");
 var SkuSelectList = require("../components/SkuSelectList.jsx");
 
+var store = require("../store/store");
+
+var SkusAC = require("../actions/SkusAC");
+
 var ProductsView = React.createClass({ displayName:"ProductsView",
     onSelectChange: function(sku){
-        console.log(sku);
+        store.dispatch(SkusAC.select(sku));
+        store.dispatch(SkusAC.getDetails(sku));
     },
     render: function() {
-        console.log("Dispatch?", this.props);
         return (
             <div className="view products-view">
                 <SkuSelectList

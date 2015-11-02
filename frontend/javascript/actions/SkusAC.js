@@ -28,7 +28,26 @@ module.exports = {
             dispatch({
                 type: ActionTypes.SKUS.GET_DETAILS_STARTED
             });
-
+            $.ajax({
+                url: "api/products/:sku".replace(":sku", sku),
+                error: function(request, error) {
+                    dispatch({
+                        type: ActionTypes.SKUS.GET_DETAILS_FAILURE
+                    });
+                },
+                success: function(data) {
+                    dispatch({
+                        type: ActionTypes.SKUS.GET_DETAILS_SUCCESS,
+                        payload: data
+                    });
+                }
+            });
+        }
+    },
+    select: function(sku) {
+        return {
+            type: ActionTypes.SKUS.SELECT,
+            payload: sku
         }
     }
 };

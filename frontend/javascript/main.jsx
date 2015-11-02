@@ -11,16 +11,12 @@ var Footer = require("./layout/Footer");
 var ProductsViewContainer = require("./containers/ProductsViewContainer");
 var LoadingModalContainer = require("./containers/LoadingModalContainer");
 
-console.log("initial state", store.getState());
-
 var unsubscribe = store.subscribe(function() {
-   console.log(store.getState());
+   
 });
 
 store.dispatch(SkusAC.fetchAll());
 window.store = store;
-
-
 
 ReactDOM.render(
     <Provider store={store}>
