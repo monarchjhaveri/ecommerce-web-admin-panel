@@ -42,7 +42,13 @@ var fields = [
         label: "SKU Last Updated",
         property: "sku_last_update",
         valueRenderFactory: function(value, data) {
-            return value;
+            var dateString;
+            try {
+                dateString = new Date(value).toDateString();
+            } catch (e) {
+                // do nothing;
+            }
+            return dateString;
         }
     },
     {
