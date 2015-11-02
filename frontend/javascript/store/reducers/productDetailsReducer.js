@@ -10,7 +10,8 @@ module.exports = function productDetailsReducer(state, action) {
 
     switch (action.type) {
         case ActionTypes.SKUS.GET_DETAILS_SUCCESS:
-            return state.set(action.payload.sku, action.payload);
+            var newState = state.set(action.payload.merchant_sku, action.payload);
+            return newState;
         default:
             return state;
     }
