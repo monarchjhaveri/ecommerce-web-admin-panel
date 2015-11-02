@@ -2,34 +2,24 @@ var React = require("react");
 var Immutable = require("immutable");
 
 var Product = require ("./../components/Product.jsx");
+var SkuSelectList = require("../components/SkuSelectList.jsx");
 
-var ProductsView = React.createClass({
-   render: function() {
-       return (
-           <div className="products-view">
-               {_createProductsViewArray(this.props.skus)}
-           </div>
-       )
-   }
-});
-
-
-function _createProductsViewArray(products) {
-    console.log("_createProductsViewArray called with", products);
-    if (!products) {
-        return [];
-    }
-
-    return products.map(function(d) {
-        console.log(d);
+var ProductsView = React.createClass({ displayName:"ProductsView",
+    onSelectChange: function(sku){
+        console.log(sku);
+    },
+    render: function() {
+        console.log("Dispatch?", this.props);
         return (
-            <Product
-                key={d.sku}
-                product={d}
-            />
+            <div className="view products-view">
+                <SkuSelectList
+                    skus={this.props.skus}
+                    selectedSku={this.props.selectedSku}
+                    onSelectChange={this.onSelectChange}
+                />
+            </div>
         )
-    });
-
-}
+    }
+});
 
 module.exports = ProductsView;

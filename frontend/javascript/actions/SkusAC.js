@@ -21,15 +21,14 @@ module.exports = {
                     });
                 }
             });
-
-            //setInterval(function() {
-            //    dispatch({
-            //        type: ActionTypes.SKUS.FETCH_ALL,
-            //        payload: [{
-            //            "sku": "123"
-            //        }]
-            //    });
-            //}, 2000)
         };
+    },
+    getDetails: function(sku) {
+        return function(dispatch) {
+            dispatch({
+                type: ActionTypes.SKUS.GET_DETAILS_STARTED
+            });
+
+        }
     }
 };

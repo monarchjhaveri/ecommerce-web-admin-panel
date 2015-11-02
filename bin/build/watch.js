@@ -15,6 +15,7 @@ b.transform("reactify");
 
 b.on('update', bundle);
 b.on('log', log);
+b.on('error', log);
 bundle();
 
 function bundle() {
