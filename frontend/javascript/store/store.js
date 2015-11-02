@@ -4,6 +4,7 @@ var createStore = require('redux').createStore;
 var applyMiddleware = require('redux').applyMiddleware;
 var thunk = require("redux-thunk");
 var productDetailsReducer = require("./reducers/productDetailsReducer");
+var loadingReducer = require("./reducers/loadingReducer");
 var skusReducer = require("./reducers/skusReducer");
 
 var ActionTypes = require("../actions/ActionTypes");
@@ -18,7 +19,7 @@ function reducer(state, action) {
     return {
         skus: skusReducer(state.skus, action),
         productDetails: productDetailsReducer(state.productDetails, action),
-        loading: true
+        loading: loadingReducer(state.loading, action)
     };
 }
 
