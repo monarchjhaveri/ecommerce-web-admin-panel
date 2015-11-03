@@ -2,13 +2,16 @@ var JetService = require("../services/JetService/JetService");
 var ProductValidationHelper = require("../helpers/ProductValidationHelper");
 var MongoDbHelper = require("../database/MongoDbHelper");
 
+var createErrorMessage = require("./ResourceErrorMessageHelper").createErrorMessage;
+var getAppropriateStatusCode = require("./ResourceErrorMessageHelper").getAppropriateStatusCode;
+
 var ProductsResource = {};
 
 ProductsResource.list = function(req, res, next) {
     MongoDbHelper.find({}, function(err, data) {
         if (err) {
             console.log(err);
-            res.status(500).send("Something went wrong while getting list of products!");
+            res.status(getAppropriateStatusCode(err)).send(createErrorMessage("get list of products from database", err));
         } else {
             res.send(data);
         }
@@ -19,7 +22,7 @@ ProductsResource.find = function(req, res, next) {
     MongoDbHelper.find({merchant_sku: req.params.sku}, function(err, data) {
         if (err) {
             console.log(err);
-            res.status(500).send("Something went wrong while getting the product details!");
+            res.status(getAppropriateStatusCode(err)).send(createErrorMessage("get product details from database", err));
         } else {
             res.send(data);
         }
@@ -36,12 +39,12 @@ ProductsResource.create = function(req, res, next) {
         MongoDbHelper.insert(payload, function(err, data) {
             if (err) {
                 console.log(err);
-                var message = _errorMapperForCreate(err);
-                res.status(500).send(message);
+                res.status(getAppropriateStatusCode(err))
+                    .send(createErrorMessage("create product in database", err));
             } else if (data.modifiedCount === 0) {
                 res.status(404).send("No record with matching _id found.");
             } else {
-                payload._id = data.insertedId.toString()
+                payload._id = data.insertedId.toString();
                 res.send(payload);
             }
         });
@@ -57,8 +60,8 @@ ProductsResource.edit = function(req, res, next) {
         MongoDbHelper.update(payload, function(err, data) {
             if (err) {
                 console.log(err);
-                var message = _errorMapperForCreate(err);
-                res.status(500).send(message);
+                res.status(getAppropriateStatusCode(err))
+                    .send(createErrorMessage("edit product in database", err));
             } else if (data.modifiedCount === 0) {
                 res.status(404).send("No record with matching _id found.");
             } else {
@@ -78,8 +81,8 @@ ProductsResource.delete = function(req, res, next) {
         MongoDbHelper.delete(payload, function(err, data) {
             if (err) {
                 console.log(err);
-                var message = _errorMapperForCreate(err);
-                res.status(500).send(message);
+                res.status(getAppropriateStatusCode(err))
+                    .send(createErrorMessage("create product in database", err));
             } else if (data.modifiedCount === 0) {
                 res.status(404).send("No record with matching _id found.");
             } else {
