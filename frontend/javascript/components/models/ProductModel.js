@@ -60,10 +60,15 @@ var StandardProductCodeArray = t.subtype(t.list(StandardProductCode), function(l
     return list.length > 0;
 });
 
+var MultipackQuantity = t.subtype(t.Num, function(num){
+    return num > 0;
+});
+
 var ProductModel = t.struct({
     merchant_sku: t.Str,
     product_title: ProductTitle,
-    standard_product_codes: StandardProductCodeArray
+    standard_product_codes: StandardProductCodeArray,
+    multipack_quantity: MultipackQuantity
 });
 
 

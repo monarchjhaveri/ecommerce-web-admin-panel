@@ -129,7 +129,8 @@ var fields = [
 ];
 var ProductDetails = React.createClass({ displayName: "ProductDetails",
     propTypes: {
-        product: React.PropTypes.object
+        product: React.PropTypes.object,
+        onEdit: React.PropTypes.func
     },
     getInitialState: function() {
         return {isEditorOpen: false};
@@ -163,7 +164,7 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
         this.setState({isEditorOpen: false, editorProduct: null});
     },
     submitEdit: function(value) {
-      console.log(value);
+      this.props.submitEdit(value);
     },
     renderEditorFields(product) {
         var renderedDOM = [];

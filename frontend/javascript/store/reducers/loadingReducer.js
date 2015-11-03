@@ -11,11 +11,14 @@ module.exports = function productDetailsReducer(state, action) {
     switch (action.type) {
         case ActionTypes.PRODUCTS.GET_DETAILS_STARTED:
         case ActionTypes.PRODUCTS.FETCH_ALL_STARTED:
+        case ActionTypes.PRODUCTS.EDIT_STARTED:
              return true;
         case ActionTypes.PRODUCTS.GET_DETAILS_SUCCESS:
         case ActionTypes.PRODUCTS.GET_DETAILS_FAILURE:
         case ActionTypes.PRODUCTS.FETCH_ALL_SUCCESS:
         case ActionTypes.PRODUCTS.FETCH_ALL_FAILURE:
+        case ActionTypes.PRODUCTS.EDIT_SUCCESS:
+        case ActionTypes.PRODUCTS.EDIT_FAILURE:
             return false;
         default:
             return state;

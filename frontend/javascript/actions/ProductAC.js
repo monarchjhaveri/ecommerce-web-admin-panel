@@ -11,7 +11,8 @@ module.exports = {
                 url: "api/products",
                 error: function(request, error) {
                     dispatch({
-                        type: ActionTypes.PRODUCTS.FETCH_ALL_FAILURE
+                        type: ActionTypes.PRODUCTS.FETCH_ALL_FAILURE,
+                        payload: error
                     });
                 },
                 success: function(data) {
@@ -23,27 +24,30 @@ module.exports = {
             });
         };
     },
-    //getDetails: function(sku) {
-    //    return function(dispatch) {
-    //        dispatch({
-    //            type: ActionTypes.PRODUCTS.GET_DETAILS_STARTED
-    //        });
-    //        $.ajax({
-    //            url: "api/products/:sku".replace(":sku", sku),
-    //            error: function(request, error) {
-    //                dispatch({
-    //                    type: ActionTypes.PRODUCTS.GET_DETAILS_FAILURE
-    //                });
-    //            },
-    //            success: function(data) {
-    //                dispatch({
-    //                    type: ActionTypes.PRODUCTS.GET_DETAILS_SUCCESS,
-    //                    payload: data
-    //                });
-    //            }
-    //        });
-    //    }
-    //},
+    edit: function(product) {
+        return function(dispatch) {
+            dispatch({
+                type: ActionTypes.PRODUCTS.EDIT_STARTED
+            });
+            $.ajax({
+                method: "PUT",
+                url: "api/products",
+                data: product,
+                error: function(request, error) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.EDIT_FAILURE,
+                        payload: error
+                    });
+                },
+                success: function(data) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.EDIT_SUCCESS,
+                        payload: data
+                    });
+                }
+            });
+        }
+    },
     select: function(product) {
         return {
             type: ActionTypes.PRODUCTS.SELECT,
