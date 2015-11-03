@@ -4,7 +4,7 @@ var ReactDOM = require('react-dom');
 var Provider = require('react-redux').Provider;
 
 var store = require("./store/store");
-var SkusAC = require("./actions/SkusAC");
+var ProductAC = require("./actions/ProductAC");
 var Header = require("./layout/Header");
 var Footer = require("./layout/Footer");
 
@@ -15,7 +15,7 @@ var unsubscribe = store.subscribe(function() {
    
 });
 
-store.dispatch(SkusAC.fetchAll());
+store.dispatch(ProductAC.fetchAll());
 window.store = store;
 
 ReactDOM.render(

@@ -37,20 +37,20 @@ var fields = [
         label: "Multipack Quantity",
         property: "multipack_quantity"
     },
-    {
-        className: "sku-last-update",
-        label: "SKU Last Updated",
-        property: "sku_last_update",
-        valueRenderFactory: function(value, data) {
-            var dateString;
-            try {
-                dateString = new Date(value).toDateString();
-            } catch (e) {
-                // do nothing;
-            }
-            return dateString;
-        }
-    },
+    //{
+    //    className: "sku-last-update",
+    //    label: "SKU Last Updated",
+    //    property: "sku_last_update",
+    //    valueRenderFactory: function(value, data) {
+    //        var dateString;
+    //        try {
+    //            dateString = new Date(value).toDateString();
+    //        } catch (e) {
+    //            // do nothing;
+    //        }
+    //        return dateString;
+    //    }
+    //},
     {
         className: "status",
         label: "Status",

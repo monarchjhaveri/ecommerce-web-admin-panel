@@ -5,7 +5,7 @@ var JetProductsResource = {};
 JetProductsResource.getProductsList = function(req, res, next) {
     JetService.getProductsList(function(err, data) {
         if (err) {
-            res.status(500).send("Something went wrong while getting list of skus!");
+            res.status(500).send("Something went wrong while getting list of products!");
         }
 
         res.send(data);

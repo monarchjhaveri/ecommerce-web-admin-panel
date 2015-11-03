@@ -13,13 +13,13 @@
 }
 
 .products-view {
-  .sku-select-list {
+  .product-select-list {
     position: absolute;
     width: 150px;
     text-overflow: ellipsis;
     height: 100%;
     overflow-y: scroll;
-    .sku-select-list-item {
+    .product-select-list-item {
       &.selected {
         background-color: dodgerblue;
       }

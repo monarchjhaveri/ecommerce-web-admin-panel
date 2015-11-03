@@ -9,7 +9,7 @@ module.exports = function productDetailsReducer(state, action) {
     }
 
     switch (action.type) {
-        case ActionTypes.SKUS.SELECT:
+        case ActionTypes.PRODUCTS.SELECT:
             return action.payload;
         default:
             return state;

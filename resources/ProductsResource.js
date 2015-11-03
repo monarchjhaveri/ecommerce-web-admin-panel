@@ -27,8 +27,6 @@ ProductsResource.find = function(req, res, next) {
 
 ProductsResource.create = function(req, res, next) {
     var payload = req.body;
-    var spc = pay.load.standard_product_codes;
-
     if (!ProductValidationHelper.validateProduct(payload)) {
         res.status(400).send("Invalid product specifications.");
     } else {
