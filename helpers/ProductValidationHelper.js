@@ -22,6 +22,10 @@ ProductValidationHelper.validateProduct = function validateProduct(product) {
     );
 };
 
+ProductValidationHelper.validateProductTitle = _validateProductTitle;
+ProductValidationHelper.validateStandardProductCodeArray = _validateStandardProductCodeArray;
+ProductValidationHelper.validateMultipackQuantity = _validateMultipackQuantity;
+
 function _validateMultipackQuantity(multipack_quantity) {
     return validator.isInt(multipack_quantity, {min: 1});
 }

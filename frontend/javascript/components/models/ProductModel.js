@@ -1,4 +1,6 @@
 var t = require('tcomb-form');
+var ProductValidationHelper = require("../../../../helpers/ProductValidationHelper");
+
 /*
 {
     "ASIN":"TestTest10",
@@ -29,7 +31,7 @@ var StandardProductCodeTypes = t.enums({
     "ISBN-13": "ISBN-13"
 });
 
-var StandardProductCodes = t.subtype(t.struct({
+var StandardProductCode = t.subtype(t.struct({
     standard_product_code: t.Str,
     standard_product_code_type: StandardProductCodeTypes
 }), function(spc) {
@@ -50,10 +52,18 @@ var StandardProductCodes = t.subtype(t.struct({
     }
 });
 
+var ProductTitle = t.subtype(t.Str, function(str){
+    return ProductValidationHelper.validateProductTitle(str)
+});
+
+var StandardProductCodeArray = t.subtype(t.list(StandardProductCode), function(list) {
+    return list.length > 0;
+});
+
 var ProductModel = t.struct({
     merchant_sku: t.Str,
-    product_title: t.Str,
-    standard_product_codes: t.list(StandardProductCodes)
+    product_title: ProductTitle,
+    standard_product_codes: StandardProductCodeArray
 });
 
 
