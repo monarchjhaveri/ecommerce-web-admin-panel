@@ -89,6 +89,9 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
     propTypes: {
         product: React.PropTypes.object
     },
+    getInitialState: function() {
+        return {isEditorOpen: false};
+    },
     renderFields(product) {
         var renderedDOM = [];
         for (var i = 0; i < fields.length; i++) {
@@ -103,22 +106,52 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
         }
         return renderedDOM;
     },
-    getContent: function() {
-        var self = this;
-        if (self.props.product) {
-            return (
-                self.renderFields(self.props.product)
+    openEditor: function() {
+        this.setState({isEditorOpen: true})
+    },
+    closeEditor: function() {
+        this.setState({isEditorOpen: false})
+    },
+    renderEditorFields(product) {
+        var renderedDOM = [];
+        for (var i = 0; i < fields.length; i++) {
+            var f = fields[i];
+            var key = f.property;
+            var className = f.className;
+            var label = f.label;
+            var value = f.valueRenderFactory ? f.valueRenderFactory(product[f.property], product) : product[f.property];
+            renderedDOM.push(
+                <div key={key} className={className}> {label} EDITABLE: {value}</div>
             );
-        } else {
-            return null;
         }
+        return renderedDOM;
+    },
+    getContent: function() {
+        return (
+            <div className="product-details">
+                {this.renderFields(this.props.product)}
+                <div className="btn btn-default" onClick={this.openEditor}>Edit</div>
+            </div>
+        );
+    },
+    getEditorContent: function() {
+        return (
+            <div className="product-details editor">
+                {this.renderEditorFields(this.props.product)}
+                <div className="btn btn-default" onClick={this.closeEditor}>Close</div>
+            </div>
+        );
     },
     render: function() {
-        return (
-          <div className="product-details">
-              {this.getContent()}
-          </div>
-        );
+        if (!this.props.product) {
+            return null;
+        }
+        if (this.state.isEditorOpen) {
+            return this.getEditorContent();
+        } else {
+            return this.getContent();
+        }
+
     }
 });
 
