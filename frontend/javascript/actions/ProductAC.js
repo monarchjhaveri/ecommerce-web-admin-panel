@@ -48,10 +48,40 @@ module.exports = {
             });
         }
     },
+    edit: function(product) {
+        return function(dispatch) {
+            dispatch({
+                type: ActionTypes.PRODUCTS.CREATE_STARTED
+            });
+            $.ajax({
+                method: "PUT",
+                url: "api/products",
+                data: product,
+                error: function(request, error) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.CREATE_FAILURE,
+                        payload: error
+                    });
+                },
+                success: function(data) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.CREATE_SUCCESS,
+                        payload: data
+                    });
+                }
+            });
+        }
+    },
     select: function(product) {
         return {
             type: ActionTypes.PRODUCTS.SELECT,
             payload: product
+        }
+    },
+    openEditorToCreate: function() {
+        return {
+            type: ActionTypes.PRODUCTS.SELECT,
+            payload: {}
         }
     }
 };

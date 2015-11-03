@@ -26,7 +26,7 @@ ProductsResource.find = function(req, res, next) {
 };
 
 ProductsResource.create = function(req, res, next) {
-    var payload = req.body;
+    var payload = _filterParams(req.body);
     if (!ProductValidationHelper.validateProduct(payload)) {
         res.status(400).send("Invalid product specifications.");
     } else {
@@ -42,6 +42,25 @@ ProductsResource.create = function(req, res, next) {
     }
 };
 
+ProductsResource.edit = function(req, res, next) {
+    var payload = _filterParams(req.body);
+    if (!ProductValidationHelper.validateProduct(payload)) {
+        res.status(400).send("Invalid product specifications.");
+    } else {
+        MongoDbHelper.update(payload, function(err, data) {
+            if (err) {
+                console.log(err);
+                var message = _errorMapperForCreate(err);
+                res.status(500).send(message);
+            } else if (data.modifiedCount === 0) {
+                res.status(404).send("No record with matching _id found.");
+            } else {
+                res.send(req.body);
+            }
+        });
+    }
+};
+
 function _errorMapperForCreate(err) {
     switch (err.code) {
         case 11000:
@@ -50,6 +69,15 @@ function _errorMapperForCreate(err) {
             return "Unknown error occurred while saving the product. See logs for details.";
             break;
     }
+}
+
+var allowedParams = ["_id", "merchant_sku", "product_title", "standard_product_codes", "multipack_quantity"];
+function _filterParams(payload) {
+    var newObject = {};
+    for(var i = 0; i < allowedParams.length; i++) {
+        newObject[allowedParams[i]] = payload[allowedParams[i]]
+    }
+    return newObject;
 }
 
 module.exports = ProductsResource;

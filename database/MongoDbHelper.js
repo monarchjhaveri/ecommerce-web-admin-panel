@@ -1,4 +1,5 @@
 var mongoclient = require("mongodb").MongoClient;
+ObjectID = require('mongodb').ObjectID
 
 var MongoDbHelper = {};
 
@@ -41,6 +42,26 @@ MongoDbHelper.insert = function(productDto, callback) {
                 callback(err);
             } else {
                 db.collection(collectionName).insertOne(productDto, function(err, data){
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback(null, data);
+                        db.close();
+                    }
+                });
+            }
+        }
+    );
+};
+
+MongoDbHelper.update = function(productDto, callback) {
+    productDto._id = new ObjectID(productDto._id);
+    mongoclient.connect(mongoUrl,
+        function(err, db){
+            if (err){
+                callback(err);
+            } else {
+                db.collection(collectionName).findOneAndUpdate({_id: productDto._id}, productDto, function(err, data){
                     if (err) {
                         callback(err);
                     } else {

@@ -6,6 +6,7 @@
   bottom: 50px;
   right: 0;
   left: 0;
+  min-height: 400px;
 }
 
 .view {
@@ -13,28 +14,39 @@
 }
 
 .products-view {
-  $product-select-list-width: 150px;
-  .product-select-list {
+  $product-view-sidebar-width: 150px;
+  .product-view-sidebar {
     position: absolute;
-    width: $product-select-list-width;
-    text-overflow: ellipsis;
+    width: $product-view-sidebar-width;
     height: 100%;
-    overflow-y: scroll;
-    .product-select-list-item {
-      &.selected {
-        background-color: dodgerblue;
+    .product-select-list {
+      position: absolute;
+      width: $product-view-sidebar-width;
+      text-overflow: ellipsis;
+      height: 95%;
+      overflow-y: scroll;
+      .product-select-list-item {
+        &.selected {
+          background-color: dodgerblue;
+        }
       }
+    }
+    .new-product-button {
+      position: absolute;
+      width: $product-view-sidebar-width;
+      height: 5%;
+      bottom: 0;
     }
   }
   .product-details {
     position: absolute;
-    left: $product-select-list-width;
+    left: $product-view-sidebar-width;
     right: 0px;
     top: 0;
     bottom: 0;
     &.editor {
       width: 650px;
-      left: $product-select-list-width + 100px;
+      left: $product-view-sidebar-width + 100px;
       top: 20px;
     }
   }

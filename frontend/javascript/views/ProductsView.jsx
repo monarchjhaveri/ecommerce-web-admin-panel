@@ -23,6 +23,9 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
     getSelectedProduct: function() {
         return this.props.selectedProduct ? this.props.selectedProduct : null;
     },
+    createAction: function() {
+        store.dispatch(ProductAC.openEditorToCreate());
+    },
     render: function() {
         return (
             <div className="view products-view">
@@ -30,6 +33,7 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
                     products={this.props.products}
                     selectedProduct={this.props.selectedProduct}
                     onSelectChange={this.onSelectChange}
+                    createAction={this.createAction}
                 />
                 <ProductDetails
                     product={this.props.selectedProduct}
@@ -39,5 +43,11 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
         )
     }
 });
+
+//<ProductEditor
+//    product={{}}
+//    cancelEdit={this.cancelEdit}
+//    submitEdit={this.submitEdit}
+//    />;
 
 module.exports = ProductsView;

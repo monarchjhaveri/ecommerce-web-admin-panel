@@ -65,6 +65,7 @@ var MultipackQuantity = t.subtype(t.Num, function(num){
 });
 
 var ProductModel = t.struct({
+    _id: t.Str,
     merchant_sku: t.Str,
     product_title: ProductTitle,
     standard_product_codes: StandardProductCodeArray,

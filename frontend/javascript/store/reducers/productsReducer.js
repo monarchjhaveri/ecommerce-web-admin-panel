@@ -12,6 +12,7 @@ module.exports = function skusReducer(state, action) {
         case ActionTypes.PRODUCTS.FETCH_ALL_SUCCESS:
             return Immutable.List(action.payload);
         case ActionTypes.PRODUCTS.EDIT_SUCCESS:
+        case ActionTypes.PRODUCTS.CREATE_SUCCESS:
             return state.push(action.payload);
         default:
             return state;

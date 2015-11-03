@@ -198,20 +198,11 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
             </div>
         );
     },
-    getEditorContent: function() {
-        return (
-            <div className="product-details editor">
-                {this.renderEditorFields(this.state.editorProduct)}
-                <div className="btn btn-warn" onClick={this.cancelEdit}>Cancel</div>
-                <div className="btn btn-success" onClick={this.submitEdit}>Submit</div>
-            </div>
-        );
-    },
     render: function() {
         if (!this.props.product) {
             return null;
         }
-        if (this.state.isEditorOpen) {
+        if (this.state.isEditorOpen || this.props.product && this.props.product.merchant_sku === undefined) {
             return <ProductEditor
                 product={this.props.product}
                 cancelEdit={this.cancelEdit}
