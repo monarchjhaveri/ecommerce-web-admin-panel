@@ -4,9 +4,46 @@ var async = require("async");
 
 var MAX_ATTEMPTS = 2;
 
+// reconnect every 2 hours
+var RECONNECT_INTERVAL = 2 * 60 * 60 * 1000;
+
+// if reconnect fails at any point, tries to reconnect every 1 minute until successful
+var RECONNECT_INTERVAL_IF_FAILED = 60 * 1000;
+
+var reconnectLoopStarted = false;
+
 var user = null;
 var pass = null;
 var authData = null;
+
+async.forever(function(next) {
+    if (!reconnectLoopStarted) {
+        var interval = RECONNECT_INTERVAL_IF_FAILED;
+        reconnectLoopStarted = true;
+        console.log("Re-auth job against Jet.com started. Next attempt in [%s] milliseconds"
+            .replace("%s", interval));
+        setTimeout(next, RECONNECT_INTERVAL);
+    } else {
+        console.log("Attempting to re-auth against Jet.com.");
+        _connect(function(err, data) {
+           if (err) {
+               var interval = RECONNECT_INTERVAL_IF_FAILED;
+               _logRemoteError("Reconnect", err);
+               console.warn(
+                   "Re-auth attempt against Jet.com failed! Will keep retrying every [%i] milliseconds until successful, but if this keeps failing, the app WILL stop functioning."
+                       .replace("%s", interval)
+               );
+               setTimeout(next, interval);
+           } else {
+               var interval = RECONNECT_INTERVAL;
+               console.log("Re-auth attempt against Jet.com successful. Next attempt in [%s] milliseconds."
+                   .replace("%s", interval));
+               authData = data;
+               setTimeout(next, interval);
+           }
+        });
+    }
+});
 
 var JetService = {};
 
