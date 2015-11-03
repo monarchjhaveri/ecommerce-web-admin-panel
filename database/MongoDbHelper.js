@@ -41,14 +41,17 @@ MongoDbHelper.insert = function(productDto, callback) {
             if (err){
                 callback(err);
             } else {
-                db.collection(collectionName).insertOne(productDto, function(err, data){
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null, data);
-                        db.close();
+                db.collection(collectionName).insertOne(
+                    productDto,
+                    function(err, data){
+                        if (err) {
+                            callback(err);
+                        } else {
+                            callback(null, data);
+                            db.close();
+                        }
                     }
-                });
+                );
             }
         }
     );

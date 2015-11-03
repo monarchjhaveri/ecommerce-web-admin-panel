@@ -10,11 +10,17 @@ module.exports = function skusReducer(state, action) {
 
     switch (action.type) {
         case ActionTypes.PRODUCTS.FETCH_ALL_SUCCESS:
-            return Immutable.List(action.payload);
+            var map = {};
+            for (var i = 0; i < action.payload.length; i++) {
+                var p = action.payload[i];
+                map[p._id] = p;
+            }
+            return Immutable.Map(map);
         case ActionTypes.PRODUCTS.EDIT_SUCCESS:
         case ActionTypes.PRODUCTS.CREATE_SUCCESS:
-            return state.push(action.payload);
+            return state.set(action.payload._id, action.payload);
         default:
-            return state;
+            return state instanceof Immutable.Map ?  state : Immutable.Map(state);
+
     }
 };

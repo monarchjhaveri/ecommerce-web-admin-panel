@@ -28,7 +28,7 @@ function _createProductsArray(products, selectedProduct, onSelectChange) {
         return [];
     }
 
-    return products.map(function(d) {
+    return products.toList().map(function(d) {
         var className = "product-select-list-item";
         className = selectedProduct && selectedProduct.merchant_sku === d.merchant_sku ? className + " selected" : className;
         return (

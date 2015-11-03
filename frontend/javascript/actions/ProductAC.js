@@ -48,13 +48,13 @@ module.exports = {
             });
         }
     },
-    edit: function(product) {
+    create: function(product) {
         return function(dispatch) {
             dispatch({
                 type: ActionTypes.PRODUCTS.CREATE_STARTED
             });
             $.ajax({
-                method: "PUT",
+                method: "POST",
                 url: "api/products",
                 data: product,
                 error: function(request, error) {

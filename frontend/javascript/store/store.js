@@ -11,7 +11,7 @@ var productsReducer = require("./reducers/productsReducer");
 var ActionTypes = require("../actions/ActionTypes");
 
 var initialState = Immutable.Map({
-    products: Immutable.List([]),
+    products: Immutable.Map({}),
     loading: true,
     selectedProduct: {}
 });

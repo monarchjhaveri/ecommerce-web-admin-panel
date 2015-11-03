@@ -164,7 +164,8 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
         this.setState({isEditorOpen: false, editorProduct: null});
     },
     submitEdit: function(value) {
-      this.props.submitEdit(value);
+        this.props.submitEdit(value);
+        this.setState({isEditorOpen: false, editorProduct: null});
     },
     renderEditorFields(product) {
         var renderedDOM = [];

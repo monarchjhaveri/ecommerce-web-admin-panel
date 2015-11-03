@@ -9,6 +9,8 @@ module.exports = function productDetailsReducer(state, action) {
     }
 
     switch (action.type) {
+        case ActionTypes.PRODUCTS.EDIT_SUCCESS:
+        case ActionTypes.PRODUCTS.CREATE_SUCCESS:
         case ActionTypes.PRODUCTS.SELECT:
             return action.payload;
         default:

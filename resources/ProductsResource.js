@@ -25,8 +25,10 @@ ProductsResource.find = function(req, res, next) {
     })
 };
 
+
 ProductsResource.create = function(req, res, next) {
     var payload = _filterParams(req.body);
+    delete payload._id;
     if (!ProductValidationHelper.validateProduct(payload)) {
         res.status(400).send("Invalid product specifications.");
     } else {
@@ -35,6 +37,8 @@ ProductsResource.create = function(req, res, next) {
                 console.log(err);
                 var message = _errorMapperForCreate(err);
                 res.status(500).send(message);
+            } else if (data.modifiedCount === 0) {
+                res.status(404).send("No record with matching _id found.");
             } else {
                 res.send(req.body);
             }
