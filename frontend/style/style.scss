@@ -13,9 +13,10 @@
 }
 
 .products-view {
+  $product-select-list-width: 150px;
   .product-select-list {
     position: absolute;
-    width: 150px;
+    width: $product-select-list-width;
     text-overflow: ellipsis;
     height: 100%;
     overflow-y: scroll;
@@ -27,10 +28,15 @@
   }
   .product-details {
     position: absolute;
-    left: 150px;
+    left: $product-select-list-width;
     right: 0px;
     top: 0;
     bottom: 0;
+    &.editor {
+      width: 650px;
+      left: $product-select-list-width + 100px;
+      top: 20px;
+    }
   }
 }
 
