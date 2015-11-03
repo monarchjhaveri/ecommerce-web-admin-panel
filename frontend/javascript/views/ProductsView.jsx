@@ -24,6 +24,9 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
             store.dispatch(ProductAC.create(product));
         }
     },
+    onDelete: function(product) {
+        store.dispatch(ProductAC.delete(product));
+    },
     getSelectedProduct: function() {
         return this.props.selectedProduct ? this.props.selectedProduct : null;
     },
@@ -42,6 +45,7 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
                 <ProductDetails
                     product={this.props.selectedProduct}
                     submitEdit={this.submitEdit}
+                    onDelete={this.onDelete}
                 />
             </div>
         )

@@ -58,7 +58,6 @@ MongoDbHelper.insert = function(productDto, callback) {
 };
 
 MongoDbHelper.update = function(productDto, callback) {
-    productDto._id = new ObjectID(productDto._id);
     mongoclient.connect(mongoUrl,
         function(err, db){
             if (err){
@@ -88,7 +87,7 @@ MongoDbHelper.delete = function(productDto, callback) {
             if (err){
                 callback(err);
             } else {
-                db.collection(collectionName).deleteOne(productDto, function(err, data){
+                db.collection(collectionName).deleteOne({_id: productDto._id}, function(err, data){
                     if (err) {
                         callback(err);
                     } else {

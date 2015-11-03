@@ -72,6 +72,30 @@ module.exports = {
             });
         }
     },
+    delete: function(product) {
+        return function(dispatch) {
+            dispatch({
+                type: ActionTypes.PRODUCTS.DELETE_STARTED
+            });
+            $.ajax({
+                method: "DELETE",
+                url: "api/products/:sku".replace(":sku", product._id),
+                data: product,
+                error: function(request, error) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.DELETE_FAILURE,
+                        payload: error
+                    });
+                },
+                success: function(data) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.DELETE_SUCCESS,
+                        payload: data
+                    });
+                }
+            });
+        }
+    },
     select: function(product) {
         return {
             type: ActionTypes.PRODUCTS.SELECT,

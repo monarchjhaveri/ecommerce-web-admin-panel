@@ -130,7 +130,8 @@ var fields = [
 var ProductDetails = React.createClass({ displayName: "ProductDetails",
     propTypes: {
         product: React.PropTypes.object,
-        onEdit: React.PropTypes.func
+        onEdit: React.PropTypes.func,
+        onDelete: React.PropTypes.func
     },
     getInitialState: function() {
         return {isEditorOpen: false};
@@ -162,6 +163,9 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
     },
     cancelEdit: function() {
         this.setState({isEditorOpen: false, editorProduct: null});
+    },
+    onDelete: function() {
+        this.props.onDelete(this.props.product);
     },
     submitEdit: function(value) {
         this.props.submitEdit(value);
@@ -196,6 +200,7 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
             <div className="product-details">
                 {this.renderFields(this.props.product)}
                 <div className="btn btn-default" onClick={this.openEditor}>Edit</div>
+                <div className="btn btn-danger" onClick={this.onDelete}>Delete</div>
             </div>
         );
     },
@@ -208,6 +213,7 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
                 product={this.props.product}
                 cancelEdit={this.cancelEdit}
                 submitEdit={this.submitEdit}
+                onDelete={this.onDelete}
             />;
         } else {
             return this.getContent();

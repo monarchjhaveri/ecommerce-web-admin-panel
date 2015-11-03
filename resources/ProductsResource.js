@@ -40,7 +40,8 @@ ProductsResource.create = function(req, res, next) {
             } else if (data.modifiedCount === 0) {
                 res.status(404).send("No record with matching _id found.");
             } else {
-                res.send(req.body);
+                payload._id = data.insertedId.toString()
+                res.send(payload);
             }
         });
     }
@@ -48,6 +49,7 @@ ProductsResource.create = function(req, res, next) {
 
 ProductsResource.edit = function(req, res, next) {
     var payload = _filterParams(req.body);
+    payload._id = new ObjectID(payload._id);
     if (!ProductValidationHelper.validateProduct(payload)) {
         res.status(400).send("Invalid product specifications.");
     } else {
@@ -59,7 +61,29 @@ ProductsResource.edit = function(req, res, next) {
             } else if (data.modifiedCount === 0) {
                 res.status(404).send("No record with matching _id found.");
             } else {
-                res.send(req.body);
+                payload._id = payload._id.toString();
+                res.send(payload);
+            }
+        });
+    }
+};
+
+ProductsResource.delete = function(req, res, next) {
+    var payload = _filterParams(req.body);
+    payload._id = new ObjectID(payload._id);
+    if (!ProductValidationHelper.validateProduct(payload)) {
+        res.status(400).send("Invalid product specifications.");
+    } else {
+        MongoDbHelper.delete(payload, function(err, data) {
+            if (err) {
+                console.log(err);
+                var message = _errorMapperForCreate(err);
+                res.status(500).send(message);
+            } else if (data.modifiedCount === 0) {
+                res.status(404).send("No record with matching _id found.");
+            } else {
+                payload._id = payload._id.toString();
+                res.send(payload);
             }
         });
     }

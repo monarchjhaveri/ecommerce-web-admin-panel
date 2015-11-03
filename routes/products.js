@@ -7,7 +7,7 @@ router.get('/', ProductsResource.list);
 router.get('/:sku', ProductsResource.find);
 router.post('/', ProductsResource.create);
 router.put('/', ProductsResource.edit);
-router.delete('/:sku', ProductsResource.create);
+router.delete('/:sku', ProductsResource.delete);
 
 module.exports = router;
 

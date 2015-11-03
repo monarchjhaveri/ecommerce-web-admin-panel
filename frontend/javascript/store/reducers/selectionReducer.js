@@ -13,6 +13,8 @@ module.exports = function productDetailsReducer(state, action) {
         case ActionTypes.PRODUCTS.CREATE_SUCCESS:
         case ActionTypes.PRODUCTS.SELECT:
             return action.payload;
+        case ActionTypes.PRODUCTS.DELETE_SUCCESS:
+            return null;
         default:
             return state;
     }
