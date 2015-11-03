@@ -16,6 +16,7 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
     },
     onSelectChange: function(product){
         store.dispatch(ProductAC.select(product));
+        store.dispatch(ProductAC.getDetails(product));
     },
     submitEdit: function(product){
         if (product._id) {

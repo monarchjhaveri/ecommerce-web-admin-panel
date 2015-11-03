@@ -42,7 +42,7 @@ var fields = [
         label: "Standard Product Codes",
         property: "standard_product_codes",
         valueRenderFactory: function(value, data) {
-            if (!value instanceof Array) {
+            if (!(value instanceof Array)) {
                 return "Invalid SPC's";
             }
 

@@ -102,6 +102,30 @@ module.exports = {
             payload: product
         }
     },
+    getDetails: function(product) {
+        return function(dispatch) {
+            dispatch({
+                type: ActionTypes.PRODUCTS.GET_DETAILS_STARTED
+            });
+            $.ajax({
+                method: "GET",
+                url: "api/products/:sku"
+                    .replace(":sku", product.merchant_sku),
+                error: function(request, error) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.GET_DETAILS_FAILURE,
+                        payload: error
+                    });
+                },
+                success: function(data) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.GET_DETAILS_SUCCESS,
+                        payload: data
+                    });
+                }
+            });
+        }
+    },
     openEditorToCreate: function() {
         return {
             type: ActionTypes.PRODUCTS.SELECT,

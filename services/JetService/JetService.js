@@ -79,6 +79,9 @@ function _connect(callback) {
 
 function _getDetails(sku) {
     return function (callback) {
+        if (!sku) {
+            callback(new Error("Sku was undefined."));
+        }
         JetApi.products.getDetails(sku, authData.id_token, function(getDetailsErr, data){
             if (getDetailsErr) {
                 callback(getDetailsErr);

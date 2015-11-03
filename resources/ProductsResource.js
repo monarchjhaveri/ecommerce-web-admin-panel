@@ -1,6 +1,7 @@
 var JetService = require("../services/JetService/JetService");
 var ProductValidationHelper = require("../helpers/ProductValidationHelper");
 var MongoDbHelper = require("../database/MongoDbHelper");
+var ObjectID = require("mongodb").ObjectID;
 var async = require("async");
 
 var createErrorMessage = require("./ResourceErrorMessageHelper").createErrorMessage;
@@ -63,7 +64,7 @@ ProductsResource.find = function(req, res, next) {
             res.status(getAppropriateStatusCode(err)).send(createErrorMessage("get product details from database", err));
         } else {
             var dbProduct = dbProductArray[0];
-            _synchronizeDbProductWithJetProduct(dbProduct, function(syncErr, syncedData) {
+            _synchronizeDbProductWithJetProduct(dbProduct, req.params.sku, function(syncErr, syncedData) {
                 if (syncErr) {
                     console.log(syncErr);
                     res.status(getAppropriateStatusCode(syncErr)).send(createErrorMessage("synchronize jet.com product data", syncErr));
@@ -139,12 +140,40 @@ ProductsResource.delete = function(req, res, next) {
     }
 };
 
-function _synchronizeDbProductWithJetProduct(dbProduct, callback) {
+function _synchronizeDbProductWithJetProduct(_dbProduct, _sku, callback) {
     async.waterfall([
         function(callback) {
-            JetService.getDetails(dbProduct.merchant_sku, callback);
+            if (!_dbProduct) {
+                var dummyObject = {
+                    merchant_sku: _sku
+                };
+                MongoDbHelper.insert(dummyObject, function(insertErr, insertData) {
+                    if (insertErr) {
+                        console.error(insertErr);
+                        callback(insertErr);
+                        return;
+                    }
+                    if (insertData.insertedCount != 1) {
+                        console.error(insertData);
+                        callback(new Error("Failed to insert stub product into DB! More info above."));
+                        return;
+                    }
+                    callback(null, dummyObject);
+                });
+            } else {
+                callback(null, _dbProduct);
+            }
         },
-        function(jetProduct, callback) {
+        function(dbProduct, callback) {
+            JetService.getDetails(dbProduct.merchant_sku, function(err, data) {
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, dbProduct, data)
+                }
+            });
+        },
+        function(dbProduct, jetProduct, callback) {
             try {
                 var newDbProduct = _applyDiff(dbProduct, jetProduct);
             } catch (e) {
