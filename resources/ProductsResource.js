@@ -9,15 +9,52 @@ var getAppropriateStatusCode = require("./ResourceErrorMessageHelper").getApprop
 var ProductsResource = {};
 
 ProductsResource.list = function(req, res, next) {
-    MongoDbHelper.find({}, function(err, data) {
+    async.waterfall([
+        JetService.getProductsList,
+        _synchronizeJetSkuArray
+    ], function(err, data) {
         if (err) {
             console.log(err);
-            res.status(getAppropriateStatusCode(err)).send(createErrorMessage("get list of products from database", err));
+            res.status(getAppropriateStatusCode(err)).send(createErrorMessage("get list of products from Jet", err));
         } else {
             res.send(data);
         }
-    })
+    });
+    //MongoDbHelper.find({}, function(err, data) {
+    //    if (err) {
+    //        console.log(err);
+    //        res.status(getAppropriateStatusCode(err)).send(createErrorMessage("get list of products from database", err));
+    //    } else {
+    //        res.send(data);
+    //    }
+    //})
 };
+
+function _synchronizeJetSkuArray(jetSkuArray, callback) {
+    async.waterfall([
+        MongoDbHelper.getProductsList,
+        function(dbProductsList, callback) {
+            callback(null, _fillJetSkuArrayWithDbData(jetSkuArray, dbProductsList))
+        }
+    ], callback)
+}
+
+function _fillJetSkuArrayWithDbData(jetSkuArray, dbProductsList) {
+    return jetSkuArray.map(function(jetSkuObject) {
+       var correspondingDbProduct = dbProductsList.find(function(dbProduct) {
+           return dbProduct.merchant_sku === jetSkuObject.sku;
+       });
+        if (correspondingDbProduct) {
+            return correspondingDbProduct;
+        } else {
+            return {
+                merchant_sku: jetSkuObject.sku,
+                product_title: "(?)"
+            }
+        }
+    });
+}
+
 
 ProductsResource.find = function(req, res, next) {
     MongoDbHelper.find({merchant_sku: req.params.sku}, function(err, dbProductArray) {

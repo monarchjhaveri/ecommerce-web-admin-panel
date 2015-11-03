@@ -13,7 +13,7 @@ module.exports = function skusReducer(state, action) {
             var map = {};
             for (var i = 0; i < action.payload.length; i++) {
                 var p = action.payload[i];
-                map[p._id] = p;
+                map[p.merchant_sku] = p;
             }
             return Immutable.Map(map);
         case ActionTypes.PRODUCTS.EDIT_SUCCESS:
