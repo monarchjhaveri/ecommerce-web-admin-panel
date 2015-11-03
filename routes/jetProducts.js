@@ -6,7 +6,7 @@ var JetService = require('../services/JetService/JetService');
 /* GET products listing. */
 router.get('/', ProductsResource.getProductsList);
 router.get('/:sku', ProductsResource.getDetails);
-router.post('/:sku', ProductsResource.create);
+//router.post('/:sku', ProductsResource.create);
 
 module.exports = router;
 

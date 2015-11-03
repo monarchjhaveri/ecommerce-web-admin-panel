@@ -1,76 +1,90 @@
 var SkuParserHelper = require("./SkuParserHelper");
 var JetApi = require('jet-api');
+var async = require("async");
+
+var MAX_ATTEMPTS = 2;
 
 var user = null;
 var pass = null;
 var authData = null;
 
-var authenticationError = null;
-
 var JetService = {};
 
 JetService.connect = function(_user, _pass) {
-    JetApi.authentication.connect(_user, _pass, function(err, data) {
+    user = _user;
+    pass = _pass;
+    async.retry(MAX_ATTEMPTS, _connect, function(err, data) {
         if (err) {
-            throw (err);
+            _logRemoteError("connect", err);
+        } else {
+            authData = data;
         }
-
-        user = _user;
-        pass = _pass;
-        authData = data;
     });
 };
 
 JetService.getProductsList = function(callback) {
-    if (notLoggedIn("getProductsList", callback)) return;
-    JetApi.products.list(authData.id_token, function(listErr, listData){
-        if (listErr || !listData || !listData.sku_urls) {
-            console.error(listErr);
-            callback(new Error("Failed to get list of SKU's from Jet.com API"));
-        }
-
-        var skus = SkuParserHelper.extractSkuFromUrls(listData.sku_urls);
-
-        var products = skus.map(function(d) {
-            return {
-                sku: d
-            }
-        });
-
-        callback(null, products);
-    });
+    _retryIfFailed("getProductsList", _getProductsList, callback);
 };
 
 JetService.getDetails = function(sku, callback) {
-
-    if (notLoggedIn("getDetails", callback)) return;
-
-    JetApi.products.getDetails(sku, authData.id_token, function(getDetailsErr, data){
-        if (getDetailsErr) {
-            console.error(getDetailsErr);
-            callback(new Error("Failed to get list of SKU's from Jet.com API"));
-        }
-
-        callback(null, data);
-    });
+    _retryIfFailed("getDetails", _getDetails(sku), callback);
 };
 
-/**
- *
- * @param {!String} actionName
- * @param {!String} callback
- * @returns {boolean}
- */
-function notLoggedIn(actionName, callback) {
-    if (!authData || !authData.id_token) {
-        console.error(
-            "Tried to do this action: [%s]. But, not backend client is not logged in to Jet.com!"
-                .replace("%s", actionName)
-        );
-        callback(new Error("Not connected to Jet.com!"));
-        return true;
+function _connect(callback) {
+    JetApi.authentication.connect(user, pass, function(err, data) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, data);
+        }
+    });
+}
+
+function _getDetails(sku) {
+    return function (callback) {
+        JetApi.products.getDetails(sku, authData.id_token, function(getDetailsErr, data){
+            if (getDetailsErr) {
+                callback(getDetailsErr);
+            } else {
+                callback(null, data);
+            }
+        });
     }
-    return false;
+}
+
+function _getProductsList(callback) {
+    JetApi.products.list(authData.id_token, function(listErr, listData){
+        if (listErr) {
+            callback(listErr);
+        } else {
+            var skus = SkuParserHelper.extractSkuFromUrls(listData.sku_urls);
+            var skuObjects = skus.map(function(d) {
+                return {
+                    sku: d
+                }
+            });
+            callback(null, skuObjects);
+        }
+    });
+}
+
+function _retryIfFailed(functionName, functionInstance, callback) {
+    async.retry(MAX_ATTEMPTS, functionInstance, function(err, data) {
+        if (err) {
+            _logRemoteError(functionName, err);
+            callback(err);
+        } else {
+            callback(null, data);
+        }
+    });
+}
+
+function _logRemoteError(fnName, err) {
+    console.error("Function [%fn] failed with this message: [%msg]"
+            .replace("%fn", fnName)
+            .replace("%msg", err.message)
+    );
+    console.error(err.stack);
 }
 
 
