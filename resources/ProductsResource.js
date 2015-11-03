@@ -1,6 +1,7 @@
 var JetService = require("../services/JetService/JetService");
 var ProductValidationHelper = require("../helpers/ProductValidationHelper");
 var MongoDbHelper = require("../database/MongoDbHelper");
+var async = require("async");
 
 var createErrorMessage = require("./ResourceErrorMessageHelper").createErrorMessage;
 var getAppropriateStatusCode = require("./ResourceErrorMessageHelper").getAppropriateStatusCode;
@@ -19,12 +20,20 @@ ProductsResource.list = function(req, res, next) {
 };
 
 ProductsResource.find = function(req, res, next) {
-    MongoDbHelper.find({merchant_sku: req.params.sku}, function(err, data) {
+    MongoDbHelper.find({merchant_sku: req.params.sku}, function(err, dbProductArray) {
         if (err) {
             console.log(err);
             res.status(getAppropriateStatusCode(err)).send(createErrorMessage("get product details from database", err));
         } else {
-            res.send(data);
+            var dbProduct = dbProductArray[0];
+            _synchronizeDbProductWithJetProduct(dbProduct, function(syncErr, syncedData) {
+                if (syncErr) {
+                    console.log(syncErr);
+                    res.status(getAppropriateStatusCode(syncErr)).send(createErrorMessage("synchronize jet.com product data", syncErr));
+                } else {
+                    res.send(dbProduct);
+                }
+            });
         }
     })
 };
@@ -92,6 +101,49 @@ ProductsResource.delete = function(req, res, next) {
         });
     }
 };
+
+function _synchronizeDbProductWithJetProduct(dbProduct, callback) {
+    async.waterfall([
+        function(callback) {
+            JetService.getDetails(dbProduct.merchant_sku, callback);
+        },
+        function(jetProduct, callback) {
+            try {
+                var newDbProduct = _applyDiff(dbProduct, jetProduct);
+            } catch (e) {
+                callback(e);
+                return;
+            }
+            callback(null, newDbProduct);
+        },
+        function(newDbProduct, callback) {
+            newDbProduct._id = new ObjectID(newDbProduct._id);
+            MongoDbHelper.update(newDbProduct, function(updateErr, updateData) {
+                if (updateErr) {
+                    callback(updateErr);
+                } else if (updateData.modifiedCount === 0) {
+                    callback(new Error("Failed to update local data with jet.com data."));
+                } else {
+                    callback(null, newDbProduct);
+                }
+            });
+        }
+    ], callback);
+}
+
+function _clone(a) {
+    return JSON.parse(JSON.stringify(a));
+}
+
+function _applyDiff(_dbProduct, jetProduct) {
+    var dbProduct = _clone(_dbProduct);
+    keys = Object.keys(jetProduct);
+    for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        dbProduct[k] = jetProduct[k];
+    }
+    return dbProduct;
+}
 
 function _errorMapperForCreate(err) {
     switch (err.code) {
