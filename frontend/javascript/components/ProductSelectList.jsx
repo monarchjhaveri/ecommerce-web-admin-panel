@@ -31,8 +31,9 @@ function _createProductsArray(products, selectedProduct, onSelectChange) {
     return products.toList().map(function(d) {
         var className = "product-select-list-item";
         className = selectedProduct && selectedProduct.merchant_sku === d.merchant_sku ? className + " selected" : className;
+        var key = d.merchant_sku + ":" + d.product_title;
         return (
-            <div key={d.merchant_sku}
+            <div key={key}
                  className={className}
                  onClick={onSelectProductFunctionBuilder(d, onSelectChange)}>
                 {d.product_title}

@@ -69,7 +69,7 @@ ProductsResource.find = function(req, res, next) {
                     console.log(syncErr);
                     res.status(getAppropriateStatusCode(syncErr)).send(createErrorMessage("synchronize jet.com product data", syncErr));
                 } else {
-                    res.send(dbProduct);
+                    res.send(syncedData);
                 }
             });
         }

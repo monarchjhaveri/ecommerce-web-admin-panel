@@ -96,12 +96,6 @@ module.exports = {
             });
         }
     },
-    select: function(product) {
-        return {
-            type: ActionTypes.PRODUCTS.SELECT,
-            payload: product
-        }
-    },
     getDetails: function(product) {
         return function(dispatch) {
             dispatch({
@@ -120,6 +114,10 @@ module.exports = {
                 success: function(data) {
                     dispatch({
                         type: ActionTypes.PRODUCTS.GET_DETAILS_SUCCESS,
+                        payload: data
+                    });
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.SELECT,
                         payload: data
                     });
                 }
