@@ -1,4 +1,9 @@
 var React = require("react");
+var LinkedStateMixin = require("react-addons-linked-state-mixin");
+var jQuery = require("jquery");
+var Immutable = require("immutable");
+
+var ProductEditor = require("./ProductEditor.jsx");
 
 // Sample product
 /*
@@ -53,6 +58,43 @@ var fields = [
                     {spcDoms}
                 </ul>
             )
+        },
+        /**
+         *
+         * @param field
+         * @param defaultValue
+         * @param data
+         * @returns {*}
+         */
+        editorRenderFactory: function(field, defaultValue, data) {
+            if (!defaultValue instanceof Array) {
+                return "Invalid SPC's";
+            }
+
+            var spcDoms = [];
+            for (var i = 0; i < defaultValue.length; i++) {
+                var f = defaultValue[i];
+                var key = f.standard_product_code_type + f.standard_product_code;
+                var label = f.standard_product_code_type;
+                var originalValue = f.standard_product_code;
+
+                spcDoms.push(
+                    <li key={"li:"+key}>
+                        <label key={"label:"+key}>
+                            {label}
+                            <input key={"input:"+key} type="text" defaultValue={originalValue}></input>
+                        </label>
+                    </li>
+                );
+            }
+            return (
+                <div className="standard-product-codes">
+                    <label>Standard Product Codes:</label>
+                    <ul>
+                        {spcDoms}
+                    </ul>
+                </div>
+            )
         }
     }
     //{
@@ -92,6 +134,14 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
     getInitialState: function() {
         return {isEditorOpen: false};
     },
+    componentWillReceiveProps: function(nextProps) {
+        if (nextProps.product &&
+            this.state.editorProduct &&
+            nextProps.product.merchant_sku === this.state.editorProduct.merchant_sku) {
+            var editorProduct = jQuery.extend(true, {}, nextProps.product);
+            this.setState({editorProduct: editorProduct});
+        }
+    },
     renderFields(product) {
         var renderedDOM = [];
         for (var i = 0; i < fields.length; i++) {
@@ -107,10 +157,13 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
         return renderedDOM;
     },
     openEditor: function() {
-        this.setState({isEditorOpen: true})
+        this.setState({isEditorOpen: true, editorProduct: jQuery.extend(true, {}, this.props.product)});
     },
-    closeEditor: function() {
-        this.setState({isEditorOpen: false})
+    cancelEdit: function() {
+        this.setState({isEditorOpen: false, editorProduct: null});
+    },
+    submitEdit: function(value) {
+      console.log(value);
     },
     renderEditorFields(product) {
         var renderedDOM = [];
@@ -119,12 +172,22 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
             var key = f.property;
             var className = f.className;
             var label = f.label;
-            var value = f.valueRenderFactory ? f.valueRenderFactory(product[f.property], product) : product[f.property];
-            renderedDOM.push(
-                <div key={key} className={className}> {label} EDITABLE: {value}</div>
-            );
+            //var value = f.editorFieldRenderFactory ? f.editorFieldRenderFactory(product[f.property], product) : product[f.property];
+            if (f.editorRenderFactory) {
+                renderedDOM.push(f.editorRenderFactory(f.property, this.state.editorProduct[f.property], this.state.editorProduct));
+            } else {
+                renderedDOM.push(
+                    <label key={"label:"+key} className={f.className}>
+                        {f.label}
+                        <input key={"input:"+key} type="text" defaultValue={this.state.editorProduct[f.property]}></input>
+                    </label>
+                );
+                renderedDOM.push(<br key={"br:"+key}/>);
+            }
         }
-        return renderedDOM;
+        return (
+            renderedDOM
+        );
     },
     getContent: function() {
         return (
@@ -137,8 +200,9 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
     getEditorContent: function() {
         return (
             <div className="product-details editor">
-                {this.renderEditorFields(this.props.product)}
-                <div className="btn btn-default" onClick={this.closeEditor}>Close</div>
+                {this.renderEditorFields(this.state.editorProduct)}
+                <div className="btn btn-warn" onClick={this.cancelEdit}>Cancel</div>
+                <div className="btn btn-success" onClick={this.submitEdit}>Submit</div>
             </div>
         );
     },
@@ -147,7 +211,11 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
             return null;
         }
         if (this.state.isEditorOpen) {
-            return this.getEditorContent();
+            return <ProductEditor
+                product={this.props.product}
+                cancelEdit={this.cancelEdit}
+                submitEdit={this.submitEdit}
+            />;
         } else {
             return this.getContent();
         }
