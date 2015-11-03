@@ -28,15 +28,37 @@ var fields = [
         property: "merchant_sku"
     },
     {
-        className: "asin",
-        label: "ASIN",
-        property: "ASIN"
-    },
-    {
         className: "multipack-quantity",
         label: "Multipack Quantity",
         property: "multipack_quantity"
     },
+    {
+        className: "standard-product-codes",
+        label: "Standard Product Codes",
+        property: "standard_product_codes",
+        valueRenderFactory: function(value, data) {
+            if (!value instanceof Array) {
+                return "Invalid SPC's";
+            }
+
+            var spcDoms = [];
+            for (var i = 0; i < value.length; i++) {
+                spcDoms.push(
+                    <li>{value[i].standard_product_code_type}: {value[i].standard_product_code}</li>
+                );
+            }
+            return (
+                <ul>
+                    {spcDoms}
+                </ul>
+            )
+        }
+    }
+    //{
+    //    className: "asin",
+    //    label: "ASIN",
+    //    property: "ASIN"
+    //},
     //{
     //    className: "sku-last-update",
     //    label: "SKU Last Updated",
@@ -51,16 +73,16 @@ var fields = [
     //        return dateString;
     //    }
     //},
-    {
-        className: "status",
-        label: "Status",
-        property: "status"
-    },
-    {
-        className: "sub-status",
-        label: "Sub Status",
-        property: "sub_status"
-    }
+    //{
+    //    className: "status",
+    //    label: "Status",
+    //    property: "status"
+    //},
+    //{
+    //    className: "sub-status",
+    //    label: "Sub Status",
+    //    property: "sub_status"
+    //}
 ];
 var ProductDetails = React.createClass({ displayName: "ProductDetails",
     propTypes: {
