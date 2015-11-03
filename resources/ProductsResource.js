@@ -99,25 +99,41 @@ ProductsResource.create = function(req, res, next) {
 };
 
 ProductsResource.edit = function(req, res, next) {
-    var payload = _filterParams(req.body);
-    payload._id = new ObjectID(payload._id);
-    if (!ProductValidationHelper.validateProduct(payload)) {
-        res.status(400).send("Invalid product specifications.");
-    } else {
-        MongoDbHelper.update(payload, function(err, data) {
-            if (err) {
-                console.log(err);
-                res.status(getAppropriateStatusCode(err))
-                    .send(createErrorMessage("edit product in database", err));
-            } else if (data.modifiedCount === 0) {
-                res.status(404).send("No record with matching _id found.");
+    var payload = req.body;
+    async.waterfall([
+        _putAgainstJet(payload)
+    ], function(err, editedProduct) {
+        if (err) {
+            res.status(getAppropriateStatusCode(err)).send(
+                createErrorMessage("synchronize jet.com product data", err)
+            );
+        }
+        _synchronizeDbProductWithJetProduct(editedProduct, editedProduct.merchant_sku, function(syncErr, syncedData) {
+            if (syncErr) {
+                console.log(syncErr);
+                res.status(getAppropriateStatusCode(syncErr)).send(
+                    createErrorMessage("synchronize jet.com product data", syncErr)
+                );
             } else {
-                payload._id = payload._id.toString();
-                res.send(payload);
+                res.send(syncedData);
             }
-        });
-    }
+        })
+    })
 };
+
+function _putAgainstJet(productDto) {
+    return function(callback) {
+        var sendDto = _clone(productDto);
+        delete sendDto._id;
+        JetService.editOrCreate(productDto, function(editOrCreateErr, editOrCreateData) {
+            if (editOrCreateErr) {
+                callback(editOrCreateErr);
+            } else {
+                callback(null, productDto);
+            }
+        })
+    };
+}
 
 ProductsResource.delete = function(req, res, next) {
     var payload = _filterParams(req.body);

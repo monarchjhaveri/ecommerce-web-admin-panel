@@ -67,6 +67,10 @@ JetService.getDetails = function(sku, callback) {
     _retryIfFailed("getDetails", _getDetails(sku), callback);
 };
 
+JetService.editOrCreate = function(productDto, callback) {
+    _retryIfFailed("editOrCreate", _editOrCreate(productDto), callback);
+};
+
 function _connect(callback) {
     JetApi.authentication.connect(user, pass, function(err, data) {
         if (err) {
@@ -87,6 +91,26 @@ function _getDetails(sku) {
                 callback(getDetailsErr);
             } else {
                 callback(null, data);
+            }
+        });
+    }
+}
+
+function _editOrCreate(productDto, callback) {
+    return function(callback) {
+        if (!productDto) {
+            callback(new Error("productDto was undefined"));
+            return;
+        }
+        if (!productDto.merchant_sku) {
+            callback(new Error("productDto.merchant_sku was undefined"));
+            return;
+        }
+        JetApi.products.create(productDto.merchant_sku, productDto, authData.id_token, function(createErr, createData) {
+            if (createErr) {
+                callback(createErr);
+            } else {
+                callback(null, createData);
             }
         });
     }
