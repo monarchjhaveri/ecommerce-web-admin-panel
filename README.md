@@ -1,15 +1,15 @@
 ###Setup:
 
 #Database setup:
-IMPORTANT Note: In production, make sure you change the PASSWORD to something a little more secure!
 
-Run the following commands:
+1. Install Mongo on the server
+2. Log into Mongo and run the following commands to set up the schema:
 ```
-CREATE DATABASE ecommerce;
-CREATE USER 'ecommerce' IDENTIFIED BY 'PASSWORD';
-GRANT ALL PRIVILEGES ON ecommerce.* TO 'ecommerce';
+use ecommerceWebpanel;
+db.products.createIndex({merchant_sku: "text"}, {unique: "true"});
 
 ```
+3. At this point, `show databases;` should show `ecommerceWebpanel` as a database.
 
 0. Clone this repo then run the following commands in the root folder:
 1. `npm install`

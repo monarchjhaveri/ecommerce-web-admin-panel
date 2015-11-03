@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var ProductsResource = require("../resources/ProductsResource");
+var ProductsResource = require("../resources/JetProductsResource");
+var JetService = require('../services/JetService/JetService');
 
 /* GET products listing. */
-router.get('/', ProductsResource.list);
-router.get('/:sku', ProductsResource.find);
-router.put('/', ProductsResource.create);
-router.delete('/:sku', ProductsResource.create);
+router.get('/', ProductsResource.getProductsList);
+router.get('/:sku', ProductsResource.getDetails);
+router.post('/:sku', ProductsResource.create);
 
 module.exports = router;
 
