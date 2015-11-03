@@ -43,8 +43,9 @@ var fields = [
 
             var spcDoms = [];
             for (var i = 0; i < value.length; i++) {
+                var textString = value[i].standard_product_code_type + ": " + value[i].standard_product_code;
                 spcDoms.push(
-                    <li>{value[i].standard_product_code_type}: {value[i].standard_product_code}</li>
+                    <li key={textString}>{textString}</li>
                 );
             }
             return (
