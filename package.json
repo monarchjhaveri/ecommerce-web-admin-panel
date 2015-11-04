@@ -31,8 +31,8 @@
     "redux": "^3.0.4",
     "redux-thunk": "^1.0.0",
     "serve-favicon": "~2.3.0",
-    "validator": "^4.2.1",
-    "winterfell": "^1.0.5"
+    "tcomb-form": "^0.7.6",
+    "validator": "^4.2.1"
   },
   "devDependencies": {
     "browserify": "^12.0.0",
