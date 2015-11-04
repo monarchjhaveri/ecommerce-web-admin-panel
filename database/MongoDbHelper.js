@@ -76,7 +76,7 @@ function _update(productDto, callback, _options) {
                     if (err) {
                         callback(err);
                     } else {
-                        callback(null, data.value);
+                        callback(null, data);
                         db.close();
                     }
                 });

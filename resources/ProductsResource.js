@@ -28,8 +28,8 @@ ProductsResource.find = function(req, res, next) {
             }
         },
         _getJetDetailsForMerchantSku,
-        _upsertJetProduct,
-        _findProductInDatabase
+        _upsertJetProductAndReturnSku,
+        _findProductInDatabaseBySku
     ], _responseFunctionFactory("get product", res));
 };
 
@@ -44,12 +44,12 @@ function _responseFunctionFactory(action, res) {
     }
 }
 
-function _upsertJetProduct(jetProduct, callback) {
+function _upsertJetProductAndReturnSku(jetProduct, callback) {
     MongoDbHelper.upsert(jetProduct, function(upsertErr, upsertedData) {
         if (upsertErr) {
             callback(upsertErr);
         } else {
-            callback(null, upsertedData);
+            callback(null, jetProduct.merchant_sku);
         }
     });
 }
@@ -74,8 +74,8 @@ ProductsResource.createOrEdit = function(req, res, next) {
             })
         },
         _getJetDetailsForMerchantSku,
-        _upsertJetProduct,
-        _findProductInDatabase
+        _upsertJetProductAndReturnSku,
+        _findProductInDatabaseBySku
     ], _responseFunctionFactory("create product", res));
 };
 
@@ -180,8 +180,8 @@ function _putAgainstJet(productDto) {
     };
 }
 
-function _findProductInDatabase(productDto, callback) {
-    MongoDbHelper.find({merchant_sku: productDto.merchant_sku}, function(err, data) {
+function _findProductInDatabaseBySku(merchantSku, callback) {
+    MongoDbHelper.find({merchant_sku: merchantSku}, function(err, data) {
         if (err) {
             callback(err);
         } else {
