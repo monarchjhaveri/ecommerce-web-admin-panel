@@ -5,8 +5,8 @@ var ProductsResource = require("../resources/ProductsResource");
 /* GET products listing. */
 router.get('/', ProductsResource.list);
 router.get('/:sku', ProductsResource.find);
-router.post('/', ProductsResource.create);
-router.put('/', ProductsResource.edit);
+router.post('/', ProductsResource.createOrEdit);
+router.put('/', ProductsResource.createOrEdit);
 //router.delete('/:sku', ProductsResource.delete);
 
 module.exports = router;

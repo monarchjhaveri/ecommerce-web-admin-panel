@@ -57,24 +57,33 @@ MongoDbHelper.insert = function(productDto, callback) {
     );
 };
 
+MongoDbHelper.upsert = function(productDto, callback) {
+    _update(productDto, callback, {upsert: true});
+};
+
 MongoDbHelper.update = function(productDto, callback) {
+    _update(productDto, callback);
+};
+
+function _update(productDto, callback, _options) {
+    var options = _options ? _options : {};
     mongoclient.connect(mongoUrl,
         function(err, db){
             if (err){
                 callback(err);
             } else {
-                db.collection(collectionName).findOneAndUpdate({_id: productDto._id}, productDto, function(err, data){
+                db.collection(collectionName).findOneAndUpdate({merchant_sku: productDto.merchant_sku}, productDto, options, function(err, data){
                     if (err) {
                         callback(err);
                     } else {
-                        callback(null, data);
+                        callback(null, data.value);
                         db.close();
                     }
                 });
             }
         }
     );
-};
+}
 
 /**
  *

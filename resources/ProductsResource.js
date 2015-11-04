@@ -13,23 +13,88 @@ ProductsResource.list = function(req, res, next) {
     async.waterfall([
         JetService.getProductsList,
         _synchronizeJetSkuArray
-    ], function(err, data) {
+    ], _responseFunctionFactory("get list of products", res));
+};
+
+
+ProductsResource.find = function(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            if (!req.params && req.params.sku) {
+                callback(new Error("Must provide a merchant_sku"))
+            } else {
+                var merchant_sku = req.params.sku;
+                callback(null, merchant_sku);
+            }
+        },
+        _getJetDetailsForMerchantSku,
+        _upsertJetProduct,
+        _findProductInDatabase
+    ], _responseFunctionFactory("get product", res));
+};
+
+function _responseFunctionFactory(action, res) {
+    return function(err, data) {
         if (err) {
             console.log(err);
-            res.status(getAppropriateStatusCode(err)).send(createErrorMessage("get list of products from Jet", err));
+            res.status(getAppropriateStatusCode(err)).send(createErrorMessage(action, err));
         } else {
             res.send(data);
         }
+    }
+}
+
+function _upsertJetProduct(jetProduct, callback) {
+    MongoDbHelper.upsert(jetProduct, function(upsertErr, upsertedData) {
+        if (upsertErr) {
+            callback(upsertErr);
+        } else {
+            callback(null, upsertedData);
+        }
     });
-    //MongoDbHelper.find({}, function(err, data) {
-    //    if (err) {
-    //        console.log(err);
-    //        res.status(getAppropriateStatusCode(err)).send(createErrorMessage("get list of products from database", err));
-    //    } else {
-    //        res.send(data);
-    //    }
-    //})
+}
+
+
+ProductsResource.createOrEdit = function(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            // parse body and create an insertable object without _id
+            var payload = _parseBody(req.body);
+            delete payload._id;
+            callback(null, payload);
+        },
+        function(payload, callback) {
+            // edit or create against jet
+            JetService.editOrCreate(payload, function(ecErr, ecData) {
+                if (ecErr) {
+                    callback(ecErr);
+                } else {
+                    callback(null, payload.merchant_sku);
+                }
+            })
+        },
+        _getJetDetailsForMerchantSku,
+        _upsertJetProduct,
+        _findProductInDatabase
+    ], _responseFunctionFactory("create product", res));
 };
+
+function _getJetDetailsForMerchantSku(merchantSku, callback) {
+    // jet Details For Merchant Sku
+    JetService.getDetails(merchantSku, callback);
+}
+// ========= Above this line is good.
+
+
+
+
+
+
+
+
+
+
+
 
 function _synchronizeJetSkuArray(jetSkuArray, callback) {
     async.waterfall([
@@ -57,46 +122,9 @@ function _fillJetSkuArrayWithDbData(jetSkuArray, dbProductsList) {
 }
 
 
-ProductsResource.find = function(req, res, next) {
-    MongoDbHelper.find({merchant_sku: req.params.sku}, function(err, dbProductArray) {
-        if (err) {
-            console.log(err);
-            res.status(getAppropriateStatusCode(err)).send(createErrorMessage("get product details from database", err));
-        } else {
-            var dbProduct = dbProductArray[0];
-            _synchronizeDbProductWithJetProduct(dbProduct, req.params.sku, function(syncErr, syncedData) {
-                if (syncErr) {
-                    console.log(syncErr);
-                    res.status(getAppropriateStatusCode(syncErr)).send(createErrorMessage("synchronize jet.com product data", syncErr));
-                } else {
-                    res.send(syncedData);
-                }
-            });
-        }
-    });
-};
 
 
-ProductsResource.create = function(req, res, next) {
-    var payload = _parseBody(req.body);
-    delete payload._id;
-    if (!ProductValidationHelper.validateProduct(payload)) {
-        res.status(400).send("Invalid product specifications.");
-    } else {
-        MongoDbHelper.insert(payload, function(err, data) {
-            if (err) {
-                console.log(err);
-                res.status(getAppropriateStatusCode(err))
-                    .send(createErrorMessage("create product in database", err));
-            } else if (data.modifiedCount === 0) {
-                res.status(404).send("No record with matching _id found.");
-            } else {
-                payload._id = data.insertedId.toString();
-                res.send(payload);
-            }
-        });
-    }
-};
+
 
 function _findEditedProductInDatabaseOrReturnNull(editedProduct, callback) {
     MongoDbHelper.find({merchant_sku: editedProduct.merchant_sku}, function(err, data) {
@@ -107,38 +135,38 @@ function _findEditedProductInDatabaseOrReturnNull(editedProduct, callback) {
         }
     });
 }
-
-ProductsResource.edit = function(req, res, next) {
-    var payload = _parseBody(req.body);
-    async.waterfall([
-        _putAgainstJet(payload),
-        function(editedProduct, callback) {
-            var sku = editedProduct.merchant_sku;
-            MongoDbHelper.find({merchant_sku: sku}, function(err, dbProductArray) {
-                if (err) {
-                    callback(err);
-                } else {
-                    var dbProduct = dbProductArray[0];
-                    _synchronizeDbProductWithJetProduct(dbProduct, sku, function(syncErr, syncedData) {
-                        if (syncErr) {
-                            callback(syncErr);
-                        } else {
-                            callback(null, syncedData);
-                        }
-                    });
-                }
-            });
-        }
-    ], function(err, editedProduct) {
-        if (err) {
-            res.status(getAppropriateStatusCode(err)).send(
-                createErrorMessage("synchronize jet.com product data", err)
-            );
-        } else {
-            res.send(editedProduct);
-        }
-    })
-};
+//
+//ProductsResource.edit = function(req, res, next) {
+//    var payload = _parseBody(req.body);
+//    async.waterfall([
+//        _putAgainstJet(payload),
+//        function(editedProduct, callback) {
+//            var sku = editedProduct.merchant_sku;
+//            MongoDbHelper.find({merchant_sku: sku}, function(err, dbProductArray) {
+//                if (err) {
+//                    callback(err);
+//                } else {
+//                    var dbProduct = dbProductArray[0];
+//                    _synchronizeDbProductWithJetProduct(dbProduct, sku, function(syncErr, syncedData) {
+//                        if (syncErr) {
+//                            callback(syncErr);
+//                        } else {
+//                            callback(null, syncedData);
+//                        }
+//                    });
+//                }
+//            });
+//        }
+//    ], function(err, editedProduct) {
+//        if (err) {
+//            res.status(getAppropriateStatusCode(err)).send(
+//                createErrorMessage("synchronize jet.com product data", err)
+//            );
+//        } else {
+//            res.send(editedProduct);
+//        }
+//    })
+//};
 
 function _putAgainstJet(productDto) {
     return function(callback) {
@@ -150,6 +178,16 @@ function _putAgainstJet(productDto) {
             }
         })
     };
+}
+
+function _findProductInDatabase(productDto, callback) {
+    MongoDbHelper.find({merchant_sku: productDto.merchant_sku}, function(err, data) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, data[0]);
+        }
+    });
 }
 //
 //ProductsResource.delete = function(req, res, next) {
@@ -194,11 +232,11 @@ function _synchronizeDbProductWithJetProduct(_dbProduct, _sku, callback) {
                     callback(null, dummyObject);
                 });
             } else {
-                callback(null, _dbProduct, _sku);
+                callback(null, _dbProduct);
             }
         },
-        function(dbProduct, sku, callback) {
-            JetService.getDetails(sku, function(err, data) {
+        function(dbProduct, callback) {
+            JetService.getDetails(dbProduct.merchant_sku, function(err, data) {
                 if (err) {
                     callback(err);
                 } else {
