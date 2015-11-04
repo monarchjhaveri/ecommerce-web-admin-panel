@@ -1,5 +1,5 @@
 var mongoclient = require("mongodb").MongoClient;
-ObjectID = require('mongodb').ObjectID
+var ObjectID = require('mongodb').ObjectID;
 
 var MongoDbHelper = {};
 

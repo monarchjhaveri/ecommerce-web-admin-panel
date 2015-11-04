@@ -73,12 +73,12 @@ ProductsResource.find = function(req, res, next) {
                 }
             });
         }
-    })
+    });
 };
 
 
 ProductsResource.create = function(req, res, next) {
-    var payload = _filterParams(req.body);
+    var payload = _parseBody(req.body);
     delete payload._id;
     if (!ProductValidationHelper.validateProduct(payload)) {
         res.status(400).send("Invalid product specifications.");
@@ -98,33 +98,50 @@ ProductsResource.create = function(req, res, next) {
     }
 };
 
+function _findEditedProductInDatabaseOrReturnNull(editedProduct, callback) {
+    MongoDbHelper.find({merchant_sku: editedProduct.merchant_sku}, function(err, data) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, data[0]);
+        }
+    });
+}
+
 ProductsResource.edit = function(req, res, next) {
-    var payload = req.body;
+    var payload = _parseBody(req.body);
     async.waterfall([
-        _putAgainstJet(payload)
+        _putAgainstJet(payload),
+        function(editedProduct, callback) {
+            var sku = editedProduct.merchant_sku;
+            MongoDbHelper.find({merchant_sku: sku}, function(err, dbProductArray) {
+                if (err) {
+                    callback(err);
+                } else {
+                    var dbProduct = dbProductArray[0];
+                    _synchronizeDbProductWithJetProduct(dbProduct, sku, function(syncErr, syncedData) {
+                        if (syncErr) {
+                            callback(syncErr);
+                        } else {
+                            callback(null, syncedData);
+                        }
+                    });
+                }
+            });
+        }
     ], function(err, editedProduct) {
         if (err) {
             res.status(getAppropriateStatusCode(err)).send(
                 createErrorMessage("synchronize jet.com product data", err)
             );
+        } else {
+            res.send(editedProduct);
         }
-        _synchronizeDbProductWithJetProduct(editedProduct, editedProduct.merchant_sku, function(syncErr, syncedData) {
-            if (syncErr) {
-                console.log(syncErr);
-                res.status(getAppropriateStatusCode(syncErr)).send(
-                    createErrorMessage("synchronize jet.com product data", syncErr)
-                );
-            } else {
-                res.send(syncedData);
-            }
-        })
     })
 };
 
 function _putAgainstJet(productDto) {
     return function(callback) {
-        var sendDto = _clone(productDto);
-        delete sendDto._id;
         JetService.editOrCreate(productDto, function(editOrCreateErr, editOrCreateData) {
             if (editOrCreateErr) {
                 callback(editOrCreateErr);
@@ -134,27 +151,27 @@ function _putAgainstJet(productDto) {
         })
     };
 }
-
-ProductsResource.delete = function(req, res, next) {
-    var payload = _filterParams(req.body);
-    payload._id = new ObjectID(payload._id);
-    if (!ProductValidationHelper.validateProduct(payload)) {
-        res.status(400).send("Invalid product specifications.");
-    } else {
-        MongoDbHelper.delete(payload, function(err, data) {
-            if (err) {
-                console.log(err);
-                res.status(getAppropriateStatusCode(err))
-                    .send(createErrorMessage("create product in database", err));
-            } else if (data.modifiedCount === 0) {
-                res.status(404).send("No record with matching _id found.");
-            } else {
-                payload._id = payload._id.toString();
-                res.send(payload);
-            }
-        });
-    }
-};
+//
+//ProductsResource.delete = function(req, res, next) {
+//    var payload = _filterParams(req.body);
+//    payload._id = new ObjectID(payload._id);
+//    if (!ProductValidationHelper.validateProduct(payload)) {
+//        res.status(400).send("Invalid product specifications.");
+//    } else {
+//        MongoDbHelper.delete(payload, function(err, data) {
+//            if (err) {
+//                console.log(err);
+//                res.status(getAppropriateStatusCode(err))
+//                    .send(createErrorMessage("create product in database", err));
+//            } else if (data.modifiedCount === 0) {
+//                res.status(404).send("No record with matching _id found.");
+//            } else {
+//                payload._id = payload._id.toString();
+//                res.send(payload);
+//            }
+//        });
+//    }
+//};
 
 function _synchronizeDbProductWithJetProduct(_dbProduct, _sku, callback) {
     async.waterfall([
@@ -177,11 +194,11 @@ function _synchronizeDbProductWithJetProduct(_dbProduct, _sku, callback) {
                     callback(null, dummyObject);
                 });
             } else {
-                callback(null, _dbProduct);
+                callback(null, _dbProduct, _sku);
             }
         },
-        function(dbProduct, callback) {
-            JetService.getDetails(dbProduct.merchant_sku, function(err, data) {
+        function(dbProduct, sku, callback) {
+            JetService.getDetails(sku, function(err, data) {
                 if (err) {
                     callback(err);
                 } else {
@@ -244,6 +261,19 @@ function _filterParams(payload) {
         newObject[allowedParams[i]] = payload[allowedParams[i]]
     }
     return newObject;
+}
+
+function _parseBody(body) {
+    if (!body) {
+        return body;
+    }
+    if (body.multipack_quantity) {
+        var num = Number(body.multipack_quantity);
+        if (!Number.isNaN(num)) {
+            body.multipack_quantity = num;
+        }
+    }
+    return body;
 }
 
 module.exports = ProductsResource;

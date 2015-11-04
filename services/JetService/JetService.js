@@ -68,7 +68,17 @@ JetService.getDetails = function(sku, callback) {
 };
 
 JetService.editOrCreate = function(productDto, callback) {
-    _retryIfFailed("editOrCreate", _editOrCreate(productDto), callback);
+    var sendDto = _clone(productDto);
+    var sku = productDto.merchant_sku;
+    delete sendDto._id;
+    delete sendDto.merchant_sku;
+    _retryIfFailed("editOrCreate", _editOrCreate(sendDto, sku), function(err, data) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, productDto);
+        }
+    });
 };
 
 function _connect(callback) {
@@ -85,6 +95,7 @@ function _getDetails(sku) {
     return function (callback) {
         if (!sku) {
             callback(new Error("Sku was undefined."));
+            return;
         }
         JetApi.products.getDetails(sku, authData.id_token, function(getDetailsErr, data){
             if (getDetailsErr) {
@@ -96,21 +107,21 @@ function _getDetails(sku) {
     }
 }
 
-function _editOrCreate(productDto, callback) {
+function _editOrCreate(productDto, merchant_sku) {
     return function(callback) {
         if (!productDto) {
             callback(new Error("productDto was undefined"));
             return;
         }
-        if (!productDto.merchant_sku) {
-            callback(new Error("productDto.merchant_sku was undefined"));
+        if (!merchant_sku) {
+            callback(new Error("merchant_sku was undefined"));
             return;
         }
-        JetApi.products.create(productDto.merchant_sku, productDto, authData.id_token, function(createErr, createData) {
+        JetApi.products.create(merchant_sku, productDto, authData.id_token, function(createErr, createData) {
             if (createErr) {
                 callback(createErr);
             } else {
-                callback(null, createData);
+                callback(null, productDto);
             }
         });
     }
@@ -153,3 +164,7 @@ function _logRemoteError(fnName, err) {
 
 
 module.exports = JetService;
+
+function _clone(a) {
+    return JSON.parse(JSON.stringify(a));
+}
