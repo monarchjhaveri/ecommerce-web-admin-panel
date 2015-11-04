@@ -85,17 +85,6 @@ function _getJetDetailsForMerchantSku(merchantSku, callback) {
 }
 // ========= Above this line is good.
 
-
-
-
-
-
-
-
-
-
-
-
 function _synchronizeJetSkuArray(jetSkuArray, callback) {
     async.waterfall([
         MongoDbHelper.getProductsList,
@@ -121,11 +110,6 @@ function _fillJetSkuArrayWithDbData(jetSkuArray, dbProductsList) {
     });
 }
 
-
-
-
-
-
 function _findEditedProductInDatabaseOrReturnNull(editedProduct, callback) {
     MongoDbHelper.find({merchant_sku: editedProduct.merchant_sku}, function(err, data) {
         if (err) {
@@ -135,38 +119,6 @@ function _findEditedProductInDatabaseOrReturnNull(editedProduct, callback) {
         }
     });
 }
-//
-//ProductsResource.edit = function(req, res, next) {
-//    var payload = _parseBody(req.body);
-//    async.waterfall([
-//        _putAgainstJet(payload),
-//        function(editedProduct, callback) {
-//            var sku = editedProduct.merchant_sku;
-//            MongoDbHelper.find({merchant_sku: sku}, function(err, dbProductArray) {
-//                if (err) {
-//                    callback(err);
-//                } else {
-//                    var dbProduct = dbProductArray[0];
-//                    _synchronizeDbProductWithJetProduct(dbProduct, sku, function(syncErr, syncedData) {
-//                        if (syncErr) {
-//                            callback(syncErr);
-//                        } else {
-//                            callback(null, syncedData);
-//                        }
-//                    });
-//                }
-//            });
-//        }
-//    ], function(err, editedProduct) {
-//        if (err) {
-//            res.status(getAppropriateStatusCode(err)).send(
-//                createErrorMessage("synchronize jet.com product data", err)
-//            );
-//        } else {
-//            res.send(editedProduct);
-//        }
-//    })
-//};
 
 function _putAgainstJet(productDto) {
     return function(callback) {
@@ -189,27 +141,6 @@ function _findProductInDatabaseBySku(merchantSku, callback) {
         }
     });
 }
-//
-//ProductsResource.delete = function(req, res, next) {
-//    var payload = _filterParams(req.body);
-//    payload._id = new ObjectID(payload._id);
-//    if (!ProductValidationHelper.validateProduct(payload)) {
-//        res.status(400).send("Invalid product specifications.");
-//    } else {
-//        MongoDbHelper.delete(payload, function(err, data) {
-//            if (err) {
-//                console.log(err);
-//                res.status(getAppropriateStatusCode(err))
-//                    .send(createErrorMessage("create product in database", err));
-//            } else if (data.modifiedCount === 0) {
-//                res.status(404).send("No record with matching _id found.");
-//            } else {
-//                payload._id = payload._id.toString();
-//                res.send(payload);
-//            }
-//        });
-//    }
-//};
 
 function _synchronizeDbProductWithJetProduct(_dbProduct, _sku, callback) {
     async.waterfall([
