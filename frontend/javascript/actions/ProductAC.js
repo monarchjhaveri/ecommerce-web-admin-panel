@@ -1,7 +1,7 @@
 var $ = require("jquery");
 var ActionTypes = require("./ActionTypes");
 
-module.exports = {
+var ProductAC = {
     fetchAll: function() {
         return function(dispatch) {
             dispatch({
@@ -38,12 +38,16 @@ module.exports = {
                         type: ActionTypes.PRODUCTS.EDIT_FAILURE,
                         payload: error
                     });
+                    ProductAC.getDetails(product);
                 },
                 success: function(data) {
-                    dispatch({
-                        type: ActionTypes.PRODUCTS.EDIT_SUCCESS,
-                        payload: data
-                    });
+                    //dispatch({
+                    //    type: ActionTypes.PRODUCTS.EDIT_SUCCESS,
+                    //    payload: data
+                    //});
+                    setTimeout(function() {
+                        dispatch(ProductAC.getDetails(product));
+                    }, 500);
                 }
             });
         }
@@ -64,10 +68,13 @@ module.exports = {
                     });
                 },
                 success: function(data) {
-                    dispatch({
-                        type: ActionTypes.PRODUCTS.CREATE_SUCCESS,
-                        payload: data
-                    });
+                    //dispatch({
+                    //    type: ActionTypes.PRODUCTS.CREATE_SUCCESS,
+                    //    payload: data
+                    //});
+                    setTimeout(function() {
+                        dispatch(ProductAC.getDetails(product));
+                    }, 500);
                 }
             });
         }
@@ -131,3 +138,5 @@ module.exports = {
         }
     }
 };
+
+module.exports = ProductAC;
