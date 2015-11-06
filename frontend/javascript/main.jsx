@@ -9,7 +9,7 @@ var Header = require("./layout/Header");
 var Footer = require("./layout/Footer");
 
 var ProductsViewContainer = require("./containers/ProductsViewContainer");
-var LoadingModalContainer = require("./containers/LoadingModalContainer");
+var LayoutContainer = require("./containers/LayoutContainer");
 
 var unsubscribe = store.subscribe(function() {
    
@@ -21,12 +21,12 @@ window.store = store;
 ReactDOM.render(
     <Provider store={store}>
         <div className="content-wrapper">
-            <Header />
+            <div className="layout-wrapper">
+                <LayoutContainer />
+            </div>
             <div className="view-wrapper">
                 <ProductsViewContainer />
             </div>
-            <Footer />
-            <LoadingModalContainer />
         </div>
     </Provider>,
     window.document.getElementById('content')

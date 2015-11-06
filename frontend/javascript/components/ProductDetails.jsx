@@ -195,30 +195,17 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
             renderedDOM
         );
     },
-    getContent: function() {
-        return (
-            <div className="product-details">
-                {this.renderFields(this.props.product)}
-                <div className="btn btn-default" onClick={this.openEditor}>Edit</div>
-                <div className="btn btn-danger" onClick={this.onDelete}>Delete</div>
-            </div>
-        );
-    },
     render: function() {
-        if (!this.props.product) {
-            return null;
-        }
-        if (this.state.isEditorOpen || this.props.product && this.props.product.merchant_sku === undefined) {
+        if (this.props.product) {
             return <ProductEditor
                 product={this.props.product}
                 cancelEdit={this.cancelEdit}
                 submitEdit={this.submitEdit}
                 onDelete={this.onDelete}
-            />;
+                />;
         } else {
-            return this.getContent();
+            return null;
         }
-
     }
 });
 

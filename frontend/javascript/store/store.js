@@ -7,20 +7,23 @@ var thunk = require("redux-thunk");
 var loadingReducer = require("./reducers/loadingReducer");
 var selectionReducer = require("./reducers/selectionReducer");
 var productsReducer = require("./reducers/productsReducer");
+var popoversReducer = require("./reducers/popoversReducer");
 
 var ActionTypes = require("../actions/ActionTypes");
 
 var initialState = Immutable.Map({
     products: Immutable.Map({}),
     loading: true,
-    selectedProduct: {}
+    selectedProduct: {},
+    popovers: Immutable.List([])
 });
 
 function reducer(state, action) {
     return {
         products: productsReducer(state.products, action),
         loading: loadingReducer(state.loading, action),
-        selectedProduct: selectionReducer(state.selectedProduct, action)
+        selectedProduct: selectionReducer(state.selectedProduct, action),
+        popovers: popoversReducer(state.popovers, action)
     };
 }
 

@@ -52,10 +52,4 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
     }
 });
 
-//<ProductEditor
-//    product={{}}
-//    cancelEdit={this.cancelEdit}
-//    submitEdit={this.submitEdit}
-//    />;
-
 module.exports = ProductsView;

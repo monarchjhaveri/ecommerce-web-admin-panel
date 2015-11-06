@@ -1,9 +1,9 @@
 var connect = require("react-redux").connect;
-var LoadingModal = require("../modals/LoadingModal.js");
+var Layout = require("../layout/Layout.js");
 
 function mapStateToProps(state) {
     return {
-        loading: state.loading
+        state: state
     }
 }
 
@@ -13,4 +13,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(LoadingModal);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Layout);

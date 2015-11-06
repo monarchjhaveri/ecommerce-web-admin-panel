@@ -1,5 +1,6 @@
 var $ = require("jquery");
 var ActionTypes = require("./ActionTypes");
+var Constants = require("../Constants");
 
 var ProductAC = {
     fetchAll: function() {
@@ -14,6 +15,7 @@ var ProductAC = {
                         type: ActionTypes.PRODUCTS.FETCH_ALL_FAILURE,
                         payload: error
                     });
+                    _createPopover(request, Constants.POPOVER_TYPES.ERROR, dispatch);
                 },
                 success: function(data) {
                     dispatch({
@@ -39,6 +41,7 @@ var ProductAC = {
                         payload: error
                     });
                     ProductAC.getDetails(product);
+                    _createPopover(request, Constants.POPOVER_TYPES.ERROR, dispatch);
                 },
                 success: function(data) {
                     //dispatch({
@@ -66,6 +69,7 @@ var ProductAC = {
                         type: ActionTypes.PRODUCTS.CREATE_FAILURE,
                         payload: error
                     });
+                    _createPopover(request, Constants.POPOVER_TYPES.ERROR, dispatch);
                 },
                 success: function(data) {
                     //dispatch({
@@ -93,6 +97,7 @@ var ProductAC = {
                         type: ActionTypes.PRODUCTS.DELETE_FAILURE,
                         payload: error
                     });
+                    _createPopover(request, Constants.POPOVER_TYPES.ERROR, dispatch);
                 },
                 success: function(data) {
                     dispatch({
@@ -117,6 +122,7 @@ var ProductAC = {
                         type: ActionTypes.PRODUCTS.GET_DETAILS_FAILURE,
                         payload: error
                     });
+                    _createPopover(request, Constants.POPOVER_TYPES.ERROR, dispatch);
                 },
                 success: function(data) {
                     dispatch({
@@ -138,5 +144,33 @@ var ProductAC = {
         }
     }
 };
+
+var ERROR_TIMEOUT = 10 * 1000; // 10 seconds
+
+/**
+ *
+ * @param {!String} message
+ * @param {!String} type
+ * @param {!function} dispatch
+ * @private
+ */
+function _createPopover(request, type, dispatch) {
+    var message = request.responseText;
+    var popoverId = Math.random();
+    dispatch({
+        type: ActionTypes.POPOVER.DISPLAY_POPOVER,
+        payload: {
+            popoverId: popoverId,
+            type: type,
+            message: message
+        }
+    });
+    setTimeout(function() {
+        dispatch({
+            type: ActionTypes.POPOVER.CLEAR_POPOVER,
+            payload: popoverId
+        });
+    }, ERROR_TIMEOUT);
+}
 
 module.exports = ProductAC;

@@ -21,8 +21,11 @@ var ActionTypes = {
         "DELETE_FAILURE": "PRODUCTS.DELETE_FAILURE",
 
         "SELECT": "PRODUCTS.SELECT"
+    },
+    "POPOVER": {
+        "DISPLAY_POPOVER": "POPOVER.DISPLAY_POPOVER",
+        "CLEAR_POPOVER": "POPOVER.CLEAR_POPOVER"
     }
-
 };
 
 module.exports = ActionTypes;

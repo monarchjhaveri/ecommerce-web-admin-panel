@@ -8,36 +8,6 @@ var ProductModel = require("./models/ProductModel");
 
 // Tech note. Values containing only white spaces are converted to null.
 
-//var options = {
-//    order: ['name', 'surname', 'rememberMe', 'gender', 'age', 'email'],
-//    hasError: true,
-//    error: <i>A custom error message</i>,
-//    help: <i>My form help</i>,
-//    legend: <i>My form legend</i>,
-//    disabled: true,
-//    fields: {
-//        name: {
-//            // name field configuration here..
-//            hasError: true,
-//            error: <i>A custom error message</i>,
-//            help: <i>My form help</i>,
-//            legend: <i>My form legend</i>,
-//            disabled: true
-//        },
-//        surname: {
-//            // surname field configuration here..
-//        }
-//    }
-//};
-
-var options = {
-    fields: {
-        _id: {
-            type: 'hidden'
-        }
-    }
-};
-
 var ProductEditor = React.createClass({displayName:"ProductEditor",
     submitEdit: function() {
         var value = this.refs.form.getValue();
@@ -70,18 +40,16 @@ var ProductEditor = React.createClass({displayName:"ProductEditor",
 });
 
 function _generateFormOptions(product) {
-    var options = {
+    return {
         fields: {
             _id: {
                 type: "hidden"
+            },
+            merchant_sku: {
+                disabled: product._id ? true : false
             }
         }
     };
-    if (product._id) {
-        options.fields.merchant_sku = options.fields.merchant_sku || {};
-        options.fields.merchant_sku.disabled = true;
-    }
-    return options;
 }
 
 module.exports = ProductEditor;

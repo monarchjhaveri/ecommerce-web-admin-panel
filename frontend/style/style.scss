@@ -77,3 +77,27 @@
     }
   }
 }
+
+.popovers-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  .popover {
+    position: relative;
+    display: inline-block;
+    width: 50%;
+    min-width: 100px;
+    max-width: 100%;
+    height: 50px;
+    left: 50%;
+    text-align: center;
+    line-height: 50px;
+    transform: translateX(-50%);
+    &.popover-error {
+      background-color: #FF6666;
+      color: white;
+    }
+  }
+}
