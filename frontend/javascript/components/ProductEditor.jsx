@@ -48,6 +48,7 @@ var ProductEditor = React.createClass({displayName:"ProductEditor",
         }
     },
     createForm: function(product) {
+        var options = _generateFormOptions(product);
         return (
             <Form
                 type={ProductModel}
@@ -67,5 +68,20 @@ var ProductEditor = React.createClass({displayName:"ProductEditor",
         );
     }
 });
+
+function _generateFormOptions(product) {
+    var options = {
+        fields: {
+            _id: {
+                type: "hidden"
+            }
+        }
+    };
+    if (product._id) {
+        options.fields.merchant_sku = options.fields.merchant_sku || {};
+        options.fields.merchant_sku.disabled = true;
+    }
+    return options;
+}
 
 module.exports = ProductEditor;
