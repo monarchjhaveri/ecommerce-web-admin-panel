@@ -1,3 +1,5 @@
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
+@import "./variableOverrides";
 @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
 .view-wrapper {
@@ -101,3 +103,17 @@
     }
   }
 }
+
+fieldset {
+  $label-width: 20%;
+  .control-label, .form-control {
+    display: inline-block;
+  }
+  .control-label {
+    width: $label-width;
+  }
+  .form-control {
+    width: 100% - $label-width;
+  }
+}
+
