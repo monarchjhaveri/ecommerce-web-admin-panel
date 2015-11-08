@@ -34,7 +34,9 @@ var ProductAC = {
             $.ajax({
                 method: "PUT",
                 url: "api/products",
-                data: product,
+                contentType:'application/json',
+                dataType:'json',
+                data: JSON.stringify(product),
                 error: function(request, error) {
                     dispatch({
                         type: ActionTypes.PRODUCTS.EDIT_FAILURE,
@@ -63,7 +65,9 @@ var ProductAC = {
             $.ajax({
                 method: "POST",
                 url: "api/products",
-                data: product,
+                contentType:'application/json',
+                dataType:'json',
+                data: JSON.stringify(product),
                 error: function(request, error) {
                     dispatch({
                         type: ActionTypes.PRODUCTS.CREATE_FAILURE,
@@ -91,7 +95,9 @@ var ProductAC = {
             $.ajax({
                 method: "DELETE",
                 url: "api/products/:sku".replace(":sku", product._id),
-                data: product,
+                contentType:'application/json',
+                dataType:'json',
+                data: JSON.stringify(product),
                 error: function(request, error) {
                     dispatch({
                         type: ActionTypes.PRODUCTS.DELETE_FAILURE,

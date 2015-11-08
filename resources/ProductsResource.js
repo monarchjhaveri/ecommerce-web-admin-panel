@@ -59,7 +59,7 @@ ProductsResource.createOrEdit = function(req, res, next) {
     async.waterfall([
         function(callback) {
             // parse body and create an insertable object without _id
-            var payload = _parseBody(req.body);
+            var payload = req.body;
             delete payload._id;
             callback(null, payload);
         },
@@ -230,19 +230,6 @@ function _filterParams(payload) {
         newObject[allowedParams[i]] = payload[allowedParams[i]]
     }
     return newObject;
-}
-
-function _parseBody(body) {
-    if (!body) {
-        return body;
-    }
-    if (body.multipack_quantity) {
-        var num = Number(body.multipack_quantity);
-        if (!Number.isNaN(num)) {
-            body.multipack_quantity = num;
-        }
-    }
-    return body;
 }
 
 module.exports = ProductsResource;

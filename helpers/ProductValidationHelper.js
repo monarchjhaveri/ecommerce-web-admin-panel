@@ -30,8 +30,12 @@ ProductValidationHelper.validateProduct = function validateProduct(product) {
 };
 
 ProductValidationHelper.validateFloatPrecisionTwo = function _validateFloatPrecisionTwo(_num) {
-    var num = typeof 2 === "number" ? _num.toString() : _num;
-    return REGEX_FLOAT_TWO.test(num);
+    var num = typeof _num === "number" ? _num.toString() : _num;
+    if (Math.floor(num) != num) {
+        return REGEX_FLOAT_TWO.test(num);
+    } else {
+        return true;
+    }
 };
 
 ProductValidationHelper.validateMsrp = function _validateMsrp(_num) {
