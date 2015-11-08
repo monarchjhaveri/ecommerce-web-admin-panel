@@ -125,6 +125,8 @@ fieldset {
   }
   .form-control {
     width: $form-control-width;
+  }
+  .form-control, .nav.nav-pills {
     &:hover + .help-block {
       display: inline-block !important;
     }
