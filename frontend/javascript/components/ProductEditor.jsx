@@ -4,7 +4,8 @@ var jQuery = require("jquery");
 var t = require('tcomb-form');
 var Form = t.form.Form;
 
-var ProductModel = require("./models/ProductModel");
+var ProductModel = require("./models/ProductModel").model;
+var productModelOptionsFactory = require("./models/ProductModel").optionsFactory;
 
 // Tech note. Values containing only white spaces are converted to null.
 
@@ -18,7 +19,7 @@ var ProductEditor = React.createClass({displayName:"ProductEditor",
         }
     },
     createForm: function(product) {
-        var options = _generateFormOptions(product);
+        var options = productModelOptionsFactory(product);
         return (
             <Form
                 type={ProductModel}
@@ -39,17 +40,5 @@ var ProductEditor = React.createClass({displayName:"ProductEditor",
     }
 });
 
-function _generateFormOptions(product) {
-    return {
-        fields: {
-            _id: {
-                type: "hidden"
-            },
-            merchant_sku: {
-                disabled: product._id ? true : false
-            }
-        }
-    };
-}
 
 module.exports = ProductEditor;

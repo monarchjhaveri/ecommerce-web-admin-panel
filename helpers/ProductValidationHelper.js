@@ -1,5 +1,10 @@
 var validator = require("validator");
 
+var REGEX_FLOAT_TWO = /^\d*\.\d{2,2}$/;
+var REGEX_MSRP = /^\d{1,18}\.\d{2,2}$/;
+
+
+
 //var minimally_valid_product = {
 //    "product_title": "My Product",
 //    "standard_product_codes": [
@@ -22,9 +27,46 @@ ProductValidationHelper.validateProduct = function validateProduct(product) {
     );
 };
 
+ProductValidationHelper.validateFloatPrecisionTwo = function _validateFloatPrecisionTwo(_num) {
+    var num = typeof 2 === "number" ? _num.toString() : _num;
+    return REGEX_FLOAT_TWO.test(num);
+};
+
+ProductValidationHelper.validateMsrp = function _validateMsrp(_num) {
+    var num = typeof 2 === "number" ? _num.toString() : _num;
+
+    return REGEX_MSRP.test(num);
+};
+
 ProductValidationHelper.validateProductTitle = _validateProductTitle;
 ProductValidationHelper.validateStandardProductCodeArray = _validateStandardProductCodeArray;
 ProductValidationHelper.validateMultipackQuantity = _validateMultipackQuantity;
+
+/**
+ *
+ * @param {!String} str
+ * @param {Integer} _min
+ * @param {Integer} _max
+ * @returns {boolean}
+ */
+ProductValidationHelper.validateString = function(str, _min, _max) {
+    var min = _min || 0;
+    var max = _max || Infinity;
+
+    if (min === 0 &&
+        str === undefined ||
+        str === null ||
+        (typeof str === 'string' && str.length === 0)
+    ) {
+        return true;
+    }
+
+    return(
+        !!str &&
+        str.length >= min &&
+        str.length <= max
+    );
+};
 
 function _validateMultipackQuantity(multipack_quantity) {
     return validator.isInt(multipack_quantity, {min: 1});

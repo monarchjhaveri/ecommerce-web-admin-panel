@@ -45,9 +45,9 @@
     top: 0;
     bottom: 0;
     &.editor {
-      width: 650px;
-      left: $product-view-sidebar-width + 100px;
-      top: 20px;
+      overflow-y: scroll;
+      width: 700px;
+      padding: 20px;
     }
   }
 }
