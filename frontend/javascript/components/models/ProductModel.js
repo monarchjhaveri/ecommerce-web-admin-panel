@@ -118,8 +118,8 @@ var ProductModel = t.struct({
     ]))),
     country_of_origin: t.maybe(_lengthValidatedString(0, 50)),
     safety_warning: t.maybe(_lengthValidatedString(0, 500)),
-    start_selling_date: t.Date, // ISO 8601 valid
-    fulfillment_time: t.Number,
+    start_selling_date: t.maybe(t.Date), // ISO 8601 valid
+    fulfillment_time: t.maybe(t.Number),
     msrp: t.maybe(t.subtype(t.Number, ProductValidationHelper.validateMsrp)),
     map_price: t.maybe(t.subtype(t.Number, ProductValidationHelper.validateMapPrice)),
     map_implementation: t.maybe(t.enums({
