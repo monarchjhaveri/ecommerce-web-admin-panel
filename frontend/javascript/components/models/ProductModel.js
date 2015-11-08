@@ -31,6 +31,11 @@ var StandardProductCode = t.subtype(t.struct({
     }
 });
 
+var AlternateImage = t.struct({
+    image_slot_id: t.Number,
+    image_url: t.String
+});
+
 var ProductTitle = t.subtype(t.Str, function(str){
     return ProductValidationHelper.validateProductTitle(str)
 });
@@ -62,6 +67,12 @@ var Bullets = t.subtype(t.list, function(ls) {
 });
 
 var FloatPrecisionTwo = t.refinement(t.Number, ProductValidationHelper.validateFloatPrecisionTwo);
+
+var SkuAttribute = t.struct({
+    attribute_id: t.Number,
+    attribute_value: t.String,
+    attribute_value_unit: t.maybe(t.String)
+});
 
 // unused fields
 /*
@@ -164,7 +175,11 @@ var ProductModel = t.struct({
     ])),
     no_return_fee_adjustment: t.maybe(t.subtype(t.Number, ProductValidationHelper.validateNoReturnFeeAdjustment)),
     exclude_from_fee_adjustments: t.maybe(t.Boolean),
-    ships_alone: t.maybe(t.Boolean)
+    ships_alone: t.maybe(t.Boolean),
+    attributes_node_specific: t.maybe(t.list(SkuAttribute)),
+    main_image_url: t.maybe(t.String),
+    swatch_image_url: t.maybe(t.String),
+    alternate_images: t.maybe(t.list(AlternateImage))
 });
 
 var AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT = _renderHelpText('At least one of the following must be provided for each merchant SKU: Standard Product Code (UPC, GTIN-14 etc.), ASIN, or Brand and Manufacturer Part Number.');
@@ -232,7 +247,29 @@ var optionsFactory = function optionsFactory(product) {
             ships_alone: {
                 help: _renderHelpText("If this field is 'true', it indicates that this 'merchant SKU' will always ship on its own.A separate 'merchant_order' will always be placed for this 'merchant_SKU', one consequence of this will be that this merchant_sku will never contriube to any basket size fee adjustments with any other merchant_skus.")
             },
-
+            attributes_node_specific: {
+                help: _renderHelpText(
+                    <span>
+                        <b>Attribute ID:</b> The node attribute ID number that you get from Jet provided documentation that corresponds with the attribute you are passing. <br/>
+                        <b>Attribute Value:</b> The value for the attribute. For example, if the attribute is size you may pass 'large' or if the the attribute is weight, you may pass '22'. For attributes like weight the unit will be passed in the next field. <br/>
+                        <b>Attribute Value Unit:</b> If the attribute_value requires a unit, then you pass the unit here. <br/>
+                    </span>
+                )
+            },
+            main_image_url: {
+                help: _renderHelpText("URL location where Jet.com can access the image. The images should be 1500 x 1500 pixels or larger, but anything 500 x 500 pixels or larger is acceptable. There is no limit to image size.")
+            },
+            swatch_image_url: {
+                help: _renderHelpText("URL location where Jet.com can access an image of a color or fabric for a given merchant SKU. The images should be 1500 x 1500 pixels or larger, but anything 500 x 500 pixels or larger is acceptable. There is no limit to image size.")
+            },
+            alternate_images: {
+                help: _renderHelpText(
+                    <span>
+                        <b>Image Slot Id:</b> The slot that the alternate image should be uploaded to. Jet.com supports up to 8 images (or 8 image slots).<br/>
+                        <b>Image Url:</b> The absolute location where Jet.com can retrieve the image<br/>
+                    </span>
+                )
+            }
         }
     };
 };
