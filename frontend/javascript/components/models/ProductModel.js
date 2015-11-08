@@ -2,28 +2,6 @@ var React = require('react');
 var t = require('tcomb-form');
 var ProductValidationHelper = require("../../../../helpers/ProductValidationHelper");
 
-/*
-{
-    "ASIN":"TestTest10",
-    "correlation_id":"map-5c7e058d28c041d2a93dbb51e27081e1",
-    "inventory_by_fulfillment_node":[],
-    "merchant_id":"c163f4f1379140d0982d18c443a1852f",
-    "merchant_sku":"1",
-    "merchant_sku_id":"c48056d95fe74dae81dc4667e247a1af",
-    "multipack_quantity":10,
-    "product_title":"Test Product",
-    "sku_last_update":"2015-10-12T09:35:11.6347408+00:00",
-    "status":"Processing",
-    "sub_status":[]
-}*/
-//
-//"standard_product_codes": [
-//    {
-//        "standard_product_code": "123456789012",
-//        "standard_product_code_type": "UPC"
-//    }
-//],
-
 var StandardProductCodeTypes = t.enums({
     "UPC": "UPC",
     "GTIN-14": "GTIN-14",
@@ -128,15 +106,73 @@ var ProductModel = t.struct({
     safety_warning: t.maybe(_lengthValidatedString(0, 500)),
     start_selling_date: t.Date, // ISO 8601 valid
     fulfillment_time: t.Number,
-    msrp: t.maybe(t.subtype(t.Str, ProductValidationHelper.validateMsrp))
+    msrp: t.maybe(t.subtype(t.Number, ProductValidationHelper.validateMsrp)),
+    map_price: t.maybe(t.subtype(t.Number, ProductValidationHelper.validateMapPrice)),
+    map_implementation: t.maybe(t.enums({
+        "103": "103: Jet member savings never applied to product",
+        "102": "102: Jet member savings on product only visible to logged in Jet members",
+        "101": "101: no restrictions on product based pricing"
+    })),
+    product_tax_code: t.maybe(t.enums.of([
+        'Toilet Paper',
+        'Thermometers',
+        'Sweatbands',
+        'SPF Suncare Products',
+        'Sparkling Water',
+        'Smoking Cessation',
+        'Shoe Insoles',
+        'Safety Clothing',
+        'Pet Foods',
+        'Paper Products',
+        'OTC Pet Meds',
+        'OTC Medication',
+        'Oral Care Products',
+        'Non-Motorized Boats',
+        'Non Taxable Product',
+        'Mobility Equipment',
+        'Medicated Personal Care Items',
+        'Infant Clothing',
+        'Helmets',
+        'Handkerchiefs',
+        'Generic Taxable Product',
+        'General Grocery Items',
+        'General Clothing',
+        'Fluoride Toothpaste',
+        'Feminine Hygiene Products',
+        'Durable Medical Equipment',
+        'Drinks under 50 Percent Juice',
+        'Disposable Wipes',
+        'Disposable Infant Diapers',
+        'Dietary Supplements',
+        'Diabetic Supplies',
+        'Costumes',
+        'Contraceptives',
+        'Contact Lens Solution',
+        'Carbonated Soft Drinks',
+        'Car Seats',
+        'Candy with Flour',
+        'Candy',
+        'Breast Pumps',
+        'Braces and Supports',
+        'Bottled Water Plain',
+        'Beverages with 51 to 99 Percent Juice',
+        'Bathing Suits',
+        'Bandages and First Aid Kits',
+        'Baby Supplies',
+        'Athletic Clothing',
+        'Adult Diapers'
+    ])),
+    no_return_fee_adjustment: t.maybe(t.subtype(t.Number, ProductValidationHelper.validateNoReturnFeeAdjustment)),
+    exclude_from_fee_adjustments: t.maybe(t.Boolean),
+    ships_alone: t.maybe(t.Boolean)
 });
 
-var AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT = <i>At least one of the following must be provided for each merchant SKU: Standard Product Code (UPC, GTIN-14 etc.), ASIN, or Brand and Manufacturer Part Number.</i>;
+var AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT = _renderHelpText('At least one of the following must be provided for each merchant SKU: Standard Product Code (UPC, GTIN-14 etc.), ASIN, or Brand and Manufacturer Part Number.');
 var AT_LEAST_ONE_PER_SKU_PLACEHOLDER = {
     help: AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT
 };
 
-var FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT = <i>'A number with 2 decimals'</i>;
+var FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT = _renderHelpText('A number with 2 decimals');
 var FLOAT_PRECISION_TWO_PLACEHOLDER = {
     help: FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT
 };
@@ -158,20 +194,18 @@ var optionsFactory = function optionsFactory(product) {
             brand: AT_LEAST_ONE_PER_SKU_PLACEHOLDER,
             mfr_part_number: AT_LEAST_ONE_PER_SKU_PLACEHOLDER,
             prop_65: {
-                help: <i>You must tell us if your product is subject to Proposition 65 rules and regulations. Proposition 65 requires merchants to provide California consumers with special warnings for products that contain chemicals known to cause cancer, birth defects, or other reproductive harm, if those products expose consumers to such materials above certain threshold levels. The default value for this is "false," so if you do not populate this column, we will assume your product is not subject to this rule. Please view this website for more information: http://www.oehha.ca.gov/.</i>
+                help: _renderHelpText('You must tell us if your product is subject to Proposition 65 rules and regulations. Proposition 65 requires merchants to provide California consumers with special warnings for products that contain chemicals known to cause cancer, birth defects, or other reproductive harm, if those products expose consumers to such materials above certain threshold levels. The default value for this is "false," so if you do not populate this column, we will assume your product is not subject to this rule. Please view this website for more information: http://www.oehha.ca.gov/.')
             },
             cpsia_cautionary_statements: {
                 factory: t.form.Select
             },
             fulfillment_time: {
-                help: <i>
-                        Number of business days from receipt of an order for the given merchant SKU until it will be shipped (only populate if it is different than your account default).\
-                        Valid Values:
-                        0 = ships the day the OrderMessage is received
-                        1 = ships one business day after the "merchant_order" is received
-                        2= ships two business days after the "merchant_order" is received
-                        N = ships N business days after the "merchant_order" is received
-                    </i>
+                help: _renderHelpText('Number of business days from receipt of an order for the given merchant SKU until it will be shipped (only populate if it is different than your account default).\
+                    Valid Values: \
+                    0 = ships the day the OrderMessage is received \
+                    1 = ships one business day after the "merchant_order" is received \
+                    2= ships two business days after the "merchant_order" is received \
+                    N = ships N business days after the "merchant_order" is received')
             },
             shipping_weight_pounds: FLOAT_PRECISION_TWO_PLACEHOLDER,
             package_length_inches: FLOAT_PRECISION_TWO_PLACEHOLDER,
@@ -181,11 +215,31 @@ var optionsFactory = function optionsFactory(product) {
             display_width_inches: FLOAT_PRECISION_TWO_PLACEHOLDER,
             display_height_inches: FLOAT_PRECISION_TWO_PLACEHOLDER,
             msrp: {
-                help: <i>A number with up to 18 digits allowed to the left of the decimal point and 2 digits to the right of the decimal point. Commas or currency symbols are not allowed</i>
-            }
+                help: _renderHelpText('A number with up to 18 digits allowed to the left of the decimal point and 2 digits to the right of the decimal point. Commas or currency symbols are not allowed')
+            },
+            map_price: {
+                help: _renderHelpText('Retailer price for the product for which member savings will be applied (if applicable, see map_implementation)')
+            },
+            map_implementation: {
+                help: _renderHelpText('The type of rule that indicates how Jet member savings are allowed to be applied to an item’s base price (which is referred to as map_price in the API documentation)')
+            },
+            no_return_fee_adjustment: {
+                help: _renderHelpText('Overides the category level setting for this fee adjustment; this is the increase in commision you are willing to pay on this product if the customer waives their ability to return it.If you want to increase the commission you are willing to pay from a base rate of 15% to 17%, then you should enter "0.02"')
+            },
+            exclude_from_fee_adjustments: {
+                help: _renderHelpText("This SKU will not be subject to any fee adjustment rules that are set up if this field is 'true'")
+            },
+            ships_alone: {
+                help: _renderHelpText("If this field is 'true', it indicates that this 'merchant SKU' will always ship on its own.A separate 'merchant_order' will always be placed for this 'merchant_SKU', one consequence of this will be that this merchant_sku will never contriube to any basket size fee adjustments with any other merchant_skus.")
+            },
+
         }
     };
 };
+
+function _renderHelpText(str) {
+    return <i>{str}</i>;
+}
 
 /**
  *
@@ -202,3 +256,27 @@ function _lengthValidatedString(min, max) {
 
 module.exports.model = ProductModel;
 module.exports.optionsFactory = optionsFactory;
+
+
+
+/*
+ {
+ "ASIN":"TestTest10",
+ "correlation_id":"map-5c7e058d28c041d2a93dbb51e27081e1",
+ "inventory_by_fulfillment_node":[],
+ "merchant_id":"c163f4f1379140d0982d18c443a1852f",
+ "merchant_sku":"1",
+ "merchant_sku_id":"c48056d95fe74dae81dc4667e247a1af",
+ "multipack_quantity":10,
+ "product_title":"Test Product",
+ "sku_last_update":"2015-10-12T09:35:11.6347408+00:00",
+ "status":"Processing",
+ "sub_status":[]
+ }*/
+//
+//"standard_product_codes": [
+//    {
+//        "standard_product_code": "123456789012",
+//        "standard_product_code_type": "UPC"
+//    }
+//],

@@ -2,6 +2,8 @@ var validator = require("validator");
 
 var REGEX_FLOAT_TWO = /^\d*\.\d{2,2}$/;
 var REGEX_MSRP = /^\d{1,18}\.\d{2,2}$/;
+var REGEX_MAP_PRICE = /^\d{1,7}\.\d{2,2}$/;
+var REGEX_NO_RETURN_FEE_ADJUSTMENT = /^\d{1,1}\.\d{2,2}$/;
 
 
 
@@ -36,6 +38,18 @@ ProductValidationHelper.validateMsrp = function _validateMsrp(_num) {
     var num = typeof 2 === "number" ? _num.toString() : _num;
 
     return REGEX_MSRP.test(num);
+};
+
+ProductValidationHelper.validateMapPrice = function _validateMsrp(_num) {
+    var num = typeof 2 === "number" ? _num.toString() : _num;
+
+    return REGEX_MAP_PRICE.test(num);
+};
+
+ProductValidationHelper.validateNoReturnFeeAdjustment = function _validateMsrp(_num) {
+    var num = typeof 2 === "number" ? _num.toString() : _num;
+
+    return REGEX_NO_RETURN_FEE_ADJUSTMENT.test(num);
 };
 
 ProductValidationHelper.validateProductTitle = _validateProductTitle;
