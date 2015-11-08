@@ -85,6 +85,9 @@ var SkuAttribute = t.struct({
 var ProductModel = t.struct({
     _id: t.maybe(t.Str),
     product_title: ProductTitle,
+    jet_browse_node_id: t.maybe(t.Number),
+    amazon_item_type_keyword: t.maybe(t.String),
+    category_path: t.maybe(t.String),
     merchant_sku: t.Str,
     ASIN: t.maybe(t.Str),
     standard_product_codes: StandardProductCodeArray,
@@ -182,15 +185,9 @@ var ProductModel = t.struct({
     alternate_images: t.maybe(t.list(AlternateImage))
 });
 
-var AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT = _renderHelpText('At least one of the following must be provided for each merchant SKU: Standard Product Code (UPC, GTIN-14 etc.), ASIN, or Brand and Manufacturer Part Number.');
-var AT_LEAST_ONE_PER_SKU_PLACEHOLDER = {
-    help: AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT
-};
+var AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT = "At least one of the following must be provided for each merchant SKU: Standard Product Code (UPC, GTIN-14 etc.), ASIN, or Brand and Manufacturer Part Number.";
 
-var FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT = _renderHelpText('A number with 2 decimals');
-var FLOAT_PRECISION_TWO_PLACEHOLDER = {
-    help: FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT
-};
+var FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT = 'A number with 2 decimals';
 
 /**
  * @param product
@@ -205,15 +202,36 @@ var optionsFactory = function optionsFactory(product) {
             merchant_sku: {
                 disabled: product._id ? true : false
             },
-            standard_product_codes: AT_LEAST_ONE_PER_SKU_PLACEHOLDER,
-            brand: AT_LEAST_ONE_PER_SKU_PLACEHOLDER,
-            mfr_part_number: AT_LEAST_ONE_PER_SKU_PLACEHOLDER,
-            prop_65: {
-                help: _renderHelpText('You must tell us if your product is subject to Proposition 65 rules and regulations. Proposition 65 requires merchants to provide California consumers with special warnings for products that contain chemicals known to cause cancer, birth defects, or other reproductive harm, if those products expose consumers to such materials above certain threshold levels. The default value for this is "false," so if you do not populate this column, we will assume your product is not subject to this rule. Please view this website for more information: http://www.oehha.ca.gov/.')
-            },
+            product_title: _helpBoxOnly('Short product description. 5 to 500 alphanumeric characters'),
+            jet_browse_node_id: _helpBoxOnly('The unique ID that defines where the product will be found in the Jet.com browse structure. This must be a valid jet_browse_node_id'),
+            amazon_item_type_keyword: _helpBoxOnly("ItemType allows customers to find your products as they browse to the most specific item types. Please use the exact selling from Amazon's browse tree guides"),
+            category_path: _helpBoxOnly("Please enter a category path using your own product taxonomy"),
+            standard_product_codes: _helpBoxOnly(<span>The barcode or barcode that is associated with the product <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
+            ASIN: _helpBoxOnly(<span>Amazon standard identification number for this merchant SKU if available <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
+            multipack_quantity: _helpBoxOnly(<span>Number of items with the given Standard Product Code that makes up your merchant SKU <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
+            brand: _helpBoxOnly(<span>Brand of the merchant SKU <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
+            manufacturer: _helpBoxOnly("Manufacturer of the merchant SKU"),
+            mfr_part_number: _helpBoxOnly(<span>Part number provided by the original manufacturer of the merchant SKU<br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
+            product_description: _helpBoxOnly("Long description of the merchant SKU"),
+            bullets: _helpBoxOnly("Merchant SKU feature description"),
+            number_units_for_price_per_unit: _helpBoxOnly("For Price Per Unit calculations, the number of units included in the merchant SKU. The unit of measure must be specified in order to indicate what is being measured by the unit-count"),
+            type_of_unit_for_price_per_unit: _helpBoxOnly("The type_of_unit_for_price_per_unit attribute is a label for the number_units_for_price_per_unit. The price per unit can then be constructed by dividing the selling price by the number of units and appending the text 'per unit value.' For example, for a six-pack of soda, number_units_for_price_per_unit= 6, type_of_unit_for_price_per_unit= can, price per unit = price per can."),
+            shipping_weight_pounds: _helpBoxOnly(<span>Weight of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            package_length_inches: _helpBoxOnly(<span>Length of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            package_width_inches: _helpBoxOnly(<span>Width of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            package_height_inches: _helpBoxOnly(<span>Height of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            display_length_inches: _helpBoxOnly(<span>Length of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            display_width_inches: _helpBoxOnly(<span>Width of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            display_height_inches: _helpBoxOnly(<span>Height of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            legal_disclaimer_description: _helpBoxOnly("Any legal language required to be displayed with the product. Max 500 characters."),
+            prop_65: _helpBoxOnly('You must tell us if your product is subject to Proposition 65 rules and regulations. Proposition 65 requires merchants to provide California consumers with special warnings for products that contain chemicals known to cause cancer, birth defects, or other reproductive harm, if those products expose consumers to such materials above certain threshold levels. The default value for this is "false," so if you do not populate this column, we will assume your product is not subject to this rule. Please view this website for more information: http://www.oehha.ca.gov/.'),
             cpsia_cautionary_statements: {
+                help: "Use CTRL + click (CMD + click in OSX) to multiselect",
                 factory: t.form.Select
             },
+            country_of_origin: _helpBoxOnly("The country that the item was manufactured in."),
+            safety_warning: _helpBoxOnly("If applicable, use to supply any associated warnings for your product. Max 500 characters."),
+            start_selling_date: _helpBoxOnly("If updating merchant SKU that has quantity = 0 at all FCs, date that the inventory in this message should be available for sale on Jet.com. You should only use this field if the quantity for the merchant SKU is 0 at all merchant_fcs."),
             fulfillment_time: {
                 help: _renderHelpText('Number of business days from receipt of an order for the given merchant SKU until it will be shipped (only populate if it is different than your account default).\
                     Valid Values: \
@@ -222,31 +240,13 @@ var optionsFactory = function optionsFactory(product) {
                     2= ships two business days after the "merchant_order" is received \
                     N = ships N business days after the "merchant_order" is received')
             },
-            shipping_weight_pounds: FLOAT_PRECISION_TWO_PLACEHOLDER,
-            package_length_inches: FLOAT_PRECISION_TWO_PLACEHOLDER,
-            package_width_inches: FLOAT_PRECISION_TWO_PLACEHOLDER,
-            package_height_inches: FLOAT_PRECISION_TWO_PLACEHOLDER,
-            display_length_inches: FLOAT_PRECISION_TWO_PLACEHOLDER,
-            display_width_inches: FLOAT_PRECISION_TWO_PLACEHOLDER,
-            display_height_inches: FLOAT_PRECISION_TWO_PLACEHOLDER,
-            msrp: {
-                help: _renderHelpText('A number with up to 18 digits allowed to the left of the decimal point and 2 digits to the right of the decimal point. Commas or currency symbols are not allowed')
-            },
-            map_price: {
-                help: _renderHelpText('Retailer price for the product for which member savings will be applied (if applicable, see map_implementation)')
-            },
-            map_implementation: {
-                help: _renderHelpText('The type of rule that indicates how Jet member savings are allowed to be applied to an item’s base price (which is referred to as map_price in the API documentation)')
-            },
-            no_return_fee_adjustment: {
-                help: _renderHelpText('Overides the category level setting for this fee adjustment; this is the increase in commision you are willing to pay on this product if the customer waives their ability to return it.If you want to increase the commission you are willing to pay from a base rate of 15% to 17%, then you should enter "0.02"')
-            },
-            exclude_from_fee_adjustments: {
-                help: _renderHelpText("This SKU will not be subject to any fee adjustment rules that are set up if this field is 'true'")
-            },
-            ships_alone: {
-                help: _renderHelpText("If this field is 'true', it indicates that this 'merchant SKU' will always ship on its own.A separate 'merchant_order' will always be placed for this 'merchant_SKU', one consequence of this will be that this merchant_sku will never contriube to any basket size fee adjustments with any other merchant_skus.")
-            },
+            msrp: _helpBoxOnly('A number with up to 18 digits allowed to the left of the decimal point and 2 digits to the right of the decimal point. Commas or currency symbols are not allowed'),
+            map_price: _helpBoxOnly('Retailer price for the product for which member savings will be applied (if applicable, see map_implementation)'),
+            map_implementation: _helpBoxOnly('The type of rule that indicates how Jet member savings are allowed to be applied to an item’s base price (which is referred to as map_price in the API documentation)'),
+            product_tax_code: _helpBoxOnly("Jet's standard code for the tax properties of a given product."),
+            no_return_fee_adjustment: _helpBoxOnly('Overides the category level setting for this fee adjustment; this is the increase in commision you are willing to pay on this product if the customer waives their ability to return it.If you want to increase the commission you are willing to pay from a base rate of 15% to 17%, then you should enter "0.02"'),
+            exclude_from_fee_adjustments: _helpBoxOnly("This SKU will not be subject to any fee adjustment rules that are set up if this field is 'true'"),
+            ships_alone: _helpBoxOnly("If this field is 'true', it indicates that this 'merchant SKU' will always ship on its own.A separate 'merchant_order' will always be placed for this 'merchant_SKU', one consequence of this will be that this merchant_sku will never contriube to any basket size fee adjustments with any other merchant_skus."),
             attributes_node_specific: {
                 help: _renderHelpText(
                     <span>
@@ -256,20 +256,14 @@ var optionsFactory = function optionsFactory(product) {
                     </span>
                 )
             },
-            main_image_url: {
-                help: _renderHelpText("URL location where Jet.com can access the image. The images should be 1500 x 1500 pixels or larger, but anything 500 x 500 pixels or larger is acceptable. There is no limit to image size.")
-            },
-            swatch_image_url: {
-                help: _renderHelpText("URL location where Jet.com can access an image of a color or fabric for a given merchant SKU. The images should be 1500 x 1500 pixels or larger, but anything 500 x 500 pixels or larger is acceptable. There is no limit to image size.")
-            },
-            alternate_images: {
-                help: _renderHelpText(
-                    <span>
-                        <b>Image Slot Id:</b> The slot that the alternate image should be uploaded to. Jet.com supports up to 8 images (or 8 image slots).<br/>
-                        <b>Image Url:</b> The absolute location where Jet.com can retrieve the image<br/>
-                    </span>
-                )
-            }
+            main_image_url: _helpBoxOnly("URL location where Jet.com can access the image. The images should be 1500 x 1500 pixels or larger, but anything 500 x 500 pixels or larger is acceptable. There is no limit to image size."),
+            swatch_image_url: _helpBoxOnly("URL location where Jet.com can access an image of a color or fabric for a given merchant SKU. The images should be 1500 x 1500 pixels or larger, but anything 500 x 500 pixels or larger is acceptable. There is no limit to image size."),
+            alternate_images: _helpBoxOnly(
+                <span>
+                    <b>Image Slot Id:</b> The slot that the alternate image should be uploaded to. Jet.com supports up to 8 images (or 8 image slots).<br/>
+                    <b>Image Url:</b> The absolute location where Jet.com can retrieve the image<br/>
+                </span>
+            )
         }
     };
 };
@@ -288,6 +282,12 @@ function _lengthValidatedString(min, max) {
     return t.subtype(t.Str, function(str) {
         return ProductValidationHelper.validateString(str, min, max)
     });
+}
+
+function _helpBoxOnly(content) {
+    return {
+        help: _renderHelpText(content)
+    }
 }
 
 
