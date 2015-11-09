@@ -5,6 +5,7 @@ var ProductDetails = require ("./../components/ProductDetails.jsx");
 var ProductSelectList = require("../components/ProductSelectList.jsx");
 
 var store = require("../store/store");
+var connect = require("react-redux").connect;
 
 var ProductAC = require("../actions/ProductAC");
 
@@ -52,4 +53,16 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
     }
 });
 
-module.exports = ProductsView;
+function mapStateToProps(state) {
+    return {
+        products: state.products,
+        selectedProduct: state.selectedProduct
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+
+    }
+}
+module.exports = connect(mapStateToProps, mapDispatchToProps)(ProductsView);
