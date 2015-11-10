@@ -5,11 +5,9 @@ var Provider = require('react-redux').Provider;
 
 var store = require("./store/store");
 var ProductAC = require("./actions/ProductAC");
-var Header = require("./layout/Header");
-var Footer = require("./layout/Footer");
 
 var ProductsView = require("./views/ProductsView.jsx");
-var Layout = require("./layout/Layout");
+var Modals = require("./modals/Modals.jsx");
 
 var ReduxRouter = require("redux-router").ReduxRouter;
 var routerStateReducer = require("redux-router").routerStateReducer;
@@ -34,12 +32,29 @@ var App = React.createClass({
                 <Provider store={store}>
                     <div className="content-wrapper">
                         <div className="layout-wrapper">
-                            <Layout />
+                            <nav className="navbar navbar-default navbar-fixed-top">
+                                <div className="container-fluid">
+                                    <div className="navbar-header">
+                                        <a href="#" className="navbar-brand">Admin Panel</a>
+                                    </div>
+                                    <div id="navbar" className="navbar-collapse collapse">
+                                        <ul className="nav navbar-nav">
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+                            <div className="navbar navbar-default navbar-fixed-bottom">
+                                <div className="container">
+
+                                </div>
+                            </div>
+                            <Modals />
                         </div>
                         <div className="view-wrapper">
                             <ReduxRouter>
-                                <Route path="/">
-                                    <IndexRoute component={ProductsView}/>
+                                <Route path="/" component={ProductsView}>
+
                                 </Route>
                             </ReduxRouter>
                         </div>
