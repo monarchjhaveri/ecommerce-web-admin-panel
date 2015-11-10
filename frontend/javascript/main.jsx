@@ -23,7 +23,6 @@ var unsubscribe = store.subscribe(function() {
    
 });
 
-store.dispatch(ProductAC.fetchAll());
 window.store = store;
 
 var Layout = React.createClass({
@@ -72,8 +71,7 @@ var App = React.createClass({
                 <Provider store={store}>
                     <ReduxRouter>
                         <Route path="/" component={Layout}>
-                            <IndexRoute component={ProductsView} />
-
+                            <IndexRoute component={ProductsView} onEnter={function(){console.log("WTF"); store.dispatch(ProductAC.fetchAll());}}/>
                             <Route path="/comp" component={Comp} />
                         </Route>
                     </ReduxRouter>
