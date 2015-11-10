@@ -4,6 +4,7 @@ var watchify = require("watchify");
 var fs = require('fs');
 var sassRunnable = require("./runnables/sassRunnable");
 var chokidar = require('chokidar');
+var colors = require('colors');
 
 var b = browserify({
     entries: [constants.filepaths.javascript.entryFile],
@@ -11,39 +12,44 @@ var b = browserify({
     packageCache: {},
     plugin: [watchify]
 });
-b.transform("reactify");
+var watchifyBundle = b.transform("reactify");
 
-b.on('update', bundle);
-b.on('log', log);
-b.on('error', log);
+b.on('update', function(updatedFiles, x) {
+    console.log(colors.green(updatedFiles));
+    bundle();
+});
+
+watchifyBundle.on('log', log);
 bundle();
 
 function bundle() {
     var writer = fs.createWriteStream(constants.filepaths.javascript.destinationFile);
-    b.bundle().pipe(writer);
+    b.bundle()
+        .on('error', function(message) {
+            console.error(colors.red(message.message));
+        })
+        .pipe(writer);
 }
 
 function log(message) {
     console.log(message);
 }
-//_runSass();
 
-var watcher = chokidar.watch(constants.filepaths.scss.root, {
+var scssWatcher = chokidar.watch(constants.filepaths.scss.root, {
     persistent: true
 });
 
 log("Chokidar started.");
 
-watcher.on('all', function(event, path) {
-    log('File', path, 'has been changed');
+scssWatcher.on('all', function(event, path) {
+    console.log(colors.grey('File ' + path + ' has been changed'));
     _runSass();
 });
 
-watcher.on('change', function(path, stats) {
-    if (stats) console.log('File', path, 'changed size to', stats.size);
+scssWatcher.on('change', function(path, stats) {
+    if (stats) console.log(colors.grey('File ' + path + ' changed size to ' + stats.size));
 });
 
 function _runSass() {
-    console.log("Running sass.");
     sassRunnable.run();
 }
