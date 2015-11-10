@@ -35,7 +35,7 @@ var Layout = React.createClass({
                         <nav className="navbar navbar-default navbar-fixed-top">
                             <div className="container-fluid">
                                 <div className="navbar-header">
-                                    <a href="#" className="navbar-brand">Admin Panel</a>
+                                    <Link className="navbar-brand" to="/">Admin Panel</Link>
                                 </div>
                                 <div id="navbar" className="navbar-collapse collapse">
                                     <ul className="nav navbar-nav">
