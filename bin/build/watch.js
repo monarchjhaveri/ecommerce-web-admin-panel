@@ -19,7 +19,9 @@ b.on('update', function(updatedFiles, x) {
     bundle();
 });
 
-watchifyBundle.on('log', log);
+watchifyBundle.on('log', function(message) {
+    console.log(colors.grey(message));
+});
 bundle();
 
 function bundle() {
@@ -31,25 +33,13 @@ function bundle() {
         .pipe(writer);
 }
 
-function log(message) {
-    console.log(message);
-}
-
 var scssWatcher = chokidar.watch(constants.filepaths.scss.root, {
     persistent: true
 });
 
-log("Chokidar started.");
+console.log("Chokidar started.");
 
 scssWatcher.on('all', function(event, path) {
-    console.log(colors.grey('File ' + path + ' has been changed'));
-    _runSass();
-});
-
-scssWatcher.on('change', function(path, stats) {
-    if (stats) console.log(colors.grey('File ' + path + ' changed size to ' + stats.size));
-});
-
-function _runSass() {
+    console.log(colors.grey('File ' + path + ' has been changed. event: ' + event));
     sassRunnable.run();
-}
+});
