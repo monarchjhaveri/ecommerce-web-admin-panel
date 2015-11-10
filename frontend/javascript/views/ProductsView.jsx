@@ -6,6 +6,7 @@ var ProductSelectList = require("../components/ProductSelectList.jsx");
 
 var store = require("../store/store");
 var connect = require("react-redux").connect;
+var Link = require("react-router").Link;
 
 var ProductAC = require("../actions/ProductAC");
 
