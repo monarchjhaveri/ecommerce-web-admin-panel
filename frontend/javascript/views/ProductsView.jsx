@@ -75,7 +75,7 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
     },
     render: function() {
         return (
-            <div className="view products-view">
+            <div className="view">
                 <ProductSelectList
                     products={this.props.products}
                     selectedProduct={this.props.selectedProduct}
@@ -87,7 +87,7 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
                     submitEdit={this.submitEdit}
                     onDelete={this.onDelete}
                     />
-                <div className="product-view-right-column">
+                <div className="view-right-column">
                     <ProductInventory
                         product={this.props.selectedProduct}
                         inventory={this.getInventoryForProduct(this.props.selectedProduct)}

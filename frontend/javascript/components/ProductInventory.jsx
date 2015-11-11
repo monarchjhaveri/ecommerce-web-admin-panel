@@ -56,18 +56,18 @@ var ProductInventory = React.createClass({ displayName: "ProductInventory",
         if (!this.props.product) {
             return null;
         } else if (this.props.fulfillmentNodes && this.props.inventory) {
-            return <div className="product-inventory">
+            return <div className="view-right-column-section">
                 <h2>Inventory</h2>
                 {this.createForm()}
                 <div className="btn btn-success" onClick={this.submitEdit}>Submit</div>
             </div>
         } else if (this.state.loadingInventory) {
-            return <div className="product-inventory">
+            return <div className="view-right-column-section">
                 <h2>Inventory</h2>
                 Loading...
             </div>;
         } else {
-            return <div className="product-inventory">
+            return <div className="view-right-column-section">
                 <h2>Inventory</h2>
                 <div className="btn btn-success" onClick={this.getInventory}>Load Products</div>
             </div>;

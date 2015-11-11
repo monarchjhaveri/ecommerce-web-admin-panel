@@ -20,7 +20,7 @@ var filterByStatusOptions = [
 ].map(function(d) {
     return <option value={d.value} key={d.value}>{d.label}</option>
 });
-filterByStatusOptions.unshift(<option key={"nullvalue"} selected disabled hidden value=''></option>);
+filterByStatusOptions.unshift(<option key={"nullvalue"} disabled hidden value=''></option>);
 
 var ProductsView = React.createClass({ displayName:"OrdersView",
     propTypes: {
@@ -32,24 +32,57 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
     handleOrdersFilterStatusChange: function(ev) {
         var newValue = ev.target.value;
         OrderAC.setFilter(newValue);
-        OrderAC.fetchAll(newValue);
+    },
+    fetchOrders: function(){
+        OrderAC.fetchAll(this.props.ordersFilter.get("status"));
     },
     componentWillReceiveProps: function(nextProps) {
         this.setState(nextProps.ordersFilter);
     },
+    getOrderElements: function() {
+        var orders = this.props.orders.toList();
+        var className = "sidebar-select-list-item";
+        //className = selectedProduct && selectedProduct.merchant_sku === d.merchant_sku ? className + " selected" : className;
+        //var key = d.merchant_sku + ":" + d.product_title;
+        //<div key={key}
+        //     className={className}
+        //     onClick={onSelectProductFunctionBuilder(d, onSelectChange)}>
+        //    {d.product_title}
+        //</div>
+        var self = this;
+        var ordersDOM = orders.map(function(d) {
+            return (
+                <div key={d.merchant_order_id} className={className}
+                    onClick={self.onSelectOrder}>
+                    {d.merchant_order_id}
+                </div>
+            )
+        });
+        return ordersDOM;
+    },
+    onSelectOrder: function(ev) {
+        alert("Selected Order Code" + ev.target.innerText);
+    },
     render: function() {
         return (
-            <div className="view products-view">
-                <div className="navbar navbar-top">
-                    <div className="well well-sm">
-                        <label >
-                            Filter By Status:
+            <div className="view">
+                <div className="view-sidebar">
+                    <div className="sidebar-list-button-top btn btn-small btn-info"
+                        onClick={this.fetchOrders}>
+                        Fetch Orders
+                    </div>
+                    <div className="sidebar-select-list">
+                        {this.getOrderElements()}
+                    </div>
+                    <div className="sidebar-list-button-bottom">
+                        <div className="sidebar-list-button-bottom-panel">
                             <select
+                                defaultValue={null}
                                 value={this.props.ordersFilter.get("state")}
                                 onChange={this.handleOrdersFilterStatusChange} >
                                 {filterByStatusOptions}
                             </select>
-                        </label>
+                        </div>
                     </div>
                 </div>
             </div>

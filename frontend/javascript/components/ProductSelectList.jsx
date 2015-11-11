@@ -10,15 +10,15 @@ var ProductSelectList = React.createClass({ displayName: "ProductSelectList",
     },
     render: function() {
         return (
-            <div className="product-view-sidebar">
-                <div className="load-products-button btn btn-small btn-info"
+            <div className="view-sidebar">
+                <div className="sidebar-list-button-top btn btn-small btn-info"
                      onClick={ProductAC.fetchAll}>
                     Fetch Products
                 </div>
-                <div className="product-select-list">
+                <div className="sidebar-select-list">
                     {_createProductsArray(this.props.products, this.props.selectedProduct, this.props.onSelectChange)}
                 </div>
-                <div className="new-product-button btn btn-small btn-success"
+                <div className="sidebar-list-button-bottom btn btn-small btn-success"
                     onClick={this.props.createAction}>
                     New
                 </div>
@@ -34,7 +34,7 @@ function _createProductsArray(products, selectedProduct, onSelectChange) {
     }
 
     return products.toList().map(function(d) {
-        var className = "product-select-list-item";
+        var className = "sidebar-select-list-item";
         className = selectedProduct && selectedProduct.merchant_sku === d.merchant_sku ? className + " selected" : className;
         var key = d.merchant_sku + ":" + d.product_title;
         return (
