@@ -45,7 +45,6 @@ var Layout = React.createClass({
                                     <ul className="nav navbar-nav">
                                         <li><Link to="/">Products</Link></li>
                                         <li><Link to="/orders">Orders</Link></li>
-                                        <li><Link to="/comp">Testomg</Link></li>
                                     </ul>
                                 </div>
                             </div>
@@ -64,12 +63,6 @@ var Layout = React.createClass({
     }
 });
 
-var Comp = React.createClass({
-    render: function() {
-        return <div>OK</div>;
-    }
-});
-
 var App = React.createClass({
     render: function() {
         return (
@@ -81,11 +74,7 @@ var App = React.createClass({
                                 component={ProductsView}
                                 onEnter={ProductAC.fetchAll}
                             />
-                            <Route path="/orders"
-                                component={OrdersView}
-                                onEnter={function(){OrderAC.fetchAll(store.getState().ordersFilter.get("status"))}}
-                            />
-                            <Route path="/comp" component={Comp} />
+                            <Route path="/orders" component={OrdersView}/>
                         </Route>
                     </ReduxRouter>
                 </Provider>

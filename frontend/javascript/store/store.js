@@ -25,7 +25,7 @@ var ActionTypes = require("../actions/ActionTypes");
 var initialState = {
     orders: Immutable.Map({}),
     products: Immutable.Map({}),
-    loading: true,
+    loading: false,
     selectedProduct: {},
     selectedOrder: {},
     popovers: Immutable.List([]),

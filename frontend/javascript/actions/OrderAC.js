@@ -5,6 +5,14 @@ var PopoverAC = require("./PopoverAC");
 var store = require("../store/store");
 
 var OrderAC = {
+    setFilter: function(filterName) {
+        store.dispatch(function(dispatch){
+            dispatch({
+                type: ActionTypes.ORDERS.SET_FILTER,
+                payload: filterName
+            });
+        });
+    },
     fetchAll: function(status) {
         store.dispatch(function(dispatch) {
             dispatch({

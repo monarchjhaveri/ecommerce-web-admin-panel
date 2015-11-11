@@ -12,6 +12,8 @@ module.exports = function ordersFilterReducer(state, action) {
     }
 
     switch (action.type) {
+        case ActionTypes.ORDERS.SET_FILTER:
+            return state.set("status", action.payload);
         default:
             return state;
     }
