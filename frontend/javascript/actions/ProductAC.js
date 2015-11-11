@@ -173,10 +173,6 @@ var ProductAC = {
                             inventory: data
                         }
                     });
-                    dispatch({
-                        type: ActionTypes.PRODUCTS.SELECT,
-                        payload: data
-                    });
                 }
             });
         });

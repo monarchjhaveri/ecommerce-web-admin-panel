@@ -46,16 +46,12 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
         }
     },
     getInventoryForProduct(product) {
-        console.log("getInventoryForProduct: started");
         var merchant_sku = product ? product.merchant_sku : null;
-        console.log("getInventoryForProduct: merchant_sku is ", merchant_sku);
         if (!merchant_sku || !this.props.productInventory || !this.props.productInventory.get(merchant_sku)) {
-            console.log("getInventoryForProduct: returning null:", merchant_sku, this.props.productInventory, this.props.productInventory.get(merchant_sku));
             return null;
         }
 
-        console.log("getInventoryForPRoduct: fulfillment_nodes are ", this.props.productInventory.get(merchant_sku).fulfillment_nodes);
-        return this.props.productInventory.get(merchant_sku).fulfillment_nodes || null;
+        return this.props.productInventory.get(merchant_sku);
     },
     render: function() {
         return (

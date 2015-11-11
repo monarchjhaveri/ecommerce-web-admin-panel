@@ -47,6 +47,23 @@ ProductsResource.getInventory = function(req, res, next) {
     ], _responseFunctionFactory("get product inventory", res));
 };
 
+ProductsResource.editInventory = function(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            if (!req.params && req.params.sku) {
+                callback(new Error("Must provide a merchant_sku"));
+            } else  if (!req.body) {
+                callback(new Error("Must provide list of inventory."));
+            } else {
+                var payload = req.body;
+                var merchant_sku = req.params.sku;
+                callback(null, payload, merchant_sku);
+            }
+        },
+        JetService.updateProductInventory
+    ], _responseFunctionFactory("get product inventory", res));
+};
+
 function _responseFunctionFactory(action, res) {
     return function(err, data) {
         if (err) {

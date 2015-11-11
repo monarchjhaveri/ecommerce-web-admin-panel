@@ -11,7 +11,7 @@ var ProductInventoryOptionsFactory = require("./models/ProductInventoryModel").o
 var ProductInventory = React.createClass({ displayName: "ProductInventory",
     propTypes: {
         product: React.PropTypes.object,
-        inventory: React.PropTypes.array,
+        inventory: React.PropTypes.object,
         onSubmitInventory: React.PropTypes.func,
         fulfillmentNodes: React.PropTypes.array
     },
@@ -30,11 +30,11 @@ var ProductInventory = React.createClass({ displayName: "ProductInventory",
         this.props.onSubmitInventory(this.refs.form.getValue());
     },
     createForm: function() {
-        var options = ProductInventoryOptionsFactory();
+        console.log("The value", this.props.inventory);
         return <Form
             type={ProductInventoryModelFactory(this.props.fulfillmentNodes)}
             value={this.props.inventory}
-            options={options}
+            options={ProductInventoryOptionsFactory()}
             ref="form"
         />
     },
