@@ -9,5 +9,7 @@ router.post('/', ProductsResource.createOrEdit);
 router.put('/', ProductsResource.createOrEdit);
 router.get('/:sku/inventory', ProductsResource.getInventory);
 router.put('/:sku/inventory', ProductsResource.editInventory);
+router.get('/:sku/price', ProductsResource.getPrice);
+router.put('/:sku/price', ProductsResource.editPrice);
 
 module.exports = router;

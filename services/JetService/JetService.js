@@ -97,6 +97,22 @@ JetService.updateProductInventory = function(fulfillmentNodesDto, sku, originalC
     _retryIfFailed("getProductInventory", _editInventory(fulfillmentNodesDto, sku), originalCallback);
 };
 
+JetService.getProductPrice = function(sku, originalCallback) {
+    _retryIfFailed("getProductInventory", function(callback) {
+        JetApi.products.price.list(sku, authData.id_token, function(err, inventory){
+            if (err) {
+                callback(err);
+            } else {
+                callback(null, inventory);
+            }
+        });
+    }, originalCallback);
+};
+
+JetService.updateProductPrice = function(priceDto, sku, originalCallback) {
+    _retryIfFailed("getProductInventory", _editPrice(priceDto, sku), originalCallback);
+};
+
 function _editInventory(fulfillmentNodesDto, merchant_sku) {
     return function(callback) {
         if (!fulfillmentNodesDto) {
@@ -112,6 +128,26 @@ function _editInventory(fulfillmentNodesDto, merchant_sku) {
                 callback(createErr);
             } else {
                 callback(null, fulfillmentNodesDto);
+            }
+        });
+    }
+}
+
+function _editPrice(priceDto, merchant_sku) {
+    return function(callback) {
+        if (!priceDto) {
+            callback(new Error("priceDto was undefined"));
+            return;
+        }
+        if (!merchant_sku) {
+            callback(new Error("merchant_sku was undefined"));
+            return;
+        }
+        JetApi.products.price.update(merchant_sku, priceDto, authData.id_token, function(createErr, createData) {
+            if (createErr) {
+                callback(createErr);
+            } else {
+                callback(null, priceDto);
             }
         });
     }

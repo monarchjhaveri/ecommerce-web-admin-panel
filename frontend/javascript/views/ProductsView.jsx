@@ -3,6 +3,7 @@ var Immutable = require("immutable");
 
 var ProductDetails = require ("./../components/ProductDetails.jsx");
 var ProductInventory = require ("./../components/ProductInventory.jsx");
+var ProductPrice = require ("./../components/ProductPrice.jsx");
 var ProductSelectList = require("../components/ProductSelectList.jsx");
 
 var store = require("../store/store");
@@ -16,6 +17,7 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
         inventory: React.PropTypes.object,
         products: React.PropTypes.object,
         selectedProduct: React.PropTypes.object,
+        selectedPrice: React.PropTypes.object,
         productDetails: React.PropTypes.object
     },
     onSelectChange: function(product){
@@ -45,6 +47,14 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
             });
         }
     },
+    submitPrice: function(value) {
+        if (value) {
+            ProductAC.editPrice({
+                product: this.props.selectedProduct,
+                payload: value
+            });
+        }
+    },
     getInventoryForProduct(product) {
         var merchant_sku = product ? product.merchant_sku : null;
         if (!merchant_sku || !this.props.productInventory || !this.props.productInventory.get(merchant_sku)) {
@@ -52,6 +62,16 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
         }
 
         return this.props.productInventory.get(merchant_sku);
+    },
+    getPriceForProduct(product) {
+        var merchant_sku = product ? product.merchant_sku : null;
+        if (!merchant_sku || !this.props.productPrice || !this.props.productPrice.get(merchant_sku)) {
+            console.log("Fail.", merchant_sku, this.props.productPrice, this.props);
+            return null;
+        }
+
+        console.log("Successful.", this.props.productPrice.get(merchant_sku));
+        return this.props.productPrice.get(merchant_sku);
     },
     render: function() {
         return (
@@ -67,12 +87,20 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
                     submitEdit={this.submitEdit}
                     onDelete={this.onDelete}
                     />
-                <ProductInventory
-                    product={this.props.selectedProduct}
-                    inventory={this.getInventoryForProduct(this.props.selectedProduct)}
-                    fulfillmentNodes={this.props.merchant.get("fulfillmentNodes")}
-                    onSubmitInventory={this.submitInventory}
-                />
+                <div className="product-view-right-column">
+                    <ProductInventory
+                        product={this.props.selectedProduct}
+                        inventory={this.getInventoryForProduct(this.props.selectedProduct)}
+                        fulfillmentNodes={this.props.merchant.get("fulfillmentNodes")}
+                        onSubmitInventory={this.submitInventory}
+                    />
+                    <ProductPrice
+                        product={this.props.selectedProduct}
+                        price={this.getPriceForProduct(this.props.selectedProduct)}
+                        fulfillmentNodes={this.props.merchant.get("fulfillmentNodes")}
+                        onSubmitPrice={this.submitPrice}
+                    />
+                </div>
             </div>
         );
     }
@@ -84,7 +112,8 @@ function mapStateToProps(state) {
         inventory: state.inventory,
         selectedProduct: state.selectedProduct,
         merchant: state.merchant,
-        productInventory: state.productInventory
+        productInventory: state.productInventory,
+        productPrice: state.productPrice
     }
 }
 

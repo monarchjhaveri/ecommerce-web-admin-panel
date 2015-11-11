@@ -18,6 +18,7 @@ module.exports = function productDetailsReducer(state, action) {
         case ActionTypes.ORDERS.EDIT_STARTED:
         case ActionTypes.ORDERS.CREATE_STARTED:
         case ActionTypes.PRODUCTS.INVENTORY.EDIT_STARTED:
+        case ActionTypes.PRODUCTS.PRICE.EDIT_STARTED:
              return true;
         case ActionTypes.PRODUCTS.GET_DETAILS_SUCCESS:
         case ActionTypes.PRODUCTS.GET_DETAILS_FAILURE:
@@ -37,6 +38,8 @@ module.exports = function productDetailsReducer(state, action) {
         case ActionTypes.ORDERS.CREATE_FAILURE:
         case ActionTypes.PRODUCTS.INVENTORY.EDIT_SUCCESS:
         case ActionTypes.PRODUCTS.INVENTORY.EDIT_FAILURE:
+        case ActionTypes.PRODUCTS.PRICE.EDIT_SUCCESS:
+        case ActionTypes.PRODUCTS.PRICE.EDIT_FAILURE:
             return false;
         default:
             return state;

@@ -117,7 +117,6 @@ var ProductAC = {
         });
     },
     getDetails: function(product) {
-        ProductAC.getInventory(product);
         store.dispatch(function (dispatch) {
             dispatch({
                 type: ActionTypes.PRODUCTS.GET_DETAILS_STARTED
@@ -202,6 +201,68 @@ var ProductAC = {
                 success: function(data) {
                     dispatch({
                         type: ActionTypes.PRODUCTS.INVENTORY.EDIT_SUCCESS,
+                        payload: data
+                    });
+                }
+            });
+        });
+    },
+    getPrice: function(product) {
+        store.dispatch(function (dispatch) {
+            dispatch({
+                type: ActionTypes.PRODUCTS.PRICE.GET_STARTED
+            });
+            $.ajax({
+                method: "GET",
+                url: "api/products/:sku/price"
+                    .replace(":sku", product.merchant_sku),
+                error: function(request, error) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.PRICE.GET_FAILURE,
+                        payload: {
+                            product: product,
+                            error: error
+                        }
+                    });
+                    PopoverAC.displayError(request.responseText);
+                },
+                success: function(data) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.PRICE.GET_SUCCESS,
+                        payload: {
+                            product: product,
+                            priceInfo: data
+                        }
+                    });
+                }
+            });
+        });
+    },
+    editPrice: function(editPriceObject) {
+        var product = editPriceObject.product;
+        var merchant_sku = product &&  product.merchant_sku;
+        var payload = editPriceObject.payload;
+        store.dispatch(function (dispatch) {
+            dispatch({
+                type: ActionTypes.PRODUCTS.PRICE.EDIT_STARTED
+            });
+            $.ajax({
+                method: "PUT",
+                url: "api/products/{id}/price".replace("{id}", merchant_sku),
+                contentType:'application/json',
+                dataType:'json',
+                data: JSON.stringify(payload),
+                error: function(request, error) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.PRICE.EDIT_FAILURE,
+                        payload: error
+                    });
+                    ProductAC.getDetails(product);
+                    PopoverAC.displayError(request.responseText);
+                },
+                success: function(data) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.PRICE.EDIT_SUCCESS,
                         payload: data
                     });
                 }

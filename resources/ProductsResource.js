@@ -61,7 +61,38 @@ ProductsResource.editInventory = function(req, res, next) {
             }
         },
         JetService.updateProductInventory
-    ], _responseFunctionFactory("get product inventory", res));
+    ], _responseFunctionFactory("update product inventory", res));
+};
+
+ProductsResource.getPrice = function(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            if (!req.params && req.params.sku) {
+                callback(new Error("Must provide a merchant_sku"))
+            } else {
+                var merchant_sku = req.params.sku;
+                callback(null, merchant_sku);
+            }
+        },
+        JetService.getProductPrice
+    ], _responseFunctionFactory("get product price", res));
+};
+
+ProductsResource.editPrice = function(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            if (!req.params && req.params.sku) {
+                callback(new Error("Must provide a merchant_sku"));
+            } else  if (!req.body) {
+                callback(new Error("Must provide prices DTO."));
+            } else {
+                var payload = req.body;
+                var merchant_sku = req.params.sku;
+                callback(null, payload, merchant_sku);
+            }
+        },
+        JetService.updateProductPrice
+    ], _responseFunctionFactory("update product price", res));
 };
 
 function _responseFunctionFactory(action, res) {
