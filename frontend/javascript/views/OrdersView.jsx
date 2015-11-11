@@ -4,11 +4,22 @@ var Immutable = require("immutable");
 var ProductDetails = require ("./../components/ProductDetails.jsx");
 var ProductSelectList = require("../components/ProductSelectList.jsx");
 
+var Constants = require("../Constants");
 var store = require("../store/store");
 var connect = require("react-redux").connect;
 var Link = require("react-router").Link;
 
 var OrderAC = require("../actions/OrderAC");
+
+var filterByStatusOptions = [
+    {value: Constants.ORDER_STATUS.ACKNOWLEDGED, label: "Acknowledged"},
+    {value: Constants.ORDER_STATUS.COMPLETE, label: "Complete"},
+    {value: Constants.ORDER_STATUS.CREATED, label: "Created"},
+    {value: Constants.ORDER_STATUS.IN_PROGRESS, label: "In Progress"},
+    {value: Constants.ORDER_STATUS.READY, label: "Ready"}
+].map(function(d) {
+    return <option value={d.value} key={d.value}>{d.label}</option>
+});
 
 var ProductsView = React.createClass({ displayName:"OrdersView",
     propTypes: {
@@ -16,30 +27,26 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
         selectedOrder: React.PropTypes.object,
         orderDetails: React.PropTypes.object
     },
-    onSelectChange: function(product){
-        store.dispatch(OrderAC.getDetails(product));
-    },
-    submitEdit: function(product){
-        if (product._id) {
-            store.dispatch(OrderAC.edit(product));
-        } else {
-            store.dispatch(OrderAC.create(product));
-        }
-    },
-    onDelete: function(product) {
-        store.dispatch(OrderAC.delete(product));
-    },
-    getSelectedProduct: function() {
-        return this.props.selectedProduct ? this.props.selectedProduct : null;
-    },
-    createAction: function() {
-        store.dispatch(OrderAC.openEditorToCreate());
+    handleOrdersFilterStatusChange: function(ev) {
+        var newValue = ev.target.value;
+        OrderAC.fetchAll(newValue);
     },
     render: function() {
         return (
             <div className="view products-view">
-                
-
+                <div className="navbar navbar-top">
+                    <div className="well well-sm">
+                        <label >
+                            Filter By Status:
+                            <select
+                                value={store.getState().ordersFilter.get("status")}
+                                onChange={this.handleOrdersFilterStatusChange}
+                            >
+                                {filterByStatusOptions}
+                            </select>
+                        </label>
+                    </div>
+                </div>
             </div>
         )
     }
