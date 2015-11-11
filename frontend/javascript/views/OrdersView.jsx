@@ -38,17 +38,8 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
     render: function() {
         return (
             <div className="view products-view">
-                <ProductSelectList
-                    products={this.props.products}
-                    selectedProduct={this.props.selectedProduct}
-                    onSelectChange={this.onSelectChange}
-                    createAction={this.createAction}
-                />
-                <ProductDetails
-                    product={this.props.selectedProduct}
-                    submitEdit={this.submitEdit}
-                    onDelete={this.onDelete}
-                />
+                
+
             </div>
         )
     }

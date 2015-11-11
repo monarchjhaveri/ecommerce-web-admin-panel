@@ -2,6 +2,16 @@ var SkuParserHelper = require("./SkuParserHelper");
 var JetApi = require('jet-api');
 var async = require("async");
 
+var VALID_ORDER_STATUSES = [];
+
+(function() {
+    var keys = Object.keys(JetApi.orders.ORDER_STATUS);
+    for (var i = 0; i < keys.length; i++) {
+        var statusKey = keys[i];
+        VALID_ORDER_STATUSES.push(JetApi.orders.ORDER_STATUS[statusKey]);
+    }
+})();
+
 var MAX_ATTEMPTS = 2;
 
 // reconnect every 2 hours
@@ -149,7 +159,7 @@ function _getProductsList(callback) {
 
 function _getOrdersListByStatus(status) {
     return function(callback) {
-        if (!status || !JetApi.orders.ORDER_STATUS[status]) {
+        if (!status || !VALID_ORDER_STATUSES.indexOf(status)) {
             callback(new Error("Unknown order status [%s]".replace("%s", status)));
         }
         JetApi.orders.listByStatus(status, authData.id_token, function(listErr, listData){
@@ -183,7 +193,7 @@ function _logRemoteError(fnName, err) {
 
 var MERCHANT_ORDER_ID_REGEX = /orders\/withoutShipmentDetail\/(.*)/;
 function _extractMerchantOrderIds(orderStatusArray) {
-    return orderStatusArray.map(function(url) {
+    return orderStatusArray.order_urls.map(function(url) {
         var match = url.match(MERCHANT_ORDER_ID_REGEX);
         if (match === null || match.length <= 1) {
             return null;

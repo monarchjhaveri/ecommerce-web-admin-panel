@@ -9,17 +9,3 @@ router.get('/:sku', ProductsResource.getDetails);
 //router.post('/:sku', ProductsResource.create);
 
 module.exports = router;
-
-function _sendData(data, res) {
-    res.send(data);
-}
-
-function _resolveSuccess(res) {
-    return function(data) {
-        res.send(data);
-    }
-}
-
-function _throwError() {
-    throw new Error()
-}

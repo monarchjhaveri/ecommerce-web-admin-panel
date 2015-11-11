@@ -5,13 +5,13 @@ var PopoverAC = require("./PopoverAC");
 var store = require("../store/store");
 
 var OrderAC = {
-    fetchAll: function() {
+    fetchAll: function(status) {
         store.dispatch(function(dispatch) {
             dispatch({
                 type: ActionTypes.ORDERS.FETCH_ALL_STARTED
             });
             $.ajax({
-                url: "api/orders",
+                url: "api/orders/:status".replace(":status", status),
                 error: function(request, error) {
                     dispatch({
                         type: ActionTypes.ORDERS.FETCH_ALL_FAILURE,

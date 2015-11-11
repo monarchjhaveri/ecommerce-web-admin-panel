@@ -80,7 +80,7 @@ var App = React.createClass({
                             />
                             <Route path="/orders"
                                 component={OrdersView}
-                                onEnter={OrderAC.fetchAll}
+                                onEnter={function(){OrderAC.fetchAll(store.getState().ordersFilter.get("status"))}}
                             />
                             <Route path="/comp" component={Comp} />
                         </Route>
