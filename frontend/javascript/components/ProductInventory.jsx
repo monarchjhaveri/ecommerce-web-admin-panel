@@ -11,7 +11,7 @@ var ProductInventoryOptionsFactory = require("./models/ProductInventoryModel").o
 var ProductInventory = React.createClass({ displayName: "ProductInventory",
     propTypes: {
         product: React.PropTypes.object,
-        inventory: React.PropTypes.object,
+        inventory: React.PropTypes.array,
         onSubmitInventory: React.PropTypes.func,
         fulfillmentNodes: React.PropTypes.array
     },
@@ -26,26 +26,28 @@ var ProductInventory = React.createClass({ displayName: "ProductInventory",
             this.setState({editorInventory: editorInventory});
         }
     },
-    submitEdit: function(value) {
-        this.props.onSubmitInventory(value);
+    submitEdit: function() {
+        this.props.onSubmitInventory(this.refs.form.getValue());
     },
     createForm: function() {
         var options = ProductInventoryOptionsFactory();
         return <Form
             type={ProductInventoryModelFactory(this.props.fulfillmentNodes)}
-            value={null}
+            value={this.props.inventory}
             options={options}
             ref="form"
         />
     },
     render: function() {
-        if (this.props.product && this.props.fulfillmentNodes) {
+        if (this.props.product && this.props.fulfillmentNodes && this.props.inventory) {
             return <div className="product-inventory">
+                <h2>Inventory</h2>
                 {this.createForm()}
                 <div className="btn btn-success" onClick={this.submitEdit}>Submit</div>
             </div>
         } else {
             return <div className="product-inventory">
+                <h2>Inventory</h2>
                 Loading...
             </div>;
         }

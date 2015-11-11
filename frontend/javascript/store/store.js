@@ -11,6 +11,7 @@ var selectionReducer = require("./reducers/selectionReducer");
 var productsReducer = require("./reducers/productsReducer");
 var ordersReducer = require("./reducers/ordersReducer");
 var popoversReducer = require("./reducers/popoversReducer");
+var productInventoryReducer = require("./reducers/productInventoryReducer");
 var ordersFilterReducer = require("./reducers/ordersFilterReducer");
 var merchantReducer = require("./reducers/merchantReducer");
 var routerStateReducer = require("redux-router").routerStateReducer;
@@ -32,7 +33,8 @@ var initialState = {
     }),
     merchant: Immutable.Map({
         fulfillmentNodes: null
-    })
+    }),
+    productInventory: Immutable.Map({/*merchant_sku: fulfillment_nodes[] */})
 };
 
 function reducer(state, action) {
@@ -44,6 +46,7 @@ function reducer(state, action) {
         popovers: popoversReducer(state.popovers, action),
         ordersFilter: ordersFilterReducer(state.ordersFilter, action),
         merchant: merchantReducer(state.merchant, action),
+        productInventory: productInventoryReducer(state.productInventory, action),
         router: routerStateReducer(state.router, action)
     };
 }

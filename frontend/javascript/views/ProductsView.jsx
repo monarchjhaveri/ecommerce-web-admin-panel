@@ -37,8 +37,25 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
     createAction: function() {
         ProductAC.openEditorToCreate();
     },
-    submitInventory: function() {
-        alert("Inventory Submitted");
+    submitInventory: function(value) {
+        if (value) {
+            ProductAC.editInventory({
+                product: this.props.selectedProduct,
+                payload: value
+            });
+        }
+    },
+    getInventoryForProduct(product) {
+        console.log("getInventoryForProduct: started");
+        var merchant_sku = product ? product.merchant_sku : null;
+        console.log("getInventoryForProduct: merchant_sku is ", merchant_sku);
+        if (!merchant_sku || !this.props.productInventory || !this.props.productInventory.get(merchant_sku)) {
+            console.log("getInventoryForProduct: returning null:", merchant_sku, this.props.productInventory, this.props.productInventory.get(merchant_sku));
+            return null;
+        }
+
+        console.log("getInventoryForPRoduct: fulfillment_nodes are ", this.props.productInventory.get(merchant_sku).fulfillment_nodes);
+        return this.props.productInventory.get(merchant_sku).fulfillment_nodes || null;
     },
     render: function() {
         return (
@@ -48,20 +65,20 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
                     selectedProduct={this.props.selectedProduct}
                     onSelectChange={this.onSelectChange}
                     createAction={this.createAction}
-                />
+                    />
                 <ProductDetails
                     product={this.props.selectedProduct}
                     submitEdit={this.submitEdit}
                     onDelete={this.onDelete}
-                />
+                    />
                 <ProductInventory
                     product={this.props.selectedProduct}
-                    inventory={this.props.inventory}
-                    onSubmitInventory={this.submitInventory}
+                    inventory={this.getInventoryForProduct(this.props.selectedProduct)}
                     fulfillmentNodes={this.props.merchant.get("fulfillmentNodes")}
+                    onSubmitInventory={this.submitInventory}
                 />
             </div>
-        )
+        );
     }
 });
 
@@ -70,7 +87,8 @@ function mapStateToProps(state) {
         products: state.products,
         inventory: state.inventory,
         selectedProduct: state.selectedProduct,
-        merchant: state.merchant
+        merchant: state.merchant,
+        productInventory: state.productInventory
     }
 }
 

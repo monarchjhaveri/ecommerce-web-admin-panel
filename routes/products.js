@@ -8,5 +8,6 @@ router.get('/:sku', ProductsResource.find);
 router.post('/', ProductsResource.createOrEdit);
 router.put('/', ProductsResource.createOrEdit);
 router.get('/:sku/inventory', ProductsResource.getInventory);
+router.put('/:sku/inventory', ProductsResource.getInventory());
 
 module.exports = router;

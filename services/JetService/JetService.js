@@ -93,6 +93,30 @@ JetService.getProductInventory = function(sku, originalCallback) {
     }, originalCallback);
 };
 
+JetService.updateProductInventory = function(fulfillmentNodesDto, sku, originalCallback) {
+    _retryIfFailed("getProductInventory", _editInventory(fulfillmentNodesDto, sku), originalCallback);
+};
+
+function _editInventory(fulfillmentNodesDto, merchant_sku) {
+    return function(callback) {
+        if (!fulfillmentNodesDto) {
+            callback(new Error("fulfillmentNodesDto was undefined"));
+            return;
+        }
+        if (!merchant_sku) {
+            callback(new Error("merchant_sku was undefined"));
+            return;
+        }
+        JetApi.products.inventory.update(merchant_sku, fulfillmentNodesDto, authData.id_token, function(createErr, createData) {
+            if (createErr) {
+                callback(createErr);
+            } else {
+                callback(null, fulfillmentNodesDto);
+            }
+        });
+    }
+}
+
 JetService.getFulfillmentNodes = function(originalCallback) {
     _retryIfFailed("getFulfillmentNodes", function(callback) {
             JetApi.merchant.getFulfillmentNodes(authData.id_token, function(err, fulfillmentNodes){
