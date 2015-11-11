@@ -58,6 +58,7 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
                     product={this.props.selectedProduct}
                     inventory={this.props.inventory}
                     onSubmitInventory={this.submitInventory}
+                    fulfillmentNodes={this.props.merchant.get("fulfillmentNodes")}
                 />
             </div>
         )
@@ -68,7 +69,8 @@ function mapStateToProps(state) {
     return {
         products: state.products,
         inventory: state.inventory,
-        selectedProduct: state.selectedProduct
+        selectedProduct: state.selectedProduct,
+        merchant: state.merchant
     }
 }
 

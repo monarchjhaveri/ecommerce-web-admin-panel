@@ -5,14 +5,15 @@ var Immutable = require("immutable");
 var t = require('tcomb-form');
 var Form = t.form.Form;
 
-var ProductInventoryModel = require("./models/ProductInventoryModel").model;
+var ProductInventoryModelFactory = require("./models/ProductInventoryModel").modelFactory;
 var ProductInventoryOptionsFactory = require("./models/ProductInventoryModel").optionsFactory;
 
 var ProductInventory = React.createClass({ displayName: "ProductInventory",
     propTypes: {
         product: React.PropTypes.object,
         inventory: React.PropTypes.object,
-        onSubmitInventory: React.PropTypes.func
+        onSubmitInventory: React.PropTypes.func,
+        fulfillmentNodes: React.PropTypes.array
     },
     getInitialState: function() {
         return {};
@@ -28,25 +29,24 @@ var ProductInventory = React.createClass({ displayName: "ProductInventory",
     submitEdit: function(value) {
         this.props.onSubmitInventory(value);
     },
-    createForm: function(inventory) {
+    createForm: function() {
         var options = ProductInventoryOptionsFactory();
         return <Form
-            type={ProductInventoryModel}
+            type={ProductInventoryModelFactory(this.props.fulfillmentNodes)}
             value={null}
             options={options}
             ref="form"
         />
     },
     render: function() {
-        if (this.props.product && this.props.inventory) {
+        if (this.props.product && this.props.fulfillmentNodes) {
             return <div className="product-inventory">
-                {this.createForm(this.props.inventory)}
+                {this.createForm()}
                 <div className="btn btn-success" onClick={this.submitEdit}>Submit</div>
             </div>
         } else {
             return <div className="product-inventory">
-                {this.createForm(this.props.inventory)}
-                <div className="btn btn-success" onClick={this.submitEdit}>Submit</div>
+                Loading...
             </div>;
         }
     }

@@ -81,6 +81,18 @@ JetService.getDetails = function(sku, callback) {
     _retryIfFailed("getDetails", _getDetails(sku), callback);
 };
 
+JetService.getFulfillmentNodes = function(originalCallback) {
+    _retryIfFailed("getFulfillmentNodes", function(callback) {
+            JetApi.merchant.getFulfillmentNodes(authData.id_token, function(err, fulfillmentNodes){
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, fulfillmentNodes);
+                }
+            });
+    }, originalCallback);
+};
+
 JetService.editOrCreate = function(productDto, callback) {
     var sendDto = _clone(productDto);
     var sku = productDto.merchant_sku;
@@ -98,8 +110,10 @@ JetService.editOrCreate = function(productDto, callback) {
 function _connect(callback) {
     JetApi.authentication.connect(user, pass, function(err, data) {
         if (err) {
+            console.error("Authentication against Jet.com API FAILED!!!");
             callback(err);
         } else {
+            console.log("Authentication against Jet.com API was successful.");
             callback(null, data);
         }
     });

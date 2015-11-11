@@ -6,6 +6,7 @@ var Provider = require('react-redux').Provider;
 var store = require("./store/store");
 var ProductAC = require("./actions/ProductAC");
 var OrderAC = require("./actions/OrderAC");
+var MerchantAC = require("./actions/MerchantAC");
 
 var ProductsView = require("./views/ProductsView.jsx");
 var OrdersView = require("./views/OrdersView.jsx");
@@ -26,6 +27,8 @@ var unsubscribe = store.subscribe(function() {
 });
 
 window.store = store;
+
+MerchantAC.getFulfillmentNodes();
 
 var Layout = React.createClass({
     render: function() {

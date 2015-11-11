@@ -12,6 +12,7 @@ var productsReducer = require("./reducers/productsReducer");
 var ordersReducer = require("./reducers/ordersReducer");
 var popoversReducer = require("./reducers/popoversReducer");
 var ordersFilterReducer = require("./reducers/ordersFilterReducer");
+var merchantReducer = require("./reducers/merchantReducer");
 var routerStateReducer = require("redux-router").routerStateReducer;
 
 var createHistory = require("history/lib/createHashHistory");
@@ -28,6 +29,9 @@ var initialState = {
     popovers: Immutable.List([]),
     ordersFilter: Immutable.Map({
         status: Constants.ORDER_STATUS.CREATED
+    }),
+    merchant: Immutable.Map({
+        fulfillmentNodes: null
     })
 };
 
@@ -39,6 +43,7 @@ function reducer(state, action) {
         selectedProduct: selectionReducer(state.selectedProduct, action),
         popovers: popoversReducer(state.popovers, action),
         ordersFilter: ordersFilterReducer(state.ordersFilter, action),
+        merchant: merchantReducer(state.merchant, action),
         router: routerStateReducer(state.router, action)
     };
 }
