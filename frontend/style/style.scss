@@ -26,7 +26,8 @@
       position: absolute;
       width: $product-view-sidebar-width;
       text-overflow: ellipsis;
-      height: 95%;
+      height: 90%;
+      top: 5%;
       overflow-y: scroll;
       .product-select-list-item {
         &.selected {
@@ -34,10 +35,15 @@
         }
       }
     }
-    .new-product-button {
+    .new-product-button, .load-products-button {
       position: absolute;
       width: $product-view-sidebar-width;
       height: 5%;
+    }
+    .load-products-button {
+      top: 0;
+    }
+    .new-product-button {
       bottom: 0;
     }
   }

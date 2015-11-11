@@ -1,4 +1,5 @@
 var React = require("react");
+var ProductAC= require("../actions/ProductAC");
 
 var ProductSelectList = React.createClass({ displayName: "ProductSelectList",
     propTypes: {
@@ -10,6 +11,10 @@ var ProductSelectList = React.createClass({ displayName: "ProductSelectList",
     render: function() {
         return (
             <div className="product-view-sidebar">
+                <div className="load-products-button btn btn-small btn-info"
+                     onClick={ProductAC.fetchAll}>
+                    Fetch Products
+                </div>
                 <div className="product-select-list">
                     {_createProductsArray(this.props.products, this.props.selectedProduct, this.props.onSelectChange)}
                 </div>

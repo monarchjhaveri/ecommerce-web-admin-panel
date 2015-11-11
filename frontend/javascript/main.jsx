@@ -70,10 +70,7 @@ var App = React.createClass({
                 <Provider store={store}>
                     <ReduxRouter>
                         <Route path="/" component={Layout}>
-                            <IndexRoute
-                                component={ProductsView}
-                                onEnter={ProductAC.fetchAll}
-                            />
+                            <IndexRoute component={ProductsView}/>
                             <Route path="/orders" component={OrdersView}/>
                         </Route>
                     </ReduxRouter>
