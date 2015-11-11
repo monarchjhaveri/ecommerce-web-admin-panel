@@ -2,8 +2,11 @@ var React = require("react");
 var LinkedStateMixin = require("react-addons-linked-state-mixin");
 var jQuery = require("jquery");
 var Immutable = require("immutable");
+var t = require('tcomb-form');
+var Form = t.form.Form;
 
-var ProductEditor = require("./ProductEditor.jsx");
+var ProductInventoryModel = require("./models/ProductInventoryModel").model;
+var ProductInventoryOptionsFactory = require("./models/ProductInventoryModel").optionsFactory;
 
 var ProductInventory = React.createClass({ displayName: "ProductInventory",
     propTypes: {
@@ -26,7 +29,13 @@ var ProductInventory = React.createClass({ displayName: "ProductInventory",
         this.props.onSubmitInventory(value);
     },
     createForm: function(inventory) {
-        return <div>Test</div>
+        var options = ProductInventoryOptionsFactory();
+        return <Form
+            type={ProductInventoryModel}
+            value={null}
+            options={options}
+            ref="form"
+        />
     },
     render: function() {
         if (this.props.product && this.props.inventory) {
