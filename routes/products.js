@@ -7,20 +7,5 @@ router.get('/', ProductsResource.list);
 router.get('/:sku', ProductsResource.find);
 router.post('/', ProductsResource.createOrEdit);
 router.put('/', ProductsResource.createOrEdit);
-//router.delete('/:sku', ProductsResource.delete);
 
 module.exports = router;
-
-function _sendData(data, res) {
-    res.send(data);
-}
-
-function _resolveSuccess(res) {
-    return function(data) {
-        res.send(data);
-    }
-}
-
-function _throwError() {
-    throw new Error()
-}

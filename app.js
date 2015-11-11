@@ -14,6 +14,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var products = require('./routes/products');
+var orders = require('./routes/orders');
 var jetProducts = require('./routes/jetProducts');
 
 var JetService = require('./services/JetService/JetService');
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/api/products', products);
+app.use('/api/orders', orders);
 app.use('/api/jet/products', jetProducts);
 
 // catch 404 and forward to error handler
@@ -50,9 +52,9 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
+    res.send({
       message: err.message,
-      error: err
+      stack: err.stack
     });
   });
 }
@@ -61,7 +63,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
+  res.send({
     message: err.message,
     error: {}
   });

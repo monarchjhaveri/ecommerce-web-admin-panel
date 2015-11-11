@@ -5,8 +5,10 @@ var Provider = require('react-redux').Provider;
 
 var store = require("./store/store");
 var ProductAC = require("./actions/ProductAC");
+var OrderAC = require("./actions/OrderAC");
 
 var ProductsView = require("./views/ProductsView.jsx");
+var OrdersView = require("./views/OrdersView.jsx");
 var Modals = require("./modals/Modals.jsx");
 
 var ReduxRouter = require("redux-router").ReduxRouter;
@@ -39,6 +41,7 @@ var Layout = React.createClass({
                                 <div id="navbar" className="navbar-collapse collapse">
                                     <ul className="nav navbar-nav">
                                         <li><Link to="/">Products</Link></li>
+                                        <li><Link to="/orders">Orders</Link></li>
                                         <li><Link to="/comp">Testomg</Link></li>
                                     </ul>
                                 </div>
@@ -71,7 +74,14 @@ var App = React.createClass({
                 <Provider store={store}>
                     <ReduxRouter>
                         <Route path="/" component={Layout}>
-                            <IndexRoute component={ProductsView} onEnter={function(){console.log("WTF"); store.dispatch(ProductAC.fetchAll());}}/>
+                            <IndexRoute
+                                component={ProductsView}
+                                onEnter={ProductAC.fetchAll}
+                            />
+                            <Route path="/orders"
+                                component={OrdersView}
+                                onEnter={OrderAC.fetchAll}
+                            />
                             <Route path="/comp" component={Comp} />
                         </Route>
                     </ReduxRouter>

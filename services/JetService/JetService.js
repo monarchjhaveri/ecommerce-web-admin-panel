@@ -63,6 +63,10 @@ JetService.getProductsList = function(callback) {
     _retryIfFailed("getProductsList", _getProductsList, callback);
 };
 
+JetService.getOrdersListByStatus = function(status, callback) {
+    _retryIfFailed("getOrdersListByStatus", _getOrdersListByStatus(status), callback);
+};
+
 JetService.getDetails = function(sku, callback) {
     _retryIfFailed("getDetails", _getDetails(sku), callback);
 };
@@ -143,6 +147,18 @@ function _getProductsList(callback) {
     });
 }
 
+function _getOrdersListByStatus(status) {
+    return function(callback) {
+        JetApi.orders.listByStatus(status, authData.id_token, function(listErr, listData){
+            if (listErr) {
+                callback(listErr);
+            } else {
+                callback(null, _extractMerchantOrderIds(listData));
+            }
+        });
+    }
+}
+
 function _retryIfFailed(functionName, functionInstance, callback) {
     async.retry(MAX_ATTEMPTS, functionInstance, function(err, data) {
         if (err) {
@@ -160,6 +176,20 @@ function _logRemoteError(fnName, err) {
             .replace("%msg", err.message)
     );
     console.error(err.stack);
+}
+
+var MERCHANT_ORDER_ID_REGEX = /orders\/withoutShipmentDetail\/(.*)/;
+function _extractMerchantOrderIds(orderStatusArray) {
+    return orderStatusArray.map(function(url) {
+        var match = url.match(MERCHANT_ORDER_ID_REGEX);
+        if (match === null || match.length <= 1) {
+            return null;
+        } else {
+            return {
+                merchant_order_id: match[1]
+            };
+        }
+    });
 }
 
 

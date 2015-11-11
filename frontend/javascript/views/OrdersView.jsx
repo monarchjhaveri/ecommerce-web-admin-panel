@@ -8,32 +8,32 @@ var store = require("../store/store");
 var connect = require("react-redux").connect;
 var Link = require("react-router").Link;
 
-var ProductAC = require("../actions/ProductAC");
+var OrderAC = require("../actions/OrderAC");
 
-var ProductsView = React.createClass({ displayName:"ProductsView",
+var ProductsView = React.createClass({ displayName:"OrdersView",
     propTypes: {
-        products: React.PropTypes.object,
-        selectedProduct: React.PropTypes.object,
-        productDetails: React.PropTypes.object
+        orders: React.PropTypes.object,
+        selectedOrder: React.PropTypes.object,
+        orderDetails: React.PropTypes.object
     },
     onSelectChange: function(product){
-        ProductAC.getDetails(product);
+        store.dispatch(OrderAC.getDetails(product));
     },
     submitEdit: function(product){
         if (product._id) {
-            ProductAC.edit(product);
+            store.dispatch(OrderAC.edit(product));
         } else {
-            ProductAC.create(product);
+            store.dispatch(OrderAC.create(product));
         }
     },
     onDelete: function(product) {
-        ProductAC.delete(product);
+        store.dispatch(OrderAC.delete(product));
     },
     getSelectedProduct: function() {
         return this.props.selectedProduct ? this.props.selectedProduct : null;
     },
     createAction: function() {
-        ProductAC.openEditorToCreate();
+        store.dispatch(OrderAC.openEditorToCreate());
     },
     render: function() {
         return (

@@ -1,4 +1,5 @@
 var React = require("react");
+var PopoverAC = require("../actions/PopoverAC.js");
 
 var Popovers = React.createClass({ displayName: "Popovers",
     propTypes: {
@@ -11,9 +12,12 @@ var Popovers = React.createClass({ displayName: "Popovers",
 
         var elements = this.props.popovers.map(function(d) {
             var className = "popover popover-" + d.type;
+            var jsonObject = JSON.parse(d.message);
             return (
                 <div className={className} key={d.popoverId}>
-                    ERROR: {d.message}
+                    <span className="btn btn-default close-button" onClick={function(){PopoverAC.clearPopover(d.popoverId)}}>Close</span>
+                    <span className="popover-title">ERROR: {jsonObject.message}</span>
+                    <span className="popover-stack">{jsonObject.stack}</span>
                 </div>
             )
         });

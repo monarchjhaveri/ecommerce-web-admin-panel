@@ -83,20 +83,31 @@
 .popovers-container {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: 25%;
+  width: 50%;
+  min-width: 600px;
   height: 100px;
   .popover {
     position: relative;
     display: inline-block;
-    width: 50%;
+    width: 100%;
     min-width: 100px;
     max-width: 100%;
-    height: 50px;
+    min-height: 50px;
     left: 50%;
     text-align: center;
-    line-height: 50px;
     transform: translateX(-50%);
+    overflow-y: visible;
+    .popover-title, .popover-stack {
+      background-color: transparent;
+      display: block;
+    }
+    .popover-stack {
+      text-align: left;
+    }
+    .close-button {
+      float: right;
+    }
     &.popover-error {
       background-color: #FF6666;
       color: white;
