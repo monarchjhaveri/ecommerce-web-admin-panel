@@ -33,6 +33,20 @@ ProductsResource.find = function(req, res, next) {
     ], _responseFunctionFactory("get product", res));
 };
 
+ProductsResource.getInventory = function(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            if (!req.params && req.params.sku) {
+                callback(new Error("Must provide a merchant_sku"))
+            } else {
+                var merchant_sku = req.params.sku;
+                callback(null, merchant_sku);
+            }
+        },
+        JetService.getProductInventory
+    ], _responseFunctionFactory("get product inventory", res));
+};
+
 function _responseFunctionFactory(action, res) {
     return function(err, data) {
         if (err) {

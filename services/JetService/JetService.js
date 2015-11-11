@@ -81,6 +81,18 @@ JetService.getDetails = function(sku, callback) {
     _retryIfFailed("getDetails", _getDetails(sku), callback);
 };
 
+JetService.getProductInventory = function(sku, originalCallback) {
+    _retryIfFailed("getProductInventory", function(callback) {
+        JetApi.products.inventory.list(sku, authData.id_token, function(err, inventory){
+            if (err) {
+                callback(err);
+            } else {
+                callback(null, inventory);
+            }
+        });
+    }, originalCallback);
+};
+
 JetService.getFulfillmentNodes = function(originalCallback) {
     _retryIfFailed("getFulfillmentNodes", function(callback) {
             JetApi.merchant.getFulfillmentNodes(authData.id_token, function(err, fulfillmentNodes){
