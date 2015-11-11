@@ -10,6 +10,8 @@ module.exports = function ordersFilterReducer(state, action) {
     }
 
     switch (action.type) {
+        case ActionTypes.PRODUCTS.INVENTORY.GET_STARTED:
+            return Immutable.Map({});
         case ActionTypes.PRODUCTS.INVENTORY.GET_SUCCESS:
             return state.set(action.payload.product.merchant_sku, action.payload.inventory);
         case ActionTypes.PRODUCTS.INVENTORY.GET_FAILURE:
