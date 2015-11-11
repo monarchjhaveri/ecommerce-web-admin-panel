@@ -17,6 +17,7 @@
 
 .products-view {
   $product-view-sidebar-width: 150px;
+  $product-view-details-width: 700px;
   .product-view-sidebar {
     position: absolute;
     width: $product-view-sidebar-width;
@@ -43,14 +44,18 @@
   .product-details {
     position: absolute;
     left: $product-view-sidebar-width;
+    width: $product-view-details-width;
+    top: 0;
+    bottom: 0;
+    overflow-y: scroll;
+    padding: 20px;
+  }
+  .product-inventory {
+    position: absolute;
+    left: $product-view-sidebar-width + $product-view-details-width;
     right: 0;
     top: 0;
     bottom: 0;
-    &.editor {
-      overflow-y: scroll;
-      width: 700px;
-      padding: 20px;
-    }
   }
 }
 

@@ -2,6 +2,7 @@ var React = require("react");
 var Immutable = require("immutable");
 
 var ProductDetails = require ("./../components/ProductDetails.jsx");
+var ProductInventory = require ("./../components/ProductInventory.jsx");
 var ProductSelectList = require("../components/ProductSelectList.jsx");
 
 var store = require("../store/store");
@@ -12,6 +13,7 @@ var ProductAC = require("../actions/ProductAC");
 
 var ProductsView = React.createClass({ displayName:"ProductsView",
     propTypes: {
+        inventory: React.PropTypes.object,
         products: React.PropTypes.object,
         selectedProduct: React.PropTypes.object,
         productDetails: React.PropTypes.object
@@ -35,6 +37,9 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
     createAction: function() {
         ProductAC.openEditorToCreate();
     },
+    submitInventory: function() {
+        alert("Inventory Submitted");
+    },
     render: function() {
         return (
             <div className="view products-view">
@@ -49,6 +54,11 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
                     submitEdit={this.submitEdit}
                     onDelete={this.onDelete}
                 />
+                <ProductInventory
+                    product={this.props.selectedProduct}
+                    inventory={this.props.inventory}
+                    onSubmitInventory={this.submitInventory}
+                />
             </div>
         )
     }
@@ -57,6 +67,7 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
 function mapStateToProps(state) {
     return {
         products: state.products,
+        inventory: state.inventory,
         selectedProduct: state.selectedProduct
     }
 }

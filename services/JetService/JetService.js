@@ -159,7 +159,7 @@ function _getProductsList(callback) {
 
 function _getOrdersListByStatus(status) {
     return function(callback) {
-        if (!status || !VALID_ORDER_STATUSES.indexOf(status)) {
+        if (!status || VALID_ORDER_STATUSES.indexOf(status) < 0) {
             callback(new Error("Unknown order status [%s]".replace("%s", status)));
         }
         JetApi.orders.listByStatus(status, authData.id_token, function(listErr, listData){
