@@ -12,7 +12,7 @@ var ordersReducer = require("./reducers/ordersReducer");
 var popoversReducer = require("./reducers/popoversReducer");
 var routerStateReducer = require("redux-router").routerStateReducer;
 
-var createHistory = require("history").createHistory;
+var createHistory = require("history/lib/createHashHistory");
 var reduxReactRouter = require("redux-router").reduxReactRouter;
 
 var ActionTypes = require("../actions/ActionTypes");

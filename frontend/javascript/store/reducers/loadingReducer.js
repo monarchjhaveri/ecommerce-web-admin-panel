@@ -1,7 +1,7 @@
 var Immutable = require("immutable");
 var ActionTypes = require("../../actions/ActionTypes");
 
-var defaultState = Immutable.Map({});
+var defaultState = false;
 
 module.exports = function productDetailsReducer(state, action) {
     if (typeof state === 'undefined') {
