@@ -72,7 +72,7 @@ var App = React.createClass({
                         <Route path="/" component={Layout}>
                             <IndexRoute component={ProductsView}/>
                             <Route path="orders" component={OrdersView}>
-                                <Route path=":id" component={OrdersView}/>
+                                <Route path=":merchant_order_id" component={OrdersView}/>
                             </Route>
                         </Route>
                     </ReduxRouter>

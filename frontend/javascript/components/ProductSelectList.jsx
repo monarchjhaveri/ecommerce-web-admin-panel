@@ -11,14 +11,14 @@ var ProductSelectList = React.createClass({ displayName: "ProductSelectList",
     render: function() {
         return (
             <div className="view-sidebar">
-                <div className="sidebar-list-button-top btn btn-small btn-info"
+                <div className="sidebar-list-button btn btn-small btn-info"
                      onClick={ProductAC.fetchAll}>
                     Fetch Products
                 </div>
                 <div className="sidebar-select-list">
                     {_createProductsArray(this.props.products, this.props.selectedProduct, this.props.onSelectChange)}
                 </div>
-                <div className="sidebar-list-button-bottom btn btn-small btn-success"
+                <div className="sidebar-list-button btn btn-small btn-success"
                     onClick={this.props.createAction}>
                     New
                 </div>

@@ -11,6 +11,10 @@
   min-height: 400px;
 }
 
+.layout-wrapper {
+  height: 100%
+}
+
 .view {
   height:  100%;
 }
@@ -19,7 +23,8 @@
   $product-view-sidebar-width: 150px;
   $product-view-details-width: 700px;
   .view-sidebar {
-    position: absolute;
+    display: inline-block;
+    float: left;
     width: $product-view-sidebar-width;
     height: 100%;
     .sidebar-select-list {

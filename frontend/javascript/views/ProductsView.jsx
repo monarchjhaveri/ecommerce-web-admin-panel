@@ -113,7 +113,8 @@ function mapStateToProps(state) {
         selectedProduct: state.selectedProduct,
         merchant: state.merchant,
         productInventory: state.productInventory,
-        productPrice: state.productPrice
+        productPrice: state.productPrice,
+        router: state.router
     }
 }
 

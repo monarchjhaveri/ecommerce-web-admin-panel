@@ -39,29 +39,24 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
     componentWillReceiveProps: function(nextProps) {
         this.setState(nextProps.ordersFilter);
     },
+    getSelectedOrder: function() {
+        var selectedOrder = this.props.router && this.props.router.params && this.props.router.params.merchant_order_id;
+        return selectedOrder ? selectedOrder : null;
+    },
     getOrderElements: function() {
         var orders = this.props.orders.toList();
         var className = "sidebar-select-list-item";
-        //className = selectedProduct && selectedProduct.merchant_sku === d.merchant_sku ? className + " selected" : className;
-        //var key = d.merchant_sku + ":" + d.product_title;
-        //<div key={key}
-        //     className={className}
-        //     onClick={onSelectProductFunctionBuilder(d, onSelectChange)}>
-        //    {d.product_title}
-        //</div>
         var self = this;
         var ordersDOM = orders.map(function(d) {
             return (
-                <div key={d.merchant_order_id} className={className}
-                    onClick={self.onSelectOrder}>
-                    {d.merchant_order_id}
+                <div key={d.merchant_order_id} className={className}>
+                     <Link to={"orders/" + d.merchant_order_id}>
+                        {d.merchant_order_id}
+                     </Link>
                 </div>
             )
         });
         return ordersDOM;
-    },
-    onSelectOrder: function(ev) {
-        alert("Selected Order Code  " + ev.target.innerText);
     },
     render: function() {
         return (
@@ -85,6 +80,9 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
                         {this.getOrderElements()}
                     </div>
                 </div>
+                <div className="order-details">
+                    {this.getSelectedOrder()}
+                </div>
             </div>
         )
     }
@@ -97,7 +95,8 @@ function mapStateToProps(state) {
         orders: state.orders,
         selectedOrder: state.selectedOrder,
         orderDetails: state.orderDetails,
-        ordersFilter: state.ordersFilter
+        ordersFilter: state.ordersFilter,
+        router: state.router
     }
 }
 
