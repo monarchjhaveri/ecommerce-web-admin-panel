@@ -77,6 +77,10 @@ JetService.getOrdersListByStatus = function(status, callback) {
     _retryIfFailed("getOrdersListByStatus", _getOrdersListByStatus(status), callback);
 };
 
+JetService.getOrderDetails = function(status, callback) {
+    _retryIfFailed("getOrderDetails", _getOrderDetails(status), callback);
+};
+
 JetService.getDetails = function(sku, callback) {
     _retryIfFailed("getDetails", _getDetails(sku), callback);
 };
@@ -253,6 +257,22 @@ function _getOrdersListByStatus(status) {
                 callback(listErr);
             } else {
                 callback(null, _extractMerchantOrderIds(listData));
+            }
+        });
+    }
+}
+
+function _getOrderDetails(merchant_order_id) {
+    return function (callback) {
+        if (!merchant_order_id) {
+            callback(new Error("Merchant order ID was undefined."));
+            return;
+        }
+        JetApi.orders.getDetails(merchant_order_id, authData.id_token, function(getDetailsErr, data){
+            if (getDetailsErr) {
+                callback(getDetailsErr);
+            } else {
+                callback(null, data);
             }
         });
     }

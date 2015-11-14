@@ -124,15 +124,15 @@ var OrderAC = {
             });
         });
     },
-    getDetails: function(order) {
+    getDetails: function(merchant_order_id) {
         store.dispatch(function(dispatch) {
             dispatch({
                 type: ActionTypes.ORDERS.GET_DETAILS_STARTED
             });
             $.ajax({
                 method: "GET",
-                url: "api/orders/:sku"
-                    .replace(":sku", order.merchant_sku),
+                url: "api/orders/order/:merchant_order_id"
+                    .replace(":merchant_order_id", merchant_order_id),
                 error: function(request, error) {
                     dispatch({
                         type: ActionTypes.ORDERS.GET_DETAILS_FAILURE,

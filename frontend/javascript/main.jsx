@@ -64,6 +64,11 @@ var Layout = React.createClass({
 });
 
 var App = React.createClass({
+    fetchOrder: function(x,y){
+        var merchant_order_id = x.params.merchant_order_id;
+        OrderAC.getDetails(merchant_order_id);
+        console.log(merchant_order_id);
+    },
     render: function() {
         return (
             <div>
@@ -72,7 +77,7 @@ var App = React.createClass({
                         <Route path="/" component={Layout}>
                             <IndexRoute component={ProductsView}/>
                             <Route path="orders" component={OrdersView}>
-                                <Route path=":merchant_order_id" component={OrdersView}/>
+                                <Route path=":merchant_order_id" component={OrdersView} onEnter={this.fetchOrder}/>
                             </Route>
                         </Route>
                     </ReduxRouter>

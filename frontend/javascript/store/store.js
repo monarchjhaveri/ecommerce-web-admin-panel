@@ -8,6 +8,7 @@ var thunk = require("redux-thunk");
 
 var loadingReducer = require("./reducers/loadingReducer");
 var selectionReducer = require("./reducers/selectionReducer");
+var selectedOrderReducer = require("./reducers/selectedOrderReducer");
 var productsReducer = require("./reducers/productsReducer");
 var ordersReducer = require("./reducers/ordersReducer");
 var popoversReducer = require("./reducers/popoversReducer");
@@ -45,6 +46,7 @@ function reducer(state, action) {
         orders: ordersReducer(state.orders, action),
         loading: loadingReducer(state.loading, action),
         selectedProduct: selectionReducer(state.selectedProduct, action),
+        selectedOrder: selectedOrderReducer(state.selectedOrder, action),
         popovers: popoversReducer(state.popovers, action),
         ordersFilter: ordersFilterReducer(state.ordersFilter, action),
         merchant: merchantReducer(state.merchant, action),

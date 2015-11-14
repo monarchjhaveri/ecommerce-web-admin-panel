@@ -9,6 +9,15 @@ var getAppropriateStatusCode = require("./ResourceErrorMessageHelper").getApprop
 
 var OrdersResource = {};
 
+OrdersResource.getDetails = function(req, res, next) {
+    var merchant_order_id = req.params.merchant_order_id;
+    async.waterfall([
+        function(callback) {
+            JetService.getOrderDetails(merchant_order_id, callback);
+        }
+    ], _responseFunctionFactory("get list of orders", res));
+};
+
 OrdersResource.list = function(req, res, next) {
     var orderStatus = req.params.order_status;
     async.waterfall([
