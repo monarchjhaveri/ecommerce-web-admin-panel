@@ -39,17 +39,20 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
     componentWillReceiveProps: function(nextProps) {
         this.setState(nextProps.ordersFilter);
     },
-    getSelectedOrder: function() {
+    getSelectedOrderId: function() {
         var selectedOrder = this.props.router && this.props.router.params && this.props.router.params.merchant_order_id;
         return selectedOrder ? selectedOrder : null;
     },
     getOrderElements: function() {
         var orders = this.props.orders.toList();
         var className = "sidebar-select-list-item";
-        var self = this;
+        var selectedOrderId = this.getSelectedOrderId();
         var ordersDOM = orders.map(function(d) {
+            var thisClassName = selectedOrderId && d.merchant_order_id === selectedOrderId ?
+                className + " selected" :
+                className;
             return (
-                <div key={d.merchant_order_id} className={className}>
+                <div key={d.merchant_order_id} className={thisClassName}>
                      <Link to={"orders/" + d.merchant_order_id}>
                         {d.merchant_order_id}
                      </Link>
@@ -69,7 +72,6 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
                     <div className="sidebar-list-button">
                         <div className="sidebar-list-button-panel">
                             <select
-                                defaultValue={null}
                                 value={this.props.ordersFilter.get("state")}
                                 onChange={this.handleOrdersFilterStatusChange} >
                                 {filterByStatusOptions}
@@ -81,7 +83,7 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
                     </div>
                 </div>
                 <div className="order-details">
-                    {this.getSelectedOrder()}
+                    {this.getSelectedOrderId()}
                 </div>
             </div>
         )
