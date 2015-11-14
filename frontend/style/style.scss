@@ -23,11 +23,10 @@
     width: $product-view-sidebar-width;
     height: 100%;
     .sidebar-select-list {
-      position: absolute;
+      display: block;
       width: $product-view-sidebar-width;
       text-overflow: ellipsis;
       height: 90%;
-      top: 5%;
       overflow-y: scroll;
       .sidebar-select-list-item {
         &.selected {
@@ -35,21 +34,14 @@
         }
       }
     }
-    .sidebar-list-button-top, .sidebar-list-button-bottom {
-      position: absolute;
+    .sidebar-list-button {
+      display: block;
       width: $product-view-sidebar-width;
-      height: 5%;
-    }
-    .sidebar-list-button-top {
-      top: 0;
-    }
-    .sidebar-list-button-bottom {
-      bottom: 0;
-    }
-    .sidebar-list-button-bottom-panel {
-      background: $gray-lighter;
-      width: 100%;
-      height: 100%;
+      .sidebar-list-button-panel {
+        background: $gray-lighter;
+        width: 100%;
+        height: 100%;
+      }
     }
   }
   .product-details {

@@ -61,21 +61,18 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
         return ordersDOM;
     },
     onSelectOrder: function(ev) {
-        alert("Selected Order Code" + ev.target.innerText);
+        alert("Selected Order Code  " + ev.target.innerText);
     },
     render: function() {
         return (
             <div className="view">
                 <div className="view-sidebar">
-                    <div className="sidebar-list-button-top btn btn-small btn-info"
+                    <div className="sidebar-list-button btn btn-small btn-info"
                         onClick={this.fetchOrders}>
                         Fetch Orders
                     </div>
-                    <div className="sidebar-select-list">
-                        {this.getOrderElements()}
-                    </div>
-                    <div className="sidebar-list-button-bottom">
-                        <div className="sidebar-list-button-bottom-panel">
+                    <div className="sidebar-list-button">
+                        <div className="sidebar-list-button-panel">
                             <select
                                 defaultValue={null}
                                 value={this.props.ordersFilter.get("state")}
@@ -83,6 +80,9 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
                                 {filterByStatusOptions}
                             </select>
                         </div>
+                    </div>
+                    <div className="sidebar-select-list">
+                        {this.getOrderElements()}
                     </div>
                 </div>
             </div>
