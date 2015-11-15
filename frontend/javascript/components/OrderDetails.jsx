@@ -124,6 +124,10 @@ var OrderDetails = React.createClass({ displayName: "OrderDetails",
                         </table>
                     </div>
                 </div>
+                <h4>Raw Data</h4>
+                <pre>
+                    {JSON.stringify(order, null, 4)}
+                </pre>
             </div>
         )
     }
