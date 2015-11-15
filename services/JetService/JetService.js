@@ -101,6 +101,18 @@ JetService.updateProductInventory = function(fulfillmentNodesDto, sku, originalC
     _retryIfFailed("getProductInventory", _editInventory(fulfillmentNodesDto, sku), originalCallback);
 };
 
+JetService.acknowledgeOrder = function(acknowledgeItemDto, merchant_order_id, originalCallback) {
+    _retryIfFailed("getProductInventory", function(callback) {
+        JetApi.orders.acknowledge(merchant_order_id, acknowledgeItemDto, authData.id_token, function(err, data) {
+            if (err) {
+                callback(err);
+            } else {
+                callback(null, data);
+            }
+        });
+    }, originalCallback);
+};
+
 JetService.getProductPrice = function(sku, originalCallback) {
     _retryIfFailed("getProductInventory", function(callback) {
         JetApi.products.price.list(sku, authData.id_token, function(err, inventory){

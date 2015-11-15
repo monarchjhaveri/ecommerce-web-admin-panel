@@ -27,6 +27,24 @@ OrdersResource.list = function(req, res, next) {
     ], _responseFunctionFactory("get list of orders", res));
 };
 
+OrdersResource.acknowledge = function(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            if (!req.params || !req.params.merchant_order_id) {
+                callback(new Error("Must provide a merchant_order_id"));
+            }
+            if (!req.body) {
+                callback(new Error("Must provide Acknowledgement DTO."));
+            }
+
+            var payload = req.body;
+            var merchant_order_id = req.params.merchant_order_id;
+            callback(null, payload, merchant_order_id);
+        },
+        JetService.acknowledgeOrder
+    ], _responseFunctionFactory("update product inventory", res));
+};
+
 function _responseFunctionFactory(action, res) {
     return function(err, data) {
         if (err) {

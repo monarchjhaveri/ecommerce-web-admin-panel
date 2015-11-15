@@ -36,33 +36,34 @@ var OrderAC = {
             });
         });
     },
-    edit: function(order) {
+    /**
+     *
+     * @param merchant_order_id
+     * @param acknowledgement_dto
+     */
+    acknowledge: function(merchant_order_id, acknowledgement_dto) {
         store.dispatch(function(dispatch) {
             dispatch({
-                type: ActionTypes.ORDERS.EDIT_STARTED
+                type: ActionTypes.ORDERS.ACKNOWLEDGE_STARTED
             });
             $.ajax({
                 method: "PUT",
-                url: "api/orders",
+                url: "api/orders/order/:merchant_order_id/acknowledge".replace(":merchant_order_id", merchant_order_id),
                 contentType:'application/json',
                 dataType:'json',
-                data: JSON.stringify(order),
+                data: JSON.stringify(acknowledgement_dto),
                 error: function(request, error) {
                     dispatch({
-                        type: ActionTypes.ORDERS.EDIT_FAILURE,
+                        type: ActionTypes.ORDERS.ACKNOWLEDGE_FAILURE,
                         payload: error
                     });
-                    OrderAC.getDetails(order);
                     PopoverAC.displayError(request.responseText);
                 },
                 success: function(data) {
-                    //dispatch({
-                    //    type: ActionTypes.ORDERS.EDIT_SUCCESS,
-                    //    payload: data
-                    //});
-                    setTimeout(function() {
-                        dispatch(OrderAC.getDetails(order));
-                    }, 500);
+                    dispatch({
+                        type: ActionTypes.ORDERS.ACKNOWLEDGE_SUCCESS,
+                        payload: data
+                    });
                 }
             });
         });

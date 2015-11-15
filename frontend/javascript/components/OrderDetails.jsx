@@ -4,6 +4,12 @@ var jQuery = require("jquery");
 var Immutable = require("immutable");
 var moment = require("moment");
 
+var t = require('tcomb-form');
+var Form = t.form.Form;
+
+var ProductModel = require("./models/ProductModel").model;
+var productModelOptionsFactory = require("./models/ProductModel").optionsFactory;
+
 var OrderDetails = React.createClass({ displayName: "OrderDetails",
     order: {
         order: React.PropTypes.object

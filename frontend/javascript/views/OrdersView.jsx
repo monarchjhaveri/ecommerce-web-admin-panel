@@ -10,6 +10,12 @@ var Link = require("react-router").Link;
 
 var OrderAC = require("../actions/OrderAC");
 
+var t = require('tcomb-form');
+var Form = t.form.Form;
+
+var OrderAcknowledgementModel = require("../components/models/OrderAcknowledgement");
+
+
 var filterByStatusOptions = [
     {value: Constants.ORDER_STATUS.ACKNOWLEDGED, label: "Acknowledged"},
     {value: Constants.ORDER_STATUS.COMPLETE, label: "Complete"},
@@ -51,6 +57,36 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
     getSelectedOrderId: function() {
         var selectedOrder = this.props.router && this.props.router.params && this.props.router.params.merchant_order_id;
         return selectedOrder ? selectedOrder : null;
+    },
+    cancelAcknowledgement: function() {
+        console.log(this.refs.form);
+    },
+    submitAcknowledgement: function() {
+        var value = this.refs.form.getValue();
+        var merchant_order_id = this.getSelectedOrderId();
+
+        // getValue returns null if validation failed
+        if (!value) {
+            return;
+        }
+
+        OrderAC.acknowledge(merchant_order_id, this.refs.form.getValue());
+    },
+    getRightViewColumn: function() {
+        if (!this.getSelectedOrderId()) {
+            return null;
+        }
+        return (
+            <div className="view-right-column">
+                <h3>Acknowledgement</h3>
+                <Form
+                    type={OrderAcknowledgementModel}
+                    ref="form"
+                />
+                <div className="btn btn-warn" onClick={this.cancelAcknowledgement}>Cancel</div>
+                <div className="btn btn-success" onClick={this.submitAcknowledgement}>Submit</div>
+            </div>
+        )
     },
     getOrderElements: function() {
         var orders = this.props.orders.toList();
@@ -94,6 +130,7 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
                 <div className="view-details">
                     {this.getSelectedOrderDom()}
                 </div>
+                {this.getRightViewColumn()}
             </div>
         )
     }
