@@ -31,7 +31,7 @@ var ProductEditor = React.createClass({displayName:"ProductEditor",
     },
     render: function() {
         return (
-            <div className="product-details">
+            <div className="view-details">
                 {this.createForm(this.props.product)}
                 <div className="btn btn-warn" onClick={this.props.cancelEdit}>Cancel</div>
                 <div className="btn btn-success" onClick={this.submitEdit}>Submit</div>

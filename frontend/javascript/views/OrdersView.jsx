@@ -1,8 +1,7 @@
 var React = require("react");
 var Immutable = require("immutable");
 
-var ProductDetails = require ("./../components/ProductDetails.jsx");
-var ProductSelectList = require("../components/ProductSelectList.jsx");
+var OrderDetails = require ("./../components/OrderDetails.jsx");
 
 var Constants = require("../Constants");
 var store = require("../store/store");
@@ -38,6 +37,16 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
     },
     componentWillReceiveProps: function(nextProps) {
         this.setState(nextProps.ordersFilter);
+    },
+    getSelectedOrderDom: function() {
+        var selectedOrderId = this.getSelectedOrderId();
+        var selectedOrder = this.getOrderById(selectedOrderId);
+        return (
+            <OrderDetails order={selectedOrder}/>
+        )
+    },
+    getOrderById: function(orderId) {
+        return this.props.orders.get(orderId);
     },
     getSelectedOrderId: function() {
         var selectedOrder = this.props.router && this.props.router.params && this.props.router.params.merchant_order_id;
@@ -82,8 +91,8 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
                         {this.getOrderElements()}
                     </div>
                 </div>
-                <div className="order-details">
-                    {this.getSelectedOrderId()}
+                <div className="view-details">
+                    {this.getSelectedOrderDom()}
                 </div>
             </div>
         )
