@@ -66,8 +66,12 @@ var Layout = React.createClass({
 var App = React.createClass({
     fetchOrder: function(x,y){
         var merchant_order_id = x.params.merchant_order_id;
-        OrderAC.getDetails(merchant_order_id);
-        console.log(merchant_order_id);
+        var selectedOrder = store.getState().selectedOrder;
+        if (selectedOrder && selectedOrder.merchant_order_id === merchant_order_id) {
+
+        } else {
+            OrderAC.getDetails(merchant_order_id);
+        }
     },
     render: function() {
         return (
@@ -78,6 +82,7 @@ var App = React.createClass({
                             <IndexRoute component={ProductsView}/>
                             <Route path="orders" component={OrdersView}>
                                 <Route path=":merchant_order_id" component={OrdersView} onEnter={this.fetchOrder}/>
+                                <Route path=":merchant_order_id/:view_mode" component={OrdersView} onEnter={this.fetchOrder}/>
                             </Route>
                         </Route>
                     </ReduxRouter>

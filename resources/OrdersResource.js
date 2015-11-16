@@ -15,6 +15,24 @@ OrdersResource.getDetails = function(req, res, next) {
         function(callback) {
             JetService.getOrderDetails(merchant_order_id, callback);
         }
+        //function(originalData, originalCallback) {
+        //    var relevant_products = {};
+        //    async.forEach(
+        //        originalData.order_items,
+        //        function(orderItem, iteratorCallback) {
+        //            MongoDbHelper.find({merchant_sku: orderItem.merchant_sku}, function(error, data) {
+        //                if (data) {
+        //                    relevant_products[orderItem.merchant_sku] = data[0];
+        //                }
+        //                iteratorCallback(null, data);
+        //            })
+        //        },
+        //        function(err) {
+        //            originalData.relevant_products = relevant_products;
+        //            originalCallback(err, originalData)
+        //        }
+        //    );
+        //}
     ], _responseFunctionFactory("get list of orders", res));
 };
 
@@ -42,7 +60,7 @@ OrdersResource.acknowledge = function(req, res, next) {
             callback(null, payload, merchant_order_id);
         },
         JetService.acknowledgeOrder
-    ], _responseFunctionFactory("update product inventory", res));
+    ], _responseFunctionFactory("acknowledge order", res));
 };
 
 function _responseFunctionFactory(action, res) {

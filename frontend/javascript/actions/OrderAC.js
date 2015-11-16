@@ -61,8 +61,10 @@ var OrderAC = {
                 },
                 success: function(data) {
                     dispatch({
-                        type: ActionTypes.ORDERS.ACKNOWLEDGE_SUCCESS,
-                        payload: data
+                        type: ActionTypes.ORDERS.CLEAR_SELECTION
+                    });
+                    dispatch({
+                        type: ActionTypes.ORDERS.ACKNOWLEDGE_SUCCESS
                     });
                 }
             });

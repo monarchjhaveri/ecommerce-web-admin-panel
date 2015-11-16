@@ -9,12 +9,10 @@ module.exports = function selectedOrderReducer(state, action) {
     }
 
     switch (action.type) {
-        case ActionTypes.ORDERS.EDIT_SUCCESS:
-        case ActionTypes.ORDERS.CREATE_SUCCESS:
         case ActionTypes.ORDERS.SELECT:
             return action.payload;
-        case ActionTypes.ORDERS.DELETE_SUCCESS:
-            return null;
+        case ActionTypes.ORDERS.CLEAR_SELECTION:
+            return {};
         default:
             return state;
     }

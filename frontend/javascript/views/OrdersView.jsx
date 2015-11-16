@@ -45,11 +45,31 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
         this.setState(nextProps.ordersFilter);
     },
     getSelectedOrderDom: function() {
-        var selectedOrderId = this.getSelectedOrderId();
-        var selectedOrder = this.getOrderById(selectedOrderId);
-        return (
-            <OrderDetails order={selectedOrder}/>
-        )
+        if (!this.getSelectedOrderId()) {
+            return null;
+        }
+        if (this.isInAcknowledgedScreen()) {
+            var link = "orders/" + this.getSelectedOrderId();
+            return (
+                <div className="col-xs-12">
+                    <h3>Acknowledgement</h3>
+                    <Form
+                        type={OrderAcknowledgementModel}
+                        ref="form"
+                        />
+                    <Link className="btn btn-warning" to={link}>
+                        Cancel
+                    </Link>
+                    <div className="btn btn-success" onClick={this.submitAcknowledgement}>Submit</div>
+                </div>
+            );
+        } else {
+            var selectedOrderId = this.getSelectedOrderId();
+            var selectedOrder = this.getOrderById(selectedOrderId);
+            return (
+                <OrderDetails order={selectedOrder}/>
+            )
+        }
     },
     getOrderById: function(orderId) {
         return this.props.orders.get(orderId);
@@ -57,6 +77,10 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
     getSelectedOrderId: function() {
         var selectedOrder = this.props.router && this.props.router.params && this.props.router.params.merchant_order_id;
         return selectedOrder ? selectedOrder : null;
+    },
+    isInAcknowledgedScreen: function() {
+        var viewMode = this.props.router && this.props.router.params && this.props.router.params.view_mode;
+        return viewMode === "acknowledge";
     },
     cancelAcknowledgement: function() {
         console.log(this.refs.form);
@@ -76,15 +100,14 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
         if (!this.getSelectedOrderId()) {
             return null;
         }
+
+        var link = "orders/" + this.getSelectedOrderId() + "/acknowledge";
         return (
             <div className="view-right-column">
-                <h3>Acknowledgement</h3>
-                <Form
-                    type={OrderAcknowledgementModel}
-                    ref="form"
-                />
-                <div className="btn btn-warn" onClick={this.cancelAcknowledgement}>Cancel</div>
-                <div className="btn btn-success" onClick={this.submitAcknowledgement}>Submit</div>
+                <h3>Options</h3>
+                <Link className="btn btn-default" to={link}>
+                    Acknowledge
+                </Link>
             </div>
         )
     },

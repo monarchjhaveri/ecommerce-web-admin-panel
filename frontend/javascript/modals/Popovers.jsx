@@ -14,7 +14,7 @@ var Popovers = React.createClass({ displayName: "Popovers",
             var className = "popover popover-" + d.type;
             var jsonObject;
             try {
-                jsonObject = JSON.parse(d.message);
+                jsonObject = d.message ? JSON.parse(d.message) : null;
             } catch (e) {
                 jsonObject = {
                     message: "UNKNOWN ERROR, Failed to parse JSON. Content is below.",
