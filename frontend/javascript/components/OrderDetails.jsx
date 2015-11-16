@@ -128,6 +128,10 @@ var OrderDetails = React.createClass({ displayName: "OrderDetails",
                             </tr>
                             </tbody>
                         </table>
+                        <h4>Order Items</h4>
+                        <div className="container col-xs-12">
+                            {orderItemsToDom(order.order_items)}
+                        </div>
                     </div>
                 </div>
                 <h4>Raw Data</h4>
@@ -138,6 +142,61 @@ var OrderDetails = React.createClass({ displayName: "OrderDetails",
         )
     }
 });
+
+function orderItemsToDom(order_items) {
+    if (!order_items) return null;
+    var dom = [];
+    for (var i = 0; i < order_items.length; i++) {
+        var o = order_items[i];
+        dom.push(
+            <div className="row" key={o.order_item_id}>
+                <table className="table table-bordered table-condensed">
+                    <tr>
+                        <td>Product Title</td>
+                        <td>{o.product_title}</td>
+                    </tr>
+                    <tr>
+                        <td>Product SKU</td>
+                        <td>{o.merchant_sku}</td>
+                    </tr>
+                    <tr>
+                        <td>Order Item ID</td>
+                        <td>{o.order_item_id}</td>
+                    </tr>
+                    <tr>
+                        <td>Base Price</td>
+                        <td>{o.item_price && o.item_price.base_price}</td>
+                    </tr>
+                    <tr>
+                        <td>Item Shipping Cost</td>
+                        <td>{o.item_price && o.item_price.item_shipping_cost}</td>
+                    </tr>
+                    <tr>
+                        <td>Item Shipping Tax</td>
+                        <td>{o.item_price && o.item_price.item_shipping_tax}</td>
+                    </tr>
+                    <tr>
+                        <td>request_order_quantity</td>
+                        <td>{o.request_order_quantity}</td>
+                    </tr>
+                    <tr>
+                        <td>request_order_cancel_qty</td>
+                        <td>{o.request_order_cancel_qty}</td>
+                    </tr>
+                    <tr>
+                        <td>Item Tax</td>
+                        <td>{o.item_price && o.item_price.item_tax}</td>
+                    </tr>
+                    <tr>
+                        <td>Item Tax Code</td>
+                        <td>{o.item_price && o.item_price.item_tax_code}</td>
+                    </tr>
+                </table>
+            </div>
+        )
+    }
+    return dom;
+}
 
 function timestampToString(timestamp) {
     if (!timestamp) return null;

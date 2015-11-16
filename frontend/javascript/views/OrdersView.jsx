@@ -13,7 +13,7 @@ var OrderAC = require("../actions/OrderAC");
 var t = require('tcomb-form');
 var Form = t.form.Form;
 
-var OrderAcknowledgementModel = require("../components/models/OrderAcknowledgement");
+var OrderAcknowledgementModelFactory = require("../components/models/OrderAcknowledgement").modelFactory;
 
 
 var filterByStatusOptions = [
@@ -54,7 +54,7 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
                 <div className="col-xs-12">
                     <h3>Acknowledgement</h3>
                     <Form
-                        type={OrderAcknowledgementModel}
+                        type={OrderAcknowledgementModelFactory(this.getSelectedOrder())}
                         ref="form"
                         />
                     <Link className="btn btn-warning" to={link}>
@@ -77,6 +77,17 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
     getSelectedOrderId: function() {
         var selectedOrder = this.props.router && this.props.router.params && this.props.router.params.merchant_order_id;
         return selectedOrder ? selectedOrder : null;
+    },
+    getSelectedOrder: function() {
+        var selectedOrderId = this.getSelectedOrderId();
+        if (!selectedOrderId) {
+            return null;
+        }
+        var selectedOrder = this.getOrderById(selectedOrderId);
+        if (!selectedOrder) {
+            return null;
+        }
+        return selectedOrder;
     },
     isInAcknowledgedScreen: function() {
         var viewMode = this.props.router && this.props.router.params && this.props.router.params.view_mode;
