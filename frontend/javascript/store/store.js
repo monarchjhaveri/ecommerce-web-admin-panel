@@ -31,7 +31,7 @@ var initialState = {
     selectedOrder: {},
     popovers: Immutable.List([]),
     ordersFilter: Immutable.Map({
-        status: Constants.ORDER_STATUS.CREATED
+        status: Constants.ORDER_STATUS.ACKNOWLEDGED
     }),
     merchant: Immutable.Map({
         fulfillmentNodes: null
