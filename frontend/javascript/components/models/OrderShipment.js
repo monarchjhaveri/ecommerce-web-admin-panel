@@ -18,11 +18,11 @@ function order_shipment_item(order) {
     return t.struct({
         shipment_item_id: t.maybe(t.String),
         merchant_sku: t.enums(orderEnums),
+        return_location: t.maybe(t.list(return_location(order))),
         response_shipment_sku_quantity: t.maybe(t.Number),
         response_shipment_cancel_qty: t.maybe(t.Number),
         RMA_number: t.maybe(t.String),
-        days_to_return: t.maybe(t.Number),
-        return_location: t.maybe(return_location(order))
+        days_to_return: t.maybe(t.Number)
     });
 }
 
@@ -30,6 +30,7 @@ function order_shipped_shipment(order) {
     return t.struct({
         shipment_id: t.maybe(t.String),
         shipment_tracking_number: t.maybe(t.String),
+        shipment_items: t.maybe(t.list(order_shipment_item(order))),
         response_shipment_date: t.maybe(t.Date),
         response_shipment_method: t.maybe(t.String),
         expected_delivery_date: t.maybe(t.Date),
@@ -75,14 +76,13 @@ function order_shipped_shipment(order) {
             'YRC':'YRC',
             'Other':'Other'
         })),
-        carrier_pick_up_date: t.maybe(t.Date),
-        shipment_items: t.maybe(order_shipment_item(order))
+        carrier_pick_up_date: t.maybe(t.Date)
     })
 }
 
 function _orderShipment(order) {
     return t.struct({
-        shipments: t.list(_order_shipped_shipment(order))
+        shipments: t.list(order_shipped_shipment(order))
     });
 }
 

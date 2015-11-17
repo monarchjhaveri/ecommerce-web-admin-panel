@@ -17,7 +17,7 @@ var MerchantAC = {
                         type: ActionTypes.MERCHANT.GET_FULFILLMENT_NODES_FAILURE_SILENTLY,
                         payload: error
                     });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function (data) {
                     dispatch({

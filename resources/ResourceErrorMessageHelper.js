@@ -4,10 +4,18 @@
 var ResourceErrorMessageHelper = {};
 
 ResourceErrorMessageHelper.createErrorMessage = function(action, err) {
-    return "Failed to %action: %errorMessage"
-        .replace("%action", action)
-        .replace("%errorMessage", err.message);
-} ;
+    var errors;
+    try {
+        errors = JSON.parse(err.extras);
+    } catch (e) {
+        errors = err.extras;
+    }
+
+    var message = {};
+    message.message = "Failed to %action.".replace("%action", action);
+    message.errors = (errors && errors.errors) ? errors.errors : errors;
+    return message;
+};
 
 ResourceErrorMessageHelper.getAppropriateStatusCode = function(err) {
     return err.statusCode || 500;

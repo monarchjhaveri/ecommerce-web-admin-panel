@@ -25,7 +25,7 @@ var OrderAC = {
                         type: ActionTypes.ORDERS.FETCH_ALL_FAILURE,
                         payload: error
                     });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({
@@ -57,7 +57,7 @@ var OrderAC = {
                         type: ActionTypes.ORDERS.ACKNOWLEDGE_FAILURE,
                         payload: error
                     });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({
@@ -70,58 +70,30 @@ var OrderAC = {
             });
         });
     },
-    create: function(order) {
+    ship: function(merchant_order_id, shipment_dto) {
         store.dispatch(function(dispatch) {
             dispatch({
-                type: ActionTypes.ORDERS.CREATE_STARTED
+                type: ActionTypes.ORDERS.SHIP_STARTED
             });
             $.ajax({
-                method: "POST",
-                url: "api/orders",
+                method: "PUT",
+                url: "api/orders/order/:merchant_order_id/shipped".replace(":merchant_order_id", merchant_order_id),
                 contentType:'application/json',
                 dataType:'json',
-                data: JSON.stringify(order),
+                data: JSON.stringify(shipment_dto),
                 error: function(request, error) {
                     dispatch({
-                        type: ActionTypes.ORDERS.CREATE_FAILURE,
+                        type: ActionTypes.ORDERS.SHIP_FAILURE,
                         payload: error
                     });
-                    PopoverAC.displayError(request.responseText);
-                },
-                success: function(data) {
-                    //dispatch({
-                    //    type: ActionTypes.ORDERS.CREATE_SUCCESS,
-                    //    payload: data
-                    //});
-                    setTimeout(function() {
-                        dispatch(OrderAC.getDetails(order));
-                    }, 500);
-                }
-            });
-        });
-    },
-    delete: function(order) {
-        store.dispatch(function(dispatch) {
-            dispatch({
-                type: ActionTypes.ORDERS.DELETE_STARTED
-            });
-            $.ajax({
-                method: "DELETE",
-                url: "api/orders/:sku".replace(":sku", order._id),
-                contentType:'application/json',
-                dataType:'json',
-                data: JSON.stringify(order),
-                error: function(request, error) {
-                    dispatch({
-                        type: ActionTypes.ORDERS.DELETE_FAILURE,
-                        payload: error
-                    });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({
-                        type: ActionTypes.ORDERS.DELETE_SUCCESS,
-                        payload: data
+                        type: ActionTypes.ORDERS.CLEAR_SELECTION
+                    });
+                    dispatch({
+                        type: ActionTypes.ORDERS.SHIP_SUCCESS
                     });
                 }
             });
@@ -141,7 +113,7 @@ var OrderAC = {
                         type: ActionTypes.ORDERS.GET_DETAILS_FAILURE,
                         payload: error
                     });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({

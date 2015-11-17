@@ -17,7 +17,7 @@ var ProductAC = {
                         type: ActionTypes.PRODUCTS.FETCH_ALL_FAILURE,
                         payload: error
                     });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({
@@ -45,7 +45,7 @@ var ProductAC = {
                         payload: error
                     });
                     ProductAC.getDetails(product);
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     //dispatch({
@@ -75,7 +75,7 @@ var ProductAC = {
                         type: ActionTypes.PRODUCTS.CREATE_FAILURE,
                         payload: error
                     });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     //dispatch({
@@ -105,7 +105,7 @@ var ProductAC = {
                         type: ActionTypes.PRODUCTS.DELETE_FAILURE,
                         payload: error
                     });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({
@@ -130,7 +130,7 @@ var ProductAC = {
                         type: ActionTypes.PRODUCTS.GET_DETAILS_FAILURE,
                         payload: error
                     });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({
@@ -162,7 +162,7 @@ var ProductAC = {
                             error: error
                         }
                     });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({
@@ -196,7 +196,7 @@ var ProductAC = {
                         payload: error
                     });
                     ProductAC.getDetails(product);
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({
@@ -224,7 +224,7 @@ var ProductAC = {
                             error: error
                         }
                     });
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({
@@ -258,7 +258,7 @@ var ProductAC = {
                         payload: error
                     });
                     ProductAC.getDetails(product);
-                    PopoverAC.displayError(request.responseText);
+                    PopoverAC.displayError(request);
                 },
                 success: function(data) {
                     dispatch({

@@ -19,14 +19,14 @@ var Popovers = React.createClass({ displayName: "Popovers",
                 };
             } catch (e) {
                 jsonObject = {
-                    message: "UNKNOWN ERROR, Failed to parse JSON. Content is below.",
                     stack: d.message
                 }
             }
             return (
                 <div className={className} key={d.popoverId}>
                     <span className="btn btn-default close-button" onClick={function(){PopoverAC.clearPopover(d.popoverId)}}>Close</span>
-                    <span className="popover-title">ERROR: {jsonObject.message}</span>
+                    <span className="popover-title">ERROR</span>
+                    <span className="popover-stack">{jsonObject.message}</span>
                     <span className="popover-stack">{jsonObject.stack}</span>
                 </div>
             )

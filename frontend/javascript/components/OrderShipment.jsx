@@ -6,6 +6,7 @@ var moment = require("moment");
 var Link = require("react-router").Link;
 var connect = require("react-redux").connect;
 var OrderAC = require("../actions/OrderAC");
+var Constants = require("../Constants");
 
 var t = require('tcomb-form');
 var Form = t.form.Form;
@@ -36,11 +37,35 @@ var OrderShipment = React.createClass({ displayName: "OrderShipment",
             fetchOrderIfNeeded(merchantOrderId);
         }
     },
+    submitAcknowledgement: function() {
+        var value = this.refs.form.getValue();
+        var merchant_order_id = this.props.params && this.props.params.merchant_order_id;
+
+        // getValue returns null if validation failed
+        if (!value || !merchant_order_id) {
+            return;
+        }
+
+        OrderAC.ship(merchant_order_id, this.refs.form.getValue());
+    },
     render: function() {
         var merchantOrderId = this.props.params.merchant_order_id;
+        var selectedOrder = this.props.selectedOrder;
 
-        if (!merchantOrderId) {
-            return null;
+        if (!merchantOrderId || !selectedOrder) {
+            return (
+                <div className="col-xs-12">
+                    No order selected!
+                </div>
+            );
+        }
+
+        if (!selectedOrder.status || selectedOrder.status !== Constants.ORDER_STATUS.ACKNOWLEDGED) {
+            return (
+                <div className="col-xs-12">
+                    Order status MUST be "acknowledged" in order to ship it.
+                </div>
+            );
         }
 
         var link = "orders/" + this.props.params.merchant_order_id;
