@@ -3,19 +3,43 @@ var LinkedStateMixin = require("react-addons-linked-state-mixin");
 var jQuery = require("jquery");
 var Immutable = require("immutable");
 var moment = require("moment");
+var store = require("../store/store");
 
 var t = require('tcomb-form');
 var Form = t.form.Form;
 
 var ProductModel = require("./models/ProductModel").model;
 var productModelOptionsFactory = require("./models/ProductModel").optionsFactory;
+var OrderAC = require("../actions/OrderAC");
+var connect = require("react-redux").connect;
+
+function fetchOrderIfNeeded(merchantOrderId) {
+    var selectedOrder = store.getState().selectedOrder;
+    if (selectedOrder && selectedOrder.merchant_order_id === merchantOrderId) {
+
+    } else {
+        OrderAC.getDetails(merchantOrderId);
+    }
+}
 
 var OrderDetails = React.createClass({ displayName: "OrderDetails",
     order: {
         order: React.PropTypes.object
     },
+    componentWillMount: function() {
+        var merchantOrderId = this.props.params && this.props.params.merchant_order_id;
+        if (merchantOrderId) {
+            fetchOrderIfNeeded(merchantOrderId);
+        }
+    },
+    componentWillReceiveProps: function(nextProps){
+        var merchantOrderId = nextProps.params.merchant_order_id;
+        if (merchantOrderId) {
+            fetchOrderIfNeeded(merchantOrderId);
+        }
+    },
     render: function() {
-        var order = this.props.order;
+        var order = this.props.selectedOrder;
 
         if (!order) {
             return null;
@@ -208,4 +232,15 @@ function timestampToString(timestamp) {
     }
 }
 
-module.exports = OrderDetails;
+function mapStateToProps(state) {
+    return {
+        selectedOrder: state.selectedOrder
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+
+    }
+}
+module.exports = connect(mapStateToProps, mapDispatchToProps)(OrderDetails);

@@ -27,7 +27,7 @@ var filterByStatusOptions = [
 });
 filterByStatusOptions.unshift(<option key={"nullvalue"} disabled hidden value=''></option>);
 
-var ProductsView = React.createClass({ displayName:"OrdersView",
+var ProductsView = React.createClass({ displayName:"getSelectedOrder",
     propTypes: {
         orders: React.PropTypes.object,
         selectedOrder: React.PropTypes.object,
@@ -44,33 +44,33 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
     componentWillReceiveProps: function(nextProps) {
         this.setState(nextProps.ordersFilter);
     },
-    getSelectedOrderDom: function() {
-        if (!this.getSelectedOrderId()) {
-            return null;
-        }
-        if (this.isInAcknowledgedScreen()) {
-            var link = "orders/" + this.getSelectedOrderId();
-            return (
-                <div className="col-xs-12">
-                    <h3>Acknowledgement</h3>
-                    <Form
-                        type={OrderAcknowledgementModelFactory(this.getSelectedOrder())}
-                        ref="form"
-                        />
-                    <Link className="btn btn-warning" to={link}>
-                        Cancel
-                    </Link>
-                    <div className="btn btn-success" onClick={this.submitAcknowledgement}>Submit</div>
-                </div>
-            );
-        } else {
-            var selectedOrderId = this.getSelectedOrderId();
-            var selectedOrder = this.getOrderById(selectedOrderId);
-            return (
-                <OrderDetails order={selectedOrder}/>
-            )
-        }
-    },
+    //getSelectedOrderDom: function() {
+    //    if (!this.getSelectedOrderId()) {
+    //        return null;
+    //    }
+    //    if (this.isInAcknowledgedScreen()) {
+    //        var link = "orders/" + this.getSelectedOrderId();
+    //        return (
+    //            <div className="col-xs-12">
+    //                <h3>Acknowledgement</h3>
+    //                <Form
+    //                    type={OrderAcknowledgementModelFactory(this.getSelectedOrder())}
+    //                    ref="form"
+    //                    />
+    //                <Link className="btn btn-warning" to={link}>
+    //                    Cancel
+    //                </Link>
+    //                <div className="btn btn-success" onClick={this.submitAcknowledgement}>Submit</div>
+    //            </div>
+    //        );
+    //    } else {
+    //        var selectedOrderId = this.getSelectedOrderId();
+    //        var selectedOrder = this.getOrderById(selectedOrderId);
+    //        return (
+    //            <OrderDetails order={selectedOrder}/>
+    //        )
+    //    }
+    //},
     getOrderById: function(orderId) {
         return this.props.orders.get(orderId);
     },
@@ -141,6 +141,7 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
         return ordersDOM;
     },
     render: function() {
+        console.log("children", this.props.children);
         return (
             <div className="view">
                 <div className="view-sidebar">
@@ -162,7 +163,7 @@ var ProductsView = React.createClass({ displayName:"OrdersView",
                     </div>
                 </div>
                 <div className="view-details">
-                    {this.getSelectedOrderDom()}
+                    {this.props.children}
                 </div>
                 {this.getRightViewColumn()}
             </div>

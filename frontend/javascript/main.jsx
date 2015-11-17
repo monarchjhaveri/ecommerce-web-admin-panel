@@ -22,6 +22,9 @@ var IndexRoute = require("react-router").IndexRoute;
 var Link = require("react-router").Link;
 var IndexLink = require("react-router").IndexLink;
 
+var OrderDetails = require("./components/OrderDetails.jsx");
+var OrderAcknowledgement = require("./components/OrderAcknowledgement.jsx");
+
 var unsubscribe = store.subscribe(function() {
    
 });
@@ -81,8 +84,10 @@ var App = React.createClass({
                         <Route path="/" component={Layout}>
                             <IndexRoute component={ProductsView}/>
                             <Route path="orders" component={OrdersView}>
-                                <Route path=":merchant_order_id" component={OrdersView} onEnter={this.fetchOrder}/>
-                                <Route path=":merchant_order_id/:view_mode" component={OrdersView} onEnter={this.fetchOrder}/>
+                                <Route path=":merchant_order_id">
+                                    <IndexRoute component={OrderDetails} />
+                                    <Route path="acknowledge" component={OrderAcknowledgement} />
+                                </Route>
                             </Route>
                         </Route>
                     </ReduxRouter>
