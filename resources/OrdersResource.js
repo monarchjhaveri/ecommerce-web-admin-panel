@@ -63,6 +63,24 @@ OrdersResource.acknowledge = function(req, res, next) {
     ], _responseFunctionFactory("acknowledge order", res));
 };
 
+OrdersResource.shipped = function(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            if (!req.params || !req.params.merchant_order_id) {
+                callback(new Error("Must provide a merchant_order_id"));
+            }
+            if (!req.body) {
+                callback(new Error("Must provide Shipped DTO."));
+            }
+
+            var payload = req.body;
+            var merchant_order_id = req.params.merchant_order_id;
+            callback(null, payload, merchant_order_id);
+        },
+        JetService.shipOrder
+    ], _responseFunctionFactory("ship order", res));
+};
+
 function _responseFunctionFactory(action, res) {
     return function(err, data) {
         if (err) {
