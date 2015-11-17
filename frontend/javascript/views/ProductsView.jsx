@@ -66,11 +66,9 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
     getPriceForProduct(product) {
         var merchant_sku = product ? product.merchant_sku : null;
         if (!merchant_sku || !this.props.productPrice || !this.props.productPrice.get(merchant_sku)) {
-            console.log("Fail.", merchant_sku, this.props.productPrice, this.props);
             return null;
         }
 
-        console.log("Successful.", this.props.productPrice.get(merchant_sku));
         return this.props.productPrice.get(merchant_sku);
     },
     render: function() {
