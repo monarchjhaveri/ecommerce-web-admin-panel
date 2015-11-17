@@ -129,6 +129,33 @@ JetService.updateProductPrice = function(priceDto, sku, originalCallback) {
     _retryIfFailed("getProductInventory", _editPrice(priceDto, sku), originalCallback);
 };
 
+
+JetService.getFulfillmentNodes = function(originalCallback) {
+    _retryIfFailed("getFulfillmentNodes", function(callback) {
+        JetApi.merchant.getFulfillmentNodes(authData.id_token, function(err, fulfillmentNodes){
+            if (err) {
+                callback(err);
+            } else {
+                callback(null, fulfillmentNodes);
+            }
+        });
+    }, originalCallback);
+};
+
+JetService.editOrCreate = function(productDto, callback) {
+    var sendDto = _clone(productDto);
+    var sku = productDto.merchant_sku;
+    delete sendDto._id;
+    delete sendDto.merchant_sku;
+    _retryIfFailed("editOrCreate", _editOrCreate(sendDto, sku), function(err, data) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, productDto);
+        }
+    });
+};
+
 function _editInventory(fulfillmentNodesDto, merchant_sku) {
     return function(callback) {
         if (!fulfillmentNodesDto) {
@@ -168,32 +195,6 @@ function _editPrice(priceDto, merchant_sku) {
         });
     }
 }
-
-JetService.getFulfillmentNodes = function(originalCallback) {
-    _retryIfFailed("getFulfillmentNodes", function(callback) {
-            JetApi.merchant.getFulfillmentNodes(authData.id_token, function(err, fulfillmentNodes){
-                if (err) {
-                    callback(err);
-                } else {
-                    callback(null, fulfillmentNodes);
-                }
-            });
-    }, originalCallback);
-};
-
-JetService.editOrCreate = function(productDto, callback) {
-    var sendDto = _clone(productDto);
-    var sku = productDto.merchant_sku;
-    delete sendDto._id;
-    delete sendDto.merchant_sku;
-    _retryIfFailed("editOrCreate", _editOrCreate(sendDto, sku), function(err, data) {
-        if (err) {
-            callback(err);
-        } else {
-            callback(null, productDto);
-        }
-    });
-};
 
 function _connect(callback) {
     JetApi.authentication.connect(user, pass, function(err, data) {
