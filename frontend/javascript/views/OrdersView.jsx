@@ -64,12 +64,16 @@ var ProductsView = React.createClass({ displayName:"getSelectedOrder",
             return null;
         }
 
-        var link = "orders/" + this.getSelectedOrderId() + "/acknowledge";
+        var acknowledgementLink = "orders/" + this.getSelectedOrderId() + "/acknowledge";
+        var shipmentLink = "orders/" + this.getSelectedOrderId() + "/shipment";
         return (
             <div className="view-right-column">
                 <h3>Options</h3>
-                <Link className="btn btn-default" to={link}>
+                <Link className="btn btn-default" to={acknowledgementLink}>
                     Acknowledge
+                </Link>
+                <Link className="btn btn-default" to={shipmentLink}>
+                    Shipped
                 </Link>
             </div>
         )
