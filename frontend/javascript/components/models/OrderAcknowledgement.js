@@ -1,6 +1,7 @@
 var React = require('react');
 var t = require('tcomb-form');
 var ProductValidationHelper = require("../../../../helpers/ProductValidationHelper");
+var ModelsHelper = require("./ModelsHelper");
 
 function _orderShipment(order) {
     return t.struct({
@@ -10,22 +11,13 @@ function _orderShipment(order) {
 }
 
 function _orderAcknowledgementItem(order) {
-    var order_items;
-    if (!order || !order.order_items) {
-        order_items = [];
-    } else {
-        order_items = order.order_items;
-    }
-    var enums = {};
-    for (var i = 0; i < order_items.length; i++) {
-        var o = order_items[i];
-        enums[o.order_item_id] = o.product_title;
-    }
+    var enums = ModelsHelper.getEnumsOfOrderItemsToProductTitles(order);
+
     return t.struct({
         //order_item_id: t.String,
         order_item_id: t.enums(enums),
         order_item_acknowledgement_status: t.enums({
-            "nonfulfillable": "nonfulfillable",
+            "nonfulfillable - invalid merchant SKU": "nonfulfillable - invalid merchant SKU",
             "nonfulfillable - no inventory" : "nonfulfillable - no inventory",
             "fulfillable": "fulfillable"
         })
