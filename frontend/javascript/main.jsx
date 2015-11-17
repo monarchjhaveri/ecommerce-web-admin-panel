@@ -24,6 +24,7 @@ var IndexLink = require("react-router").IndexLink;
 
 var OrderDetails = require("./components/OrderDetails.jsx");
 var OrderAcknowledgement = require("./components/OrderAcknowledgement.jsx");
+var OrderShipment = require("./components/OrderShipment.jsx");
 
 var unsubscribe = store.subscribe(function() {
    
@@ -87,6 +88,7 @@ var App = React.createClass({
                                 <Route path=":merchant_order_id">
                                     <IndexRoute component={OrderDetails} />
                                     <Route path="acknowledge" component={OrderAcknowledgement} />
+                                    <Route path="shipment" component={OrderShipment} />
                                 </Route>
                             </Route>
                         </Route>

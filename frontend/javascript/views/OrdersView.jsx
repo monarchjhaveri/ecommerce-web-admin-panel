@@ -13,9 +13,6 @@ var OrderAC = require("../actions/OrderAC");
 var t = require('tcomb-form');
 var Form = t.form.Form;
 
-var OrderAcknowledgementModelFactory = require("../components/models/OrderAcknowledgement").modelFactory;
-
-
 var filterByStatusOptions = [
     {value: Constants.ORDER_STATUS.ACKNOWLEDGED, label: "Acknowledged"},
     {value: Constants.ORDER_STATUS.COMPLETE, label: "Complete"},
@@ -44,33 +41,6 @@ var ProductsView = React.createClass({ displayName:"getSelectedOrder",
     componentWillReceiveProps: function(nextProps) {
         this.setState(nextProps.ordersFilter);
     },
-    //getSelectedOrderDom: function() {
-    //    if (!this.getSelectedOrderId()) {
-    //        return null;
-    //    }
-    //    if (this.isInAcknowledgedScreen()) {
-    //        var link = "orders/" + this.getSelectedOrderId();
-    //        return (
-    //            <div className="col-xs-12">
-    //                <h3>Acknowledgement</h3>
-    //                <Form
-    //                    type={OrderAcknowledgementModelFactory(this.getSelectedOrder())}
-    //                    ref="form"
-    //                    />
-    //                <Link className="btn btn-warning" to={link}>
-    //                    Cancel
-    //                </Link>
-    //                <div className="btn btn-success" onClick={this.submitAcknowledgement}>Submit</div>
-    //            </div>
-    //        );
-    //    } else {
-    //        var selectedOrderId = this.getSelectedOrderId();
-    //        var selectedOrder = this.getOrderById(selectedOrderId);
-    //        return (
-    //            <OrderDetails order={selectedOrder}/>
-    //        )
-    //    }
-    //},
     getOrderById: function(orderId) {
         return this.props.orders.get(orderId);
     },
@@ -88,24 +58,6 @@ var ProductsView = React.createClass({ displayName:"getSelectedOrder",
             return null;
         }
         return selectedOrder;
-    },
-    isInAcknowledgedScreen: function() {
-        var viewMode = this.props.router && this.props.router.params && this.props.router.params.view_mode;
-        return viewMode === "acknowledge";
-    },
-    cancelAcknowledgement: function() {
-        console.log(this.refs.form);
-    },
-    submitAcknowledgement: function() {
-        var value = this.refs.form.getValue();
-        var merchant_order_id = this.getSelectedOrderId();
-
-        // getValue returns null if validation failed
-        if (!value) {
-            return;
-        }
-
-        OrderAC.acknowledge(merchant_order_id, this.refs.form.getValue());
     },
     getRightViewColumn: function() {
         if (!this.getSelectedOrderId()) {
@@ -141,7 +93,6 @@ var ProductsView = React.createClass({ displayName:"getSelectedOrder",
         return ordersDOM;
     },
     render: function() {
-        console.log("children", this.props.children);
         return (
             <div className="view">
                 <div className="view-sidebar">

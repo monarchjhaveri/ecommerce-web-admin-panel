@@ -9,7 +9,7 @@ var OrderAC = require("../actions/OrderAC");
 
 var t = require('tcomb-form');
 var Form = t.form.Form;
-var OrderAcknowledgementModelFactory = require("./models/OrderAcknowledgement").modelFactory;
+var OrderShipmentModelFactory = require("./models/OrderShipment").modelFactory;
 
 function fetchOrderIfNeeded(merchantOrderId) {
     var selectedOrder = store.getState().selectedOrder;
@@ -20,7 +20,7 @@ function fetchOrderIfNeeded(merchantOrderId) {
     }
 }
 
-var OrderAcknowledgement = React.createClass({ displayName: "OrderAcknowledgement",
+var OrderShipment = React.createClass({ displayName: "OrderShipment",
     order: {
         order: React.PropTypes.object
     },
@@ -36,20 +36,6 @@ var OrderAcknowledgement = React.createClass({ displayName: "OrderAcknowledgemen
             fetchOrderIfNeeded(merchantOrderId);
         }
     },
-    submitAcknowledgement: function() {
-        var value = this.refs.form.getValue();
-        var merchant_order_id = this.props.params && this.props.params.merchant_order_id;
-
-        // getValue returns null if validation failed
-        if (!value || !merchant_order_id) {
-            return;
-        }
-
-        OrderAC.acknowledge(merchant_order_id, this.refs.form.getValue());
-    },
-    getOrderById: function(orderId) {
-        return this.props.orders.get(orderId);
-    },
     render: function() {
         var merchantOrderId = this.props.params.merchant_order_id;
 
@@ -60,9 +46,9 @@ var OrderAcknowledgement = React.createClass({ displayName: "OrderAcknowledgemen
         var link = "orders/" + this.props.params.merchant_order_id;
         return (
             <div className="col-xs-12">
-                <h3>Acknowledgement</h3>
+                <h3>Shipment</h3>
                 <Form
-                    type={OrderAcknowledgementModelFactory(this.props.selectedOrder)}
+                    type={OrderShipmentModelFactory(this.props.selectedOrder)}
                     ref="form"
                     />
                 <Link className="btn btn-warning" to={link}>
@@ -85,4 +71,4 @@ function mapDispatchToProps(dispatch) {
 
     }
 }
-module.exports = connect(mapStateToProps, mapDispatchToProps)(OrderAcknowledgement);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(OrderShipment);
