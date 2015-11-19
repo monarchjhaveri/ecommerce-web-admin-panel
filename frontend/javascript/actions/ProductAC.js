@@ -1,7 +1,6 @@
 var $ = require("jquery");
 var ActionTypes = require("./ActionTypes");
 var Constants = require("../Constants");
-//var store = require("../store/store");
 var PopoverAC = require("./PopoverAC");
 
 var ProductAC = {
@@ -48,13 +47,12 @@ var ProductAC = {
                     PopoverAC.displayError(request);
                 },
                 success: function(data) {
-                    //dispatch({
-                    //    type: ActionTypes.PRODUCTS.EDIT_SUCCESS,
-                    //    payload: data
-                    //});
-                    setTimeout(function() {
-                        dispatch(ProductAC.getDetails(product));
-                    }, 500);
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.EDIT_SUCCESS,
+                        payload: data
+                    });
+                    PopoverAC.displaySuccessFromText("Product successfully edited.");
+                    dispatch(ProductAC.getDetails(product));
                 }
             });
         });
@@ -78,13 +76,12 @@ var ProductAC = {
                     PopoverAC.displayError(request);
                 },
                 success: function(data) {
-                    //dispatch({
-                    //    type: ActionTypes.PRODUCTS.CREATE_SUCCESS,
-                    //    payload: data
-                    //});
-                    setTimeout(function() {
-                        dispatch(ProductAC.getDetails(product));
-                    }, 500);
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.CREATE_SUCCESS,
+                        payload: data
+                    });
+                    PopoverAC.displaySuccessFromText("Product successfully created.");
+                    ProductAC.getDetails(product);
                 }
             });
         });
@@ -176,6 +173,7 @@ var ProductAC = {
                         type: ActionTypes.PRODUCTS.INVENTORY.EDIT_SUCCESS,
                         payload: data
                     });
+                    PopoverAC.displaySuccessFromText("Inventory successfully edited.");
                 }
             });
         });
@@ -234,6 +232,7 @@ var ProductAC = {
                     PopoverAC.displayError(request);
                 },
                 success: function(data) {
+                    PopoverAC.displaySuccessFromText("Product price successfully edited.");
                     dispatch({
                         type: ActionTypes.PRODUCTS.PRICE.EDIT_SUCCESS,
                         payload: data
@@ -254,33 +253,5 @@ var ProductAC = {
         });
     }
 };
-
-var ERROR_TIMEOUT = 10 * 1000; // 10 seconds
-
-/**
- *
- * @param {!String} message
- * @param {!String} type
- * @param {!function} dispatch
- * @private
- */
-function _createPopover(request, type, dispatch) {
-    var message = request.responseText;
-    var popoverId = Math.random();
-    dispatch({
-        type: ActionTypes.POPOVER.DISPLAY_POPOVER,
-        payload: {
-            popoverId: popoverId,
-            type: type,
-            message: message
-        }
-    });
-    setTimeout(function() {
-        dispatch({
-            type: ActionTypes.POPOVER.CLEAR_POPOVER,
-            payload: popoverId
-        });
-    }, ERROR_TIMEOUT);
-}
 
 module.exports = ProductAC;

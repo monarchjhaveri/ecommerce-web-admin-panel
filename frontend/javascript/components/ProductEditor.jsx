@@ -15,7 +15,7 @@ var ProductEditor = React.createClass({displayName:"ProductEditor",
     submitEdit: function() {
         var ValidationResult = this.refs.form.validate();
 
-        if (ValidationResult.errors) {
+        if (ValidationResult.errors.length > 0) {
             PopoverAC.displayErrorFromText("Validation failed.");
             ValidationResult.errors.forEach(function(d) {
                 console.log(d.message);

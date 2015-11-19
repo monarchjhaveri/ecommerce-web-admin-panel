@@ -2,7 +2,8 @@ var JET_ORDER_STATUS = require("jet-api").orders.ORDER_STATUS;
 
 var Constants = {
     POPOVER_TYPES: {
-        ERROR: "error"
+        ERROR: "error",
+        SUCCESS: "success"
     },
     ORDER_STATUS: {
         ACKNOWLEDGED: JET_ORDER_STATUS.ACKNOWLEDGED,

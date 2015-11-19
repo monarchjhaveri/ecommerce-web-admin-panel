@@ -3,23 +3,27 @@ var ActionTypes = require("./ActionTypes");
 var Constants = require("../Constants");
 var store = require("../store/store");
 
-var ERROR_TIMEOUT = 10 * 1000; // 10 seconds
+var POPOVER_TIMEOUT = 10 * 1000; // 10 seconds
 
-function _displayError(message) {
+function _makePopover(message, type) {
     store.dispatch(function (dispatch) {
         var popoverId = Math.random();
         dispatch({
             type: ActionTypes.POPOVER.DISPLAY_POPOVER,
             payload: {
                 popoverId: popoverId,
-                type: Constants.POPOVER_TYPES.ERROR,
+                type: type,
                 message: message
             }
         });
         setTimeout(function () {
             PopoverAC.clearPopover(popoverId);
-        }, ERROR_TIMEOUT);
+        }, POPOVER_TIMEOUT);
     });
+}
+
+function _displayError(message) {
+    _makePopover(message, Constants.POPOVER_TYPES.ERROR);
 }
 
 
@@ -38,6 +42,9 @@ var PopoverAC = {
         }
     },
     displayErrorFromText: _displayError,
+    displaySuccessFromText: function(message) {
+        _makePopover(message, Constants.POPOVER_TYPES.SUCCESS);
+    },
     clearPopover: function (popoverId) {
         store.dispatch({
             type: ActionTypes.POPOVER.CLEAR_POPOVER,
