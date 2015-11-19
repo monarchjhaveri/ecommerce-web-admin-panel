@@ -64,17 +64,20 @@ var ProductsView = React.createClass({ displayName:"getSelectedOrder",
             return null;
         }
 
-        var acknowledgementLink = "orders/" + this.getSelectedOrderId() + "/acknowledge";
-        var shipmentLink = "orders/" + this.getSelectedOrderId() + "/shipment";
+        var links = [];
+
+        var orderStatus = this.getSelectedOrder() && this.getSelectedOrder().status;
+
+        if (orderStatus === Constants.ORDER_STATUS.READY) {
+            links.push(_createLinkButton("orders/" + this.getSelectedOrderId() + "/acknowledge", "Acknowledge"));
+        } else if (orderStatus === Constants.ORDER_STATUS.ACKNOWLEDGED) {
+            links.push(_createLinkButton("orders/" + this.getSelectedOrderId() + "/shipment", "Shipped"));
+        }
+
         return (
             <div className="view-right-column">
                 <h3>Options</h3>
-                <Link className="btn btn-default" to={acknowledgementLink}>
-                    Acknowledge
-                </Link>
-                <Link className="btn btn-default" to={shipmentLink}>
-                    Shipped
-                </Link>
+                {links}
             </div>
         )
     },
@@ -125,6 +128,14 @@ var ProductsView = React.createClass({ displayName:"getSelectedOrder",
         )
     }
 });
+
+function _createLinkButton(link, label) {
+    return (
+        <Link className="btn btn-default" to={link} key={label+link}>
+            {label}
+        </Link>
+    );
+}
 
 function mapStateToProps(state) {
     return {

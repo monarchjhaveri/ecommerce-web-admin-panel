@@ -7,7 +7,7 @@ var compose = require('redux').compose;
 var thunk = require("redux-thunk");
 
 var loadingReducer = require("./reducers/loadingReducer");
-var selectedProductReducer = require("./reducers/selectionReducer");
+var selectedProductReducer = require("./reducers/selectedProductReducer");
 var selectedOrderReducer = require("./reducers/selectedOrderReducer");
 var productsReducer = require("./reducers/productsReducer");
 var ordersReducer = require("./reducers/ordersReducer");

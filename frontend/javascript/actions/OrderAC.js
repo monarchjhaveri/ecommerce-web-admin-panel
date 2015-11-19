@@ -3,6 +3,7 @@ var ActionTypes = require("./ActionTypes");
 var Constants = require("../Constants");
 var PopoverAC = require("./PopoverAC");
 var store = require("../store/store");
+var pushState = require("redux-router").pushState;
 
 var OrderAC = {
     setFilter: function(filterName) {
@@ -14,6 +15,7 @@ var OrderAC = {
         });
     },
     fetchAll: function(status) {
+        OrderAC.clearSelection();
         store.dispatch(function(dispatch) {
             dispatch({
                 type: ActionTypes.ORDERS.FETCH_ALL_STARTED
@@ -60,9 +62,7 @@ var OrderAC = {
                     PopoverAC.displayError(request);
                 },
                 success: function(data) {
-                    dispatch({
-                        type: ActionTypes.ORDERS.CLEAR_SELECTION
-                    });
+                    OrderAC.clearSelection();
                     dispatch({
                         type: ActionTypes.ORDERS.ACKNOWLEDGE_SUCCESS
                     });
@@ -89,9 +89,7 @@ var OrderAC = {
                     PopoverAC.displayError(request);
                 },
                 success: function(data) {
-                    dispatch({
-                        type: ActionTypes.ORDERS.CLEAR_SELECTION
-                    });
+                    OrderAC.clearSelection();
                     dispatch({
                         type: ActionTypes.ORDERS.SHIP_SUCCESS
                     });
@@ -133,6 +131,9 @@ var OrderAC = {
             type: ActionTypes.ORDERS.SELECT,
             payload: {}
         });
+    },
+    clearSelection: function() {
+        store.dispatch(pushState(null, "/orders"));
     }
 };
 
