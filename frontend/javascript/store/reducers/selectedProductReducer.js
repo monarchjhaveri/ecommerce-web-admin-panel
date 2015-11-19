@@ -3,7 +3,7 @@ var ActionTypes = require("../../actions/ActionTypes");
 
 var defaultState = null;
 
-module.exports = function productDetailsReducer(state, action) {
+module.exports = function selectedProductReducer(state, action) {
     if (typeof state === 'undefined') {
         return defaultState;
     }
@@ -13,7 +13,7 @@ module.exports = function productDetailsReducer(state, action) {
         case ActionTypes.PRODUCTS.CREATE_SUCCESS:
         case ActionTypes.PRODUCTS.SELECT:
             return action.payload;
-        case ActionTypes.PRODUCTS.DELETE_SUCCESS:
+        case ActionTypes.PRODUCTS.CLEAR_SELECTION:
             return null;
         default:
             return state;

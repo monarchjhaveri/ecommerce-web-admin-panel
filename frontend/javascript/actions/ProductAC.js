@@ -89,33 +89,6 @@ var ProductAC = {
             });
         });
     },
-    delete: function(product) {
-        store.dispatch(function (dispatch) {
-            dispatch({
-                type: ActionTypes.PRODUCTS.DELETE_STARTED
-            });
-            $.ajax({
-                method: "DELETE",
-                url: "api/products/:sku".replace(":sku", product._id),
-                contentType:'application/json',
-                dataType:'json',
-                data: JSON.stringify(product),
-                error: function(request, error) {
-                    dispatch({
-                        type: ActionTypes.PRODUCTS.DELETE_FAILURE,
-                        payload: error
-                    });
-                    PopoverAC.displayError(request);
-                },
-                success: function(data) {
-                    dispatch({
-                        type: ActionTypes.PRODUCTS.DELETE_SUCCESS,
-                        payload: data
-                    });
-                }
-            });
-        });
-    },
     getDetails: function(product) {
         store.dispatch(function (dispatch) {
             dispatch({
@@ -270,10 +243,15 @@ var ProductAC = {
         });
     },
     openEditorToCreate: function() {
-        return {
+        store.dispatch({
             type: ActionTypes.PRODUCTS.SELECT,
             payload: {}
-        }
+        });
+    },
+    clearSelection: function() {
+        store.dispatch({
+            type: ActionTypes.PRODUCTS.CLEAR_SELECTION
+        });
     }
 };
 

@@ -19,7 +19,7 @@ var ProductSelectList = React.createClass({ displayName: "ProductSelectList",
                     {_createProductsArray(this.props.products, this.props.selectedProduct, this.props.onSelectChange)}
                 </div>
                 <div className="sidebar-list-button btn btn-small btn-success"
-                    onClick={this.props.createAction}>
+                    onClick={ProductAC.openEditorToCreate}>
                     New
                 </div>
             </div>

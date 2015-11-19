@@ -4,6 +4,7 @@ var jQuery = require("jquery");
 var Immutable = require("immutable");
 
 var ProductEditor = require("./ProductEditor.jsx");
+var ProductAC = require("../actions/ProductAC");
 
 // Sample product
 /*
@@ -134,7 +135,7 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
         onDelete: React.PropTypes.func
     },
     getInitialState: function() {
-        return {isEditorOpen: false};
+        return {editorProduct: null};
     },
     componentWillReceiveProps: function(nextProps) {
         if (nextProps.product &&
@@ -159,17 +160,18 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
         return renderedDOM;
     },
     openEditor: function() {
-        this.setState({isEditorOpen: true, editorProduct: jQuery.extend(true, {}, this.props.product)});
+        this.setState({editorProduct: jQuery.extend(true, {}, this.props.product)});
     },
     cancelEdit: function() {
-        this.setState({isEditorOpen: false, editorProduct: null});
+        ProductAC.clearSelection();
+        this.setState({editorProduct: null});
     },
     onDelete: function() {
         this.props.onDelete(this.props.product);
     },
     submitEdit: function(value) {
         this.props.submitEdit(value);
-        this.setState({isEditorOpen: false, editorProduct: null});
+        this.setState({editorProduct: null});
     },
     renderEditorFields(product) {
         var renderedDOM = [];

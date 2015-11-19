@@ -21,8 +21,6 @@ module.exports = function skusReducer(state, action) {
         case ActionTypes.PRODUCTS.CREATE_SUCCESS:
         case ActionTypes.PRODUCTS.GET_DETAILS_SUCCESS:
             return state.set(action.payload[stateKey], action.payload);
-        case ActionTypes.PRODUCTS.DELETE_SUCCESS:
-            return state.remove(action.payload[stateKey]);
         default:
             return state instanceof Immutable.Map ?  state : Immutable.Map(state);
 

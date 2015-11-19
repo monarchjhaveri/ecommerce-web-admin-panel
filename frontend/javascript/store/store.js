@@ -7,7 +7,7 @@ var compose = require('redux').compose;
 var thunk = require("redux-thunk");
 
 var loadingReducer = require("./reducers/loadingReducer");
-var selectionReducer = require("./reducers/selectionReducer");
+var selectedProductReducer = require("./reducers/selectionReducer");
 var selectedOrderReducer = require("./reducers/selectedOrderReducer");
 var productsReducer = require("./reducers/productsReducer");
 var ordersReducer = require("./reducers/ordersReducer");
@@ -27,7 +27,7 @@ var initialState = {
     orders: Immutable.Map({}),
     products: Immutable.Map({}),
     loading: false,
-    selectedProduct: {},
+    selectedProduct: null,
     selectedOrder: {},
     popovers: Immutable.List([]),
     ordersFilter: Immutable.Map({
@@ -45,7 +45,7 @@ function reducer(state, action) {
         products: productsReducer(state.products, action),
         orders: ordersReducer(state.orders, action),
         loading: loadingReducer(state.loading, action),
-        selectedProduct: selectionReducer(state.selectedProduct, action),
+        selectedProduct: selectedProductReducer(state.selectedProduct, action),
         selectedOrder: selectedOrderReducer(state.selectedOrder, action),
         popovers: popoversReducer(state.popovers, action),
         ordersFilter: ordersFilterReducer(state.ordersFilter, action),

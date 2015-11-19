@@ -36,9 +36,6 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
     getSelectedProduct: function() {
         return this.props.selectedProduct ? this.props.selectedProduct : null;
     },
-    createAction: function() {
-        ProductAC.openEditorToCreate();
-    },
     submitInventory: function(value) {
         if (value) {
             ProductAC.editInventory({
@@ -78,13 +75,12 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
                     products={this.props.products}
                     selectedProduct={this.props.selectedProduct}
                     onSelectChange={this.onSelectChange}
-                    createAction={this.createAction}
                     />
-                <ProductDetails
+                {this.props.selectedProduct ? <ProductDetails
                     product={this.props.selectedProduct}
                     submitEdit={this.submitEdit}
                     onDelete={this.onDelete}
-                    />
+                    /> : undefined}
                 <div className="view-right-column">
                     <ProductInventory
                         product={this.props.selectedProduct}
