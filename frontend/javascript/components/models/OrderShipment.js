@@ -97,9 +97,8 @@ function _optionsFactory(order) {
             required: " (REQUIRED)",
             remove: 'Remove',
             up: 'Up'
-        },
-        disableOrder: true
-    }
+        }
+    };
 }
 
 module.exports.modelFactory = _orderShipment;
