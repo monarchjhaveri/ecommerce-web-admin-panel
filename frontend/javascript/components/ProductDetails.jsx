@@ -134,17 +134,6 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
         onEdit: React.PropTypes.func,
         onDelete: React.PropTypes.func
     },
-    getInitialState: function() {
-        return {editorProduct: null};
-    },
-    componentWillReceiveProps: function(nextProps) {
-        if (nextProps.product &&
-            this.state.editorProduct &&
-            nextProps.product.merchant_sku === this.state.editorProduct.merchant_sku) {
-            var editorProduct = jQuery.extend(true, {}, nextProps.product);
-            this.setState({editorProduct: editorProduct});
-        }
-    },
     renderFields(product) {
         var renderedDOM = [];
         for (var i = 0; i < fields.length; i++) {
@@ -159,43 +148,14 @@ var ProductDetails = React.createClass({ displayName: "ProductDetails",
         }
         return renderedDOM;
     },
-    openEditor: function() {
-        this.setState({editorProduct: jQuery.extend(true, {}, this.props.product)});
-    },
     cancelEdit: function() {
         ProductAC.clearSelection();
-        this.setState({editorProduct: null});
     },
     onDelete: function() {
         this.props.onDelete(this.props.product);
     },
     submitEdit: function(value) {
         this.props.submitEdit(value);
-        this.setState({editorProduct: null});
-    },
-    renderEditorFields(product) {
-        var renderedDOM = [];
-        for (var i = 0; i < fields.length; i++) {
-            var f = fields[i];
-            var key = f.property;
-            var className = f.className;
-            var label = f.label;
-            //var value = f.editorFieldRenderFactory ? f.editorFieldRenderFactory(product[f.property], product) : product[f.property];
-            if (f.editorRenderFactory) {
-                renderedDOM.push(f.editorRenderFactory(f.property, this.state.editorProduct[f.property], this.state.editorProduct));
-            } else {
-                renderedDOM.push(
-                    <label key={"label:"+key} className={f.className}>
-                        {f.label}
-                        <input key={"input:"+key} type="text" defaultValue={this.state.editorProduct[f.property]}></input>
-                    </label>
-                );
-                renderedDOM.push(<br key={"br:"+key}/>);
-            }
-        }
-        return (
-            renderedDOM
-        );
     },
     render: function() {
         if (this.props.product) {
