@@ -12,5 +12,10 @@ module.exports = {
             enums[o.merchant_sku] = o.product_title;
         }
         return enums;
+    },
+    dateToJetDate: function dateToJetDate(value) {
+        if (!value) return value;
+        var dateString1 = new Date(value).toISOString();
+        return dateString1.substring(0, dateString1.length-1) + "0000-05:00";
     }
 };

@@ -20,8 +20,8 @@ function order_shipment_item(order) {
         alt_shipment_item_id: t.maybe(t.String),
         merchant_sku: t.enums(orderEnums),
         return_location: t.maybe(t.list(return_location(order))),
-        response_shipment_sku_quantity: t.maybe(t.Number),
-        response_shipment_cancel_qty: t.maybe(t.Number),
+        response_shipment_sku_quantity: t.Number,
+        response_shipment_cancel_qty: t.Number,
         RMA_number: t.maybe(t.String),
         days_to_return: t.maybe(t.Number)
     });
@@ -90,6 +90,23 @@ function _orderShipment(order) {
 
 function _optionsFactory(order) {
     return {
+        //fields: {
+        //    shipments: {
+        //        item: {
+        //            fields: {
+        //                response_shipment_date: {
+        //                    transformer: DateTransformer
+        //                },
+        //                expected_delivery_date: {
+        //                    transformer: DateTransformer
+        //                },
+        //                carrier_pick_up_date: {
+        //                    transformer: DateTransformer
+        //                }
+        //            }
+        //        }
+        //    }
+        //},
         i18n: {
             add: 'Add',
             down: 'Down',

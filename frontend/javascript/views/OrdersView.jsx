@@ -10,9 +10,6 @@ var Link = require("react-router").Link;
 
 var OrderAC = require("../actions/OrderAC");
 
-var t = require('tcomb-form');
-var Form = t.form.Form;
-
 var filterByStatusOptions = [
     {value: Constants.ORDER_STATUS.ACKNOWLEDGED, label: "Acknowledged"},
     {value: Constants.ORDER_STATUS.COMPLETE, label: "Complete"},

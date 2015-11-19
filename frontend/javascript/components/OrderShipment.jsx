@@ -6,7 +6,9 @@ var moment = require("moment");
 var Link = require("react-router").Link;
 var connect = require("react-redux").connect;
 var OrderAC = require("../actions/OrderAC");
+var PopoverAC = require("../actions/PopoverAC");
 var Constants = require("../Constants");
+var ModelsHelper = require("./models/ModelsHelper");
 
 var t = require('tcomb-form');
 var Form = t.form.Form;
@@ -39,15 +41,29 @@ var OrderShipment = React.createClass({ displayName: "OrderShipment",
         }
     },
     submitAcknowledgement: function() {
-        var value = this.refs.form.getValue();
+        var ValidationResult = this.refs.form.validate();
         var merchant_order_id = this.props.params && this.props.params.merchant_order_id;
 
-        // getValue returns null if validation failed
-        if (!value || !merchant_order_id) {
-            return;
-        }
+        if (!merchant_order_id) {
+            PopoverAC.displayErrorFromText("Merchant Order not selected.");
+        } else if (ValidationResult.errors.length > 0) {
+            PopoverAC.displayErrorFromText("Validation failed.");
+            ValidationResult.errors.forEach(function(d) {
+                console.log(d.message);
+                PopoverAC.displayErrorFromText(d.message);
+            });
+        } else {
+            var result = JSON.parse(JSON.stringify(this.refs.form.getValue()));
 
-        OrderAC.ship(merchant_order_id, this.refs.form.getValue());
+            result.shipments = result.shipments.map(function(d) {
+                d.response_shipment_date = ModelsHelper.dateToJetDate(d.response_shipment_date);
+                d.expected_delivery_date = ModelsHelper.dateToJetDate(d.expected_delivery_date);
+                d.carrier_pick_up_date = ModelsHelper.dateToJetDate(d.carrier_pick_up_date);
+                return d;
+            });
+
+            OrderAC.ship(merchant_order_id, result);
+        }
     },
     render: function() {
         var merchantOrderId = this.props.params.merchant_order_id;

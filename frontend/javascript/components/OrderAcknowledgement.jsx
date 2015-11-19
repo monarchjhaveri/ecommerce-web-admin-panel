@@ -6,6 +6,7 @@ var moment = require("moment");
 var Link = require("react-router").Link;
 var connect = require("react-redux").connect;
 var OrderAC = require("../actions/OrderAC");
+var PopoverAC = require("../actions/PopoverAC");
 var Constants = require("../Constants");
 
 var t = require('tcomb-form');
@@ -38,15 +39,20 @@ var OrderAcknowledgement = React.createClass({ displayName: "OrderAcknowledgemen
         }
     },
     submitAcknowledgement: function() {
-        var value = this.refs.form.getValue();
+        var ValidationResult = this.refs.form.validate();
         var merchant_order_id = this.props.params && this.props.params.merchant_order_id;
 
-        // getValue returns null if validation failed
-        if (!value || !merchant_order_id) {
-            return;
+        if (!merchant_order_id) {
+            PopoverAC.displayErrorFromText("Merchant Order not selected.");
+        } else if (ValidationResult.errors.length > 0) {
+            PopoverAC.displayErrorFromText("Validation failed.");
+            ValidationResult.errors.forEach(function(d) {
+                console.log(d.message);
+                PopoverAC.displayErrorFromText(d.message);
+            });
+        } else {
+            OrderAC.acknowledge(merchant_order_id, this.refs.form.getValue());
         }
-
-        OrderAC.acknowledge(merchant_order_id, this.refs.form.getValue());
     },
     getOrderById: function(orderId) {
         return this.props.orders.get(orderId);
