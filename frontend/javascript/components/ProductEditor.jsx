@@ -7,15 +7,22 @@ var Form = t.form.Form;
 var ProductModel = require("./models/ProductModel").model;
 var productModelOptionsFactory = require("./models/ProductModel").optionsFactory;
 
+var PopoverAC = require("../actions/PopoverAC");
+
 // Tech note. Values containing only white spaces are converted to null.
 
 var ProductEditor = React.createClass({displayName:"ProductEditor",
     submitEdit: function() {
-        var value = this.refs.form.getValue();
+        var ValidationResult = this.refs.form.validate();
 
-        // getValue returns null if validation failed
-        if (value) {
-            this.props.submitEdit(value);
+        if (ValidationResult.errors) {
+            PopoverAC.displayErrorFromText("Validation failed.");
+            ValidationResult.errors.forEach(function(d) {
+                console.log(d.message);
+                PopoverAC.displayErrorFromText(d.message);
+            });
+        } else {
+            this.props.submitEdit(ValidationResult.value);
         }
     },
     createForm: function(product) {
