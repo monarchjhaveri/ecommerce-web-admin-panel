@@ -28,12 +28,20 @@ var ProductSelectList = React.createClass({ displayName: "ProductSelectList",
 });
 
 
+function _sortProducts(product) {
+    var title = product.product_title;
+    if (typeof title === "string") {
+        title = title.toLowerCase();
+    }
+    return title;
+}
+
 function _createProductsArray(products, selectedProduct, onSelectChange) {
     if (!products) {
         return [];
     }
 
-    return products.toList().map(function(d) {
+    return products.toList().sortBy(_sortProducts).map(function(d) {
         var className = "sidebar-select-list-item";
         className = selectedProduct && selectedProduct.merchant_sku === d.merchant_sku ? className + " selected" : className;
         var key = d.merchant_sku + ":" + d.product_title;
