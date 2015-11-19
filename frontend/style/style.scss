@@ -112,7 +112,13 @@
     width: 100%;
     min-width: 100px;
     max-width: 100%;
-    min-height: 50px;
+    min-height: 25px;
+    padding: 5px;
+    margin: 1px 0;
+    background-color: white;
+    color: black;
+    border: 5px solid black;
+    border-radius: 5px;
     left: 50%;
     text-align: center;
     transform: translateX(-50%);
@@ -124,10 +130,10 @@
     }
     .close-button {
       float: right;
+      cursor: pointer;
     }
     &.popover-error {
-      background-color: #FF6666;
-      color: white;
+      border-color: #FF6666;
     }
   }
 }

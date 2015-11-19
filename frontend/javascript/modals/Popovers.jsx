@@ -24,8 +24,7 @@ var Popovers = React.createClass({ displayName: "Popovers",
             }
             return (
                 <div className={className} key={d.popoverId}>
-                    <span className="btn btn-default close-button" onClick={function(){PopoverAC.clearPopover(d.popoverId)}}>Close</span>
-                    <span className="popover-title">ERROR</span>
+                    <span className="close-button" onClick={function(){PopoverAC.clearPopover(d.popoverId)}}>Close</span>
                     <span className="popover-stack">{jsonObject.message}</span>
                     <span className="popover-stack">{jsonObject.stack}</span>
                 </div>
