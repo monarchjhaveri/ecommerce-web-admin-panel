@@ -17,6 +17,7 @@ function order_shipment_item(order) {
     var orderEnums = ModelsHelper.getEnumsOfOrderItemsToProductTitles(order);
     return t.struct({
         shipment_item_id: t.maybe(t.String),
+        alt_shipment_item_id: t.maybe(t.String),
         merchant_sku: t.enums(orderEnums),
         return_location: t.maybe(t.list(return_location(order))),
         response_shipment_sku_quantity: t.maybe(t.Number),
@@ -29,6 +30,7 @@ function order_shipment_item(order) {
 function order_shipped_shipment(order) {
     return t.struct({
         shipment_id: t.maybe(t.String),
+        alt_shipment_id: t.maybe(t.String),
         shipment_tracking_number: t.maybe(t.String),
         shipment_items: t.maybe(t.list(order_shipment_item(order))),
         response_shipment_date: t.maybe(t.Date),
@@ -76,7 +78,7 @@ function order_shipped_shipment(order) {
             'YRC':'YRC',
             'Other':'Other'
         })),
-        carrier_pick_up_date: t.maybe(t.Date)
+        carrier_pick_up_date: t.Date
     })
 }
 
@@ -86,4 +88,19 @@ function _orderShipment(order) {
     });
 }
 
+function _optionsFactory(order) {
+    return {
+        i18n: {
+            add: 'Add',
+            down: 'Down',
+            optional: '',
+            required: " (REQUIRED)",
+            remove: 'Remove',
+            up: 'Up'
+        },
+        disableOrder: true
+    }
+}
+
 module.exports.modelFactory = _orderShipment;
+module.exports.optionsFactory = _optionsFactory;

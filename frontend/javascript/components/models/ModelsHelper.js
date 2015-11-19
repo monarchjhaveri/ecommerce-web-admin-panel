@@ -9,7 +9,7 @@ module.exports = {
         var enums = {};
         for (var i = 0; i < order_items.length; i++) {
             var o = order_items[i];
-            enums[o.order_item_id] = o.product_title;
+            enums[o.merchant_sku] = o.product_title;
         }
         return enums;
     }

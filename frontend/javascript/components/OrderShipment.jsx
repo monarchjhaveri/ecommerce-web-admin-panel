@@ -11,6 +11,7 @@ var Constants = require("../Constants");
 var t = require('tcomb-form');
 var Form = t.form.Form;
 var OrderShipmentModelFactory = require("./models/OrderShipment").modelFactory;
+var OrderShipmentOptionsFactory = require("./models/OrderShipment").optionsFactory;
 
 function fetchOrderIfNeeded(merchantOrderId) {
     var selectedOrder = store.getState().selectedOrder;
@@ -74,6 +75,7 @@ var OrderShipment = React.createClass({ displayName: "OrderShipment",
                 <h3>Shipment</h3>
                 <Form
                     type={OrderShipmentModelFactory(this.props.selectedOrder)}
+                    options={OrderShipmentOptionsFactory(this.props.selectedOrder)}
                     ref="form"
                     />
                 <Link className="btn btn-warning" to={link}>
