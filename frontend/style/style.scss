@@ -141,6 +141,11 @@
   }
 }
 
+.directed-cancel-flag {
+  color: red;
+  float: right;
+}
+
 fieldset {
   $control-label-width: 20%;
   $form-control-width: 40%;

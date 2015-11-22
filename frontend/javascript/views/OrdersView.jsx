@@ -15,7 +15,8 @@ var filterByStatusOptions = [
     {value: Constants.ORDER_STATUS.COMPLETE, label: "Complete"},
     {value: Constants.ORDER_STATUS.CREATED, label: "Created"},
     {value: Constants.ORDER_STATUS.IN_PROGRESS, label: "In Progress"},
-    {value: Constants.ORDER_STATUS.READY, label: "Ready"}
+    {value: Constants.ORDER_STATUS.READY, label: "Ready"},
+    {value: Constants.ORDER_STATUS.DIRECTED_CANCEL, label: "Directed Cancel"}
 ].map(function(d) {
     return <option value={d.value} key={d.value}>{d.label}</option>
 });

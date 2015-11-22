@@ -47,6 +47,7 @@ var OrderDetails = React.createClass({ displayName: "OrderDetails",
 
         return (
             <div className="col-xs-12">
+                {getDirectedCancelFlag(this.props.selectedOrder)}
                 <h3>Order Information</h3>
                 <div className="col-xs-12">
                     <div className="row">
@@ -229,6 +230,14 @@ function timestampToString(timestamp) {
         return timestamp;
     } else {
         return m.format('MMM Do [\']YY, h:mm:ss a');
+    }
+}
+
+function getDirectedCancelFlag(order) {
+    if (order && order.jet_request_directed_cancel) {
+        return <h3 className="directed-cancel-flag">CONTAINS CANCELLED ITEMS</h3>
+    } else {
+        return null;
     }
 }
 
