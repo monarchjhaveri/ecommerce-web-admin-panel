@@ -15,6 +15,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var products = require('./routes/products');
 var orders = require('./routes/orders');
+var returns = require('./routes/returns');
 var jetProducts = require('./routes/jetProducts');
 var merchant = require('./routes/merchant');
 
@@ -39,6 +40,7 @@ app.use('/api/products', products);
 app.use('/api/orders', orders);
 app.use('/api/jet/products', jetProducts);
 app.use('/api/merchant', merchant);
+app.use('/api/returns', returns);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

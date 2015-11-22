@@ -89,6 +89,10 @@ JetService.getReturnsListByStatus = function(status, callback) {
     _retryIfFailed("getReturnsListByStatus", _getReturnsListByStatus(status), callback);
 };
 
+JetService.getReturnDetails = function(id, callback) {
+    _retryIfFailed("getReturnDetails", _getReturnDetails(id), callback);
+};
+
 JetService.getDetails = function(sku, callback) {
     _retryIfFailed("getDetails", _getDetails(sku), callback);
 };
@@ -130,6 +134,12 @@ JetService.shipOrder = function(shipped_dto, merchant_order_id, originalCallback
                 callback(null, data);
             }
         });
+    }, originalCallback);
+};
+
+JetService.completeReturn = function(completed_return_dto, return_id, originalCallback) {
+    _retryIfFailed("shipOrder", function(callback) {
+        JetApi.returns.complete(return_id, completed_return_dto, authData.id_token, callback);
     }, originalCallback);
 };
 
@@ -284,14 +294,15 @@ function _getOrdersListByStatus(status) {
     return function(callback) {
         if (!status || VALID_ORDER_STATUSES.indexOf(status) < 0) {
             callback(new Error("Unknown order status [%s]".replace("%s", status)));
+        } else {
+            JetApi.orders.listByStatus(status, authData.id_token, function(listErr, listData){
+                if (listErr) {
+                    callback(listErr);
+                } else {
+                    callback(null, _extractMerchantOrderIds(listData));
+                }
+            });
         }
-        JetApi.orders.listByStatus(status, authData.id_token, function(listErr, listData){
-            if (listErr) {
-                callback(listErr);
-            } else {
-                callback(null, _extractMerchantOrderIds(listData));
-            }
-        });
     }
 }
 
@@ -305,7 +316,7 @@ function _getReturnsListByStatus(status) {
             if (listErr) {
                 callback(listErr);
             } else {
-                callback(null, _extractMerchantOrderIds(listData));
+                callback(null, _extractReturnIds(listData));
             }
         });
     }
@@ -324,6 +335,16 @@ function _getOrderDetails(merchant_order_id) {
                 callback(null, data);
             }
         });
+    }
+}
+
+function _getReturnDetails(return_id) {
+    return function (callback) {
+        if (!return_id) {
+            callback(new Error("Return ID was undefined."));
+        } else {
+            JetApi.returns.getDetails(return_id, authData.id_token, callback);
+        }
     }
 }
 
@@ -355,6 +376,20 @@ function _extractMerchantOrderIds(orderStatusArray) {
         } else {
             return {
                 merchant_order_id: match[1]
+            };
+        }
+    });
+}
+
+var RETURN_ID_REGEX = /return\/state\/(.*)/;
+function _extractReturnIds(returnsArray) {
+    return returnsArray.return_urls.map(function(url) {
+        var match = url.match(RETURN_ID_REGEX);
+        if (match === null || match.length <= 1) {
+            return null;
+        } else {
+            return {
+                return_id: match[1]
             };
         }
     });
