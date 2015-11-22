@@ -311,14 +311,15 @@ function _getReturnsListByStatus(status) {
     return function(callback) {
         if (!status || VALID_RETURN_STATUSES.indexOf(status) < 0) {
             callback(new Error("Unknown return status [%s]".replace("%s", status)));
+        } else {
+            JetApi.returns.listByStatus(status, authData.id_token, function(listErr, listData){
+                if (listErr) {
+                    callback(listErr);
+                } else {
+                    callback(null, _extractReturnIds(listData));
+                }
+            });
         }
-        JetApi.returns.listByStatus(status, authData.id_token, function(listErr, listData){
-            if (listErr) {
-                callback(listErr);
-            } else {
-                callback(null, _extractReturnIds(listData));
-            }
-        });
     }
 }
 
