@@ -2,15 +2,19 @@ var SkuParserHelper = require("./SkuParserHelper");
 var JetApi = require('jet-api');
 var async = require("async");
 
-var VALID_ORDER_STATUSES = [];
+var VALID_ORDER_STATUSES = _objectValuesToArray(JetApi.orders.ORDER_STATUS);
+var VALID_RETURN_STATUSES = _objectValuesToArray(JetApi.returns.RETURN_STATUS);
 
-(function() {
-    var keys = Object.keys(JetApi.orders.ORDER_STATUS);
+
+function _objectValuesToArray(_enum) {
+    var arr = [];
+    var keys = Object.keys(_enum);
     for (var i = 0; i < keys.length; i++) {
-        var statusKey = keys[i];
-        VALID_ORDER_STATUSES.push(JetApi.orders.ORDER_STATUS[statusKey]);
+        var key = keys[i];
+        arr.push(_enum[key]);
     }
-})();
+    return arr;
+}
 
 var MAX_ATTEMPTS = 2;
 
@@ -79,6 +83,10 @@ JetService.getOrdersListByStatus = function(status, callback) {
 
 JetService.getOrderDetails = function(status, callback) {
     _retryIfFailed("getOrderDetails", _getOrderDetails(status), callback);
+};
+
+JetService.getReturnsListByStatus = function(status, callback) {
+    _retryIfFailed("getReturnsListByStatus", _getReturnsListByStatus(status), callback);
 };
 
 JetService.getDetails = function(sku, callback) {
@@ -278,6 +286,22 @@ function _getOrdersListByStatus(status) {
             callback(new Error("Unknown order status [%s]".replace("%s", status)));
         }
         JetApi.orders.listByStatus(status, authData.id_token, function(listErr, listData){
+            if (listErr) {
+                callback(listErr);
+            } else {
+                callback(null, _extractMerchantOrderIds(listData));
+            }
+        });
+    }
+}
+
+
+function _getReturnsListByStatus(status) {
+    return function(callback) {
+        if (!status || VALID_RETURN_STATUSES.indexOf(status) < 0) {
+            callback(new Error("Unknown return status [%s]".replace("%s", status)));
+        }
+        JetApi.returns.listByStatus(status, authData.id_token, function(listErr, listData){
             if (listErr) {
                 callback(listErr);
             } else {
