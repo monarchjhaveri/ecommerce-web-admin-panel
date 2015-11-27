@@ -1,18 +1,13 @@
 var JET_ORDER_STATUS = require("jet-api").orders.ORDER_STATUS;
+var JET_RETURN_STATUS = require("jet-api").returns.RETURN_STATUS;
 
 var Constants = {
     POPOVER_TYPES: {
         ERROR: "error",
         SUCCESS: "success"
     },
-    ORDER_STATUS: {
-        ACKNOWLEDGED: JET_ORDER_STATUS.ACKNOWLEDGED,
-        COMPLETE: JET_ORDER_STATUS.COMPLETE,
-        IN_PROGRESS: JET_ORDER_STATUS.IN_PROGRESS,
-        CREATED: JET_ORDER_STATUS.CREATED,
-        READY: JET_ORDER_STATUS.READY,
-        DIRECTED_CANCEL: JET_ORDER_STATUS.DIRECTED_CANCEL
-    }
+    ORDER_STATUS: JET_ORDER_STATUS,
+    RETURN_STATUS: JET_RETURN_STATUS
 };
 
 module.exports = Constants;

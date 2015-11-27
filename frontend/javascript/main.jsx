@@ -10,6 +10,7 @@ var MerchantAC = require("./actions/MerchantAC");
 
 var ProductsView = require("./views/ProductsView.jsx");
 var OrdersView = require("./views/OrdersView.jsx");
+var ReturnsView = require("./views/ReturnsView.jsx");
 var Modals = require("./modals/Modals.jsx");
 
 var ReduxRouter = require("redux-router").ReduxRouter;
@@ -25,6 +26,8 @@ var IndexLink = require("react-router").IndexLink;
 var OrderDetails = require("./components/OrderDetails.jsx");
 var OrderAcknowledgement = require("./components/OrderAcknowledgement.jsx");
 var OrderShipment = require("./components/OrderShipment.jsx");
+
+var ReturnDetails = require("./components/ReturnDetails.jsx");
 
 var unsubscribe = store.subscribe(function() {
    
@@ -49,6 +52,7 @@ var Layout = React.createClass({
                                     <ul className="nav navbar-nav">
                                         <li><Link to="/">Products</Link></li>
                                         <li><Link to="/orders">Orders</Link></li>
+                                        <li><Link to="/returns">Returns</Link></li>
                                     </ul>
                                 </div>
                             </div>
@@ -89,6 +93,12 @@ var App = React.createClass({
                                     <IndexRoute component={OrderDetails} />
                                     <Route path="acknowledge" component={OrderAcknowledgement} />
                                     <Route path="shipment" component={OrderShipment} />
+                                </Route>
+                            </Route>
+                            <Route path="returns" >
+                                <IndexRoute component={ReturnsView}></IndexRoute>
+                                <Route path=":merchant_order_id">
+                                    <IndexRoute component={ReturnDetails} />
                                 </Route>
                             </Route>
                         </Route>
