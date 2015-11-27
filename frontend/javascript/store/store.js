@@ -16,6 +16,7 @@ var popoversReducer = require("./reducers/popoversReducer");
 var productInventoryReducer = require("./reducers/productInventoryReducer");
 var productPriceReducer = require("./reducers/productPriceReducer");
 var ordersFilterReducer = require("./reducers/ordersFilterReducer");
+var returnsFilterReducer = require("./reducers/returnsFilterReducer");
 var merchantReducer = require("./reducers/merchantReducer");
 var routerStateReducer = require("redux-router").routerStateReducer;
 
@@ -30,8 +31,12 @@ var initialState = {
     loading: false,
     selectedProduct: null,
     selectedOrder: {},
+    selectedReturn: {},
     popovers: Immutable.List([]),
     ordersFilter: Immutable.Map({
+        status: Constants.ORDER_STATUS.ACKNOWLEDGED
+    }),
+    returnsFilter: Immutable.Map({
         status: Constants.ORDER_STATUS.ACKNOWLEDGED
     }),
     merchant: Immutable.Map({
@@ -51,6 +56,7 @@ function reducer(state, action) {
         selectedReturn: selectedReturnReducer(state.selectedReturn, action),
         popovers: popoversReducer(state.popovers, action),
         ordersFilter: ordersFilterReducer(state.ordersFilter, action),
+        returnsFilter: returnsFilterReducer(state.returnsFilter, action),
         merchant: merchantReducer(state.merchant, action),
         productInventory: productInventoryReducer(state.productInventory, action),
         productPrice: productPriceReducer(state.productPrice, action),
