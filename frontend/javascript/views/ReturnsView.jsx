@@ -29,7 +29,7 @@ var ReturnsView = React.createClass({ displayName:"ReturnsView",
         returnsFilter: React.PropTypes.object
     },
     fetchReturns: function(){
-        ReturnAC.fetchAll(self.props.returnsFilter.get("status"));
+        ReturnAC.fetchAll(this.props.returnsFilter.get("status"));
     },
     handleReturnsFilterStatusChange: function() {
 
