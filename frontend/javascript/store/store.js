@@ -12,6 +12,7 @@ var selectedOrderReducer = require("./reducers/selectedOrderReducer");
 var selectedReturnReducer= require("./reducers/selectedReturnReducer");
 var productsReducer = require("./reducers/productsReducer");
 var ordersReducer = require("./reducers/ordersReducer");
+var returnsReducer = require("./reducers/returnsReducer");
 var popoversReducer = require("./reducers/popoversReducer");
 var productInventoryReducer = require("./reducers/productInventoryReducer");
 var productPriceReducer = require("./reducers/productPriceReducer");
@@ -28,6 +29,7 @@ var ActionTypes = require("../actions/ActionTypes");
 var initialState = {
     orders: Immutable.Map({}),
     products: Immutable.Map({}),
+    returns: Immutable.Map({}),
     loading: false,
     selectedProduct: null,
     selectedOrder: {},
@@ -50,6 +52,7 @@ function reducer(state, action) {
     return {
         products: productsReducer(state.products, action),
         orders: ordersReducer(state.orders, action),
+        returns: returnsReducer(state.returns, action),
         loading: loadingReducer(state.loading, action),
         selectedProduct: selectedProductReducer(state.selectedProduct, action),
         selectedOrder: selectedOrderReducer(state.selectedOrder, action),

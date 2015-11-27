@@ -11,13 +11,12 @@ var ReturnAC= require("../actions/ReturnAC");
 var filterByStatusOptions = [
     {value: Constants.RETURN_STATUS.ACKNOWLEDGED, label: "Acknowledged"},
     {value: Constants.RETURN_STATUS.CREATED, label: "Created"},
-    {value: Constants.RETURN_STATUS.REFUND_CUSTOMER_WITHOUT_RETURN, label: "Refund Customer Without Return"},
     {value: Constants.RETURN_STATUS.COMPLETED_BY_MERCHANT, label: "Completed By Merchant"},
+    {value: Constants.RETURN_STATUS.REFUND_CUSTOMER_WITHOUT_RETURN, label: "Refund Customer Without Return"},
     {value: Constants.RETURN_STATUS.JET_REFUNDED, label: "Jet Refunded"}
 ].map(function(d) {
         return <option value={d.value} key={d.value}>{d.label}</option>
     });
-
 
 var ReturnsView = React.createClass({ displayName:"ReturnsView",
     propTypes: {
@@ -31,8 +30,9 @@ var ReturnsView = React.createClass({ displayName:"ReturnsView",
     fetchReturns: function(){
         ReturnAC.fetchAll(this.props.returnsFilter.get("status"));
     },
-    handleReturnsFilterStatusChange: function() {
-
+    handleReturnsFilterStatusChange: function(ev) {
+        var newValue = ev.target.value;
+        ReturnAC.setFilter(newValue);
     },
     getOrderElements: function(){
 

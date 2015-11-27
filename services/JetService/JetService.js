@@ -382,7 +382,7 @@ function _extractMerchantOrderIds(orderStatusArray) {
     });
 }
 
-var RETURN_ID_REGEX = /return\/state\/(.*)/;
+var RETURN_ID_REGEX = /returns\/state\/(.*)/;
 function _extractReturnIds(returnsArray) {
     return returnsArray.return_urls.map(function(url) {
         var match = url.match(RETURN_ID_REGEX);
@@ -390,7 +390,7 @@ function _extractReturnIds(returnsArray) {
             return null;
         } else {
             return {
-                return_id: match[1]
+                merchant_return_authorization_id: match[1]
             };
         }
     });
