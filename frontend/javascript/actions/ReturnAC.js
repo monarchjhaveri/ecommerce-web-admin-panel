@@ -133,7 +133,7 @@ var ReturnAC = {
         });
     },
     clearSelection: function() {
-        store.dispatch(pushState(null, "/orders"));
+        store.dispatch(pushState(null, "/returns"));
     }
 };
 
