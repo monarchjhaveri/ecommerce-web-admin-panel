@@ -52,7 +52,6 @@ var OrderAC = {
                 method: "PUT",
                 url: "api/orders/order/:merchant_order_id/acknowledge".replace(":merchant_order_id", merchant_order_id),
                 contentType:'application/json',
-                dataType:'json',
                 data: JSON.stringify(acknowledgement_dto),
                 error: function(request, error) {
                     dispatch({
@@ -66,6 +65,7 @@ var OrderAC = {
                     dispatch({
                         type: ActionTypes.ORDERS.ACKNOWLEDGE_SUCCESS
                     });
+                    PopoverAC.displaySuccessFromText("Successfully acknowledged order " + merchant_order_id +".");
                 }
             });
         });
