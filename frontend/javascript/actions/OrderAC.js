@@ -79,7 +79,6 @@ var OrderAC = {
                 method: "PUT",
                 url: "api/orders/order/:merchant_order_id/shipped".replace(":merchant_order_id", merchant_order_id),
                 contentType:'application/json',
-                dataType:'json',
                 data: JSON.stringify(shipment_dto),
                 error: function(request, error) {
                     dispatch({
@@ -93,6 +92,7 @@ var OrderAC = {
                     dispatch({
                         type: ActionTypes.ORDERS.SHIP_SUCCESS
                     });
+                    PopoverAC.displaySuccessFromText("Successfully shipped order " + merchant_order_id + ".");
                 }
             });
         });

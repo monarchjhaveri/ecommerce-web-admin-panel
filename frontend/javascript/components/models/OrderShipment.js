@@ -14,7 +14,7 @@ function return_location(order) {
 }
 
 function order_shipment_item(order) {
-    var orderEnums = ModelsHelper.getEnumsOfOrderItemsToProductTitles(order);
+    var orderEnums = ModelsHelper.getEnumsOfOrderItemSkusToProductTitles(order);
     return t.struct({
         shipment_item_id: t.maybe(t.String),
         alt_shipment_item_id: t.maybe(t.String),
