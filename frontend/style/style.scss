@@ -21,7 +21,7 @@
 
 .view {
   $product-view-sidebar-width: 250px;
-  $product-view-details-width: 700px;
+  $product-view-details-width: 850px;
   .view-sidebar {
     display: inline-block;
     float: left;
@@ -147,13 +147,31 @@
 }
 
 fieldset {
-  $control-label-width: 20%;
   $form-control-width: 40%;
-  $help-block-width: 100% - $control-label-width - $form-control-width - 5%;
-  .control-label, .form-control {
-    display: inline-block;
-    vertical-align: top;
+  $help-block-width: 100% - $form-control-width - 5%;
+  .form-group-depth-1 {
+    .control-label, &.form-control {
+      display: inline-block;
+      vertical-align: top;
+    }
+    .form-control {
+      width: $form-control-width;
+    }
+    .form-control, .nav.nav-pills {
+      &:hover + .help-block {
+        display: inline-block !important;
+      }
+    }
+    .nav.nav-pills {
+      & li {
+        width: $form-control-width/3;
+        & .form-control {
+          width: 100%;
+        }
+      }
+    }
   }
+
   .help-block {
     @extend .well;
     @extend .well-lg;
@@ -163,23 +181,9 @@ fieldset {
     margin-left: 10px;
   }
   .control-label {
-    width: $control-label-width;
+
   }
-  .form-control {
-    width: $form-control-width;
-  }
-  .form-control, .nav.nav-pills {
-    &:hover + .help-block {
-      display: inline-block !important;
-    }
-  }
-  .nav.nav-pills {
-    & li {
-      width: $form-control-width/3;
-      & .form-control {
-        width: 100%;
-      }
-    }
-  }
+
+
 }
 
