@@ -4,13 +4,13 @@ if (process.env.NODE_ENV !== 'production') {
   dotenv.config();
 }
 
-
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var auth = require('basic-auth');
 
 var routes = require('./routes/index');
 var products = require('./routes/products');
@@ -27,6 +27,21 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.use(function(req, res, next) {
+  var user = auth(req);
+
+  var username = process.env.BASIC_AUTH_USERNAME || 'admin';
+  var password = process.env.BASIC_AUTH_PASSWORD || 'password';
+
+  if (user === undefined || user['name'] !== username || user['pass'] !== password) {
+    res.statusCode = 401;
+    res.setHeader('WWW-Authenticate', 'Basic realm="MyRealmName"');
+    res.end('Unauthorized');
+  } else {
+    next();
+  }
+});
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -42,12 +57,17 @@ app.use('/api/jet/products', jetProducts);
 app.use('/api/merchant', merchant);
 app.use('/api/returns', returns);
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
+
+app.use(logger);
+
+
 
 // error handlers
 
