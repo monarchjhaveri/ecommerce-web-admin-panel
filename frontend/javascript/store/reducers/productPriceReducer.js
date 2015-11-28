@@ -11,6 +11,7 @@ module.exports = function productPriceReducer(state, action) {
 
     switch (action.type) {
         case ActionTypes.PRODUCTS.PRICE.GET_STARTED:
+        case ActionTypes.PRODUCTS.GET_DETAILS_STARTED:
             return Immutable.Map({});
         case ActionTypes.PRODUCTS.PRICE.GET_SUCCESS:
             return state.set(action.payload.product.merchant_sku, action.payload.priceInfo);
