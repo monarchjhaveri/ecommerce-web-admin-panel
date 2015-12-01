@@ -9,10 +9,14 @@ var getAppropriateStatusCode = require("./ResourceErrorMessageHelper").getApprop
 var ReturnsResource = {};
 
 ReturnsResource.getDetails = function(req, res, next) {
-    var return_id = req.params.return_id;
+    var return_url_id = req.params.return_url_id;
     async.waterfall([
         function(callback) {
-            JetService.getReturnDetails(return_id, callback);
+            JetService.getReturnDetails(return_url_id, callback);
+        },
+        function(returnDetailsDto, callback) {
+            returnDetailsDto.return_url_id = return_url_id;
+            callback(null, returnDetailsDto);
         }
     ], _responseFunctionFactory("get details of return", res));
 };
@@ -29,16 +33,16 @@ ReturnsResource.list = function(req, res, next) {
 ReturnsResource.complete = function(req, res, next) {
     async.waterfall([
         function(callback) {
-            if (!req.params || !req.params.return_id) {
-                callback(new Error("Must provide a return_id"));
+            if (!req.params || !req.params.return_url_id) {
+                callback(new Error("Must provide a return_url_id"));
             }
             if (!req.body) {
                 callback(new Error("Must provide Completed Return DTO."));
             }
 
             var payload = req.body;
-            var return_id = req.params.return_id;
-            callback(null, payload, return_id);
+            var return_url_id = req.params.return_url_id;
+            callback(null, payload, return_url_id);
         },
         JetService.completeReturn
     ], _responseFunctionFactory("complete return", res));

@@ -40,17 +40,17 @@ var ReturnAC = {
     },
     /**
      *
-     * @param merchant_return_authorization_id
+     * @param return_url_id
      * @param acknowledgement_dto
      */
-    acknowledge: function(merchant_return_authorization_id, acknowledgement_dto) {
+    acknowledge: function(return_url_id, acknowledgement_dto) {
         store.dispatch(function(dispatch) {
             dispatch({
                 type: ActionTypes.RETURNS.ACKNOWLEDGE_STARTED
             });
             $.ajax({
                 method: "PUT",
-                url: "api/returns/return/:merchant_return_authorization_id/acknowledge".replace(":merchant_return_authorization_id", merchant_return_authorization_id),
+                url: "api/returns/return/:return_url_id/acknowledge".replace(":return_url_id", return_url_id),
                 contentType:'application/json',
                 dataType:'json',
                 data: JSON.stringify(acknowledgement_dto),
@@ -97,15 +97,15 @@ var ReturnAC = {
             });
         });
     },
-    getDetails: function(merchant_order_id) {
+    getDetails: function(return_url_id) {
         store.dispatch(function(dispatch) {
             dispatch({
                 type: ActionTypes.RETURNS.GET_DETAILS_STARTED
             });
             $.ajax({
                 method: "GET",
-                url: "api/orders/order/:merchant_order_id"
-                    .replace(":merchant_order_id", merchant_order_id),
+                url: "api/returns/return/:return_url_id"
+                    .replace(":return_url_id", return_url_id),
                 error: function(request, error) {
                     dispatch({
                         type: ActionTypes.RETURNS.GET_DETAILS_FAILURE,

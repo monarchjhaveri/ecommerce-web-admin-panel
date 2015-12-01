@@ -2,7 +2,7 @@ var Immutable = require("immutable");
 var ActionTypes = require("../../actions/ActionTypes");
 
 var defaultState = Immutable.List([]);
-var stateKey = "merchant_return_authorization_id";
+var stateKey = "return_url_id";
 
 module.exports = function ordersReducer(state, action) {
     if (typeof state === 'undefined') {

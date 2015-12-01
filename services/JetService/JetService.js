@@ -137,9 +137,9 @@ JetService.shipOrder = function(shipped_dto, merchant_order_id, originalCallback
     }, originalCallback);
 };
 
-JetService.completeReturn = function(completed_return_dto, return_id, originalCallback) {
+JetService.completeReturn = function(completed_return_dto, return_url_id, originalCallback) {
     _retryIfFailed("shipOrder", function(callback) {
-        JetApi.returns.complete(return_id, completed_return_dto, authData.id_token, callback);
+        JetApi.returns.complete(return_url_id, completed_return_dto, authData.id_token, callback);
     }, originalCallback);
 };
 
@@ -339,12 +339,12 @@ function _getOrderDetails(merchant_order_id) {
     }
 }
 
-function _getReturnDetails(return_id) {
+function _getReturnDetails(return_url_id) {
     return function (callback) {
-        if (!return_id) {
-            callback(new Error("Return ID was undefined."));
+        if (!return_url_id) {
+            callback(new Error("return_url_id was undefined."));
         } else {
-            JetApi.returns.getDetails(return_id, authData.id_token, callback);
+            JetApi.returns.getDetails(return_url_id, authData.id_token, callback);
         }
     }
 }
@@ -382,15 +382,15 @@ function _extractMerchantOrderIds(orderStatusArray) {
     });
 }
 
-var RETURN_ID_REGEX = /returns\/state\/(.*)/;
+var RETURN_URL_ID_REGEX = /returns\/state\/(.*)/;
 function _extractReturnIds(returnsArray) {
     return returnsArray.return_urls.map(function(url) {
-        var match = url.match(RETURN_ID_REGEX);
+        var match = url.match(RETURN_URL_ID_REGEX);
         if (match === null || match.length <= 1) {
             return null;
         } else {
             return {
-                merchant_return_authorization_id: match[1]
+                return_url_id: match[1]
             };
         }
     });

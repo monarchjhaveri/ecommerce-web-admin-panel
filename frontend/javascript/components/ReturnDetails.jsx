@@ -13,18 +13,26 @@ var productModelOptionsFactory = require("./models/ProductModel").optionsFactory
 var ReturnAC = require("../actions/ReturnAC");
 var connect = require("react-redux").connect;
 
+function fetchReturnIfNeeded(return_url_id) {
+    var selectedReturn = store.getState().selectedReturn;
+    if (selectedReturn && selectedReturn.return_url_id === return_url_id) {
+    } else {
+        ReturnAC.getDetails(return_url_id);
+    }
+}
+
 var ReturnDetails = React.createClass({ displayName: "ReturnDetails",
     propTypes: {
         selectedReturn: React.PropTypes.object
     },
     componentWillMount: function() {
-        var merchant_return_authorization_id = this.props.params && this.props.params.selectedReturn && this.props.params.selectedReturn.merchant_return_authorization_id;
-        if (merchant_return_authorization_id) {
-            fetchReturnIfNeeded(merchant_return_authorization_id);
+        var return_url_id = this.props.params && this.props.params.return_url_id;
+        if (return_url_id) {
+            fetchReturnIfNeeded(return_url_id);
         }
     },
     componentWillReceiveProps: function(nextProps){
-        var merchantOrderId = nextProps.params.merchant_order_id;
+        var merchantOrderId = nextProps.params.return_url_id;
         if (merchantOrderId) {
             fetchReturnIfNeeded(merchantOrderId);
         }
@@ -47,15 +55,6 @@ function timestampToString(timestamp) {
         return timestamp;
     } else {
         return m.format('MMM Do [\']YY, h:mm:ss a');
-    }
-}
-
-
-function fetchReturnIfNeeded(merchant_return_authorization_id) {
-    var selectedReturn = store.getState().selectedReturn;
-    if (selectedReturn && selectedReturn.merchant_return_authorization_id === merchant_return_authorization_id) {
-    } else {
-        ReturnAC.getDetails(merchant_return_authorization_id);
     }
 }
 

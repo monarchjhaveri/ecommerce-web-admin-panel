@@ -97,7 +97,7 @@ var App = React.createClass({
                             </Route>
                             <Route path="returns" >
                                 <IndexRoute component={ReturnsView}></IndexRoute>
-                                <Route path=":merchant_return_authorization_id">
+                                <Route path=":return_url_id">
                                     <IndexRoute component={ReturnDetails} />
                                 </Route>
                             </Route>

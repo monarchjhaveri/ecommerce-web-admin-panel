@@ -35,7 +35,7 @@ var ReturnsView = React.createClass({ displayName:"ReturnsView",
         ReturnAC.setFilter(newValue);
     },
     getSelectedReturnId: function() {
-        var selectedReturnId = this.props.router && this.props.router.params && this.props.router.params.merchant_return_authorization_id;
+        var selectedReturnId = this.props.router && this.props.router.params && this.props.router.params.return_url_id;
         return selectedReturnId ? selectedReturnId : null;
     },
     getReturnElements: function() {
@@ -43,11 +43,11 @@ var ReturnsView = React.createClass({ displayName:"ReturnsView",
         var className = "sidebar-select-list-item";
         var selectedReturnId = this.getSelectedReturnId();
         var returnsDOM = returns.map(function(d) {
-            var thisClassName = selectedReturnId && d.merchant_return_authorization_id === selectedReturnId ? className + " selected" : className;
+            var thisClassName = selectedReturnId && d.return_url_id === selectedReturnId ? className + " selected" : className;
             return (
-                <div key={d.merchant_return_authorization_id} className={thisClassName}>
-                    <Link to={"returns/" + d.merchant_return_authorization_id}>
-                        {d.merchant_return_authorization_id}
+                <div key={d.return_url_id} className={thisClassName}>
+                    <Link to={"returns/" + d.return_url_id}>
+                        {d.return_url_id}
                     </Link>
                 </div>
             )
