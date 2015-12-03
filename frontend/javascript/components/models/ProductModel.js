@@ -2,6 +2,7 @@ var React = require('react');
 var t = require('tcomb-form');
 var ProductValidationHelper = require("../../../../helpers/ProductValidationHelper");
 var jQuery = require("jquery");
+var ModelsHelper = require("./ModelsHelper");
 
 var StandardProductCodeTypes = t.enums({
     "UPC": "UPC",
@@ -204,7 +205,7 @@ function _mergeUniqueLeft(array1, array2) {
  * @returns {{}}
  */
 var optionsFactory = function optionsFactory(product) {
-    return {
+    return ModelsHelper.applyDefaultOptions({
         order: _mergeUniqueLeft(
             ['merchant_sku', 'product_title','multipack_quantity', 'standard_product_codes', 'main_image_url', 'swatch_image_url', 'alternate_images'],
             Object.keys(_productModel)
@@ -279,7 +280,7 @@ var optionsFactory = function optionsFactory(product) {
                 </span>
             )
         }
-    };
+    });
 };
 
 function _renderHelpText(str) {
@@ -327,27 +328,3 @@ function _helpBoxAndPrecisionTwo(content) {
 
 module.exports.model = ProductModel;
 module.exports.optionsFactory = optionsFactory;
-
-
-
-/*
- {
- "ASIN":"TestTest10",
- "correlation_id":"map-5c7e058d28c041d2a93dbb51e27081e1",
- "inventory_by_fulfillment_node":[],
- "merchant_id":"c163f4f1379140d0982d18c443a1852f",
- "merchant_sku":"1",
- "merchant_sku_id":"c48056d95fe74dae81dc4667e247a1af",
- "multipack_quantity":10,
- "product_title":"Test Product",
- "sku_last_update":"2015-10-12T09:35:11.6347408+00:00",
- "status":"Processing",
- "sub_status":[]
- }*/
-//
-//"standard_product_codes": [
-//    {
-//        "standard_product_code": "123456789012",
-//        "standard_product_code_type": "UPC"
-//    }
-//],

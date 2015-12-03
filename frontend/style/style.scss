@@ -20,8 +20,8 @@
 }
 
 .view {
-  $product-view-sidebar-width: 275px;
-  $product-view-details-width: 950px;
+  $product-view-sidebar-width: 270px;
+  $view-right-column-width: 210px;
   .view-sidebar {
     display: inline-block;
     float: left;
@@ -52,7 +52,7 @@
   .view-details {
     position: absolute;
     left: $product-view-sidebar-width;
-    width: $product-view-details-width;
+    right: $view-right-column-width;
     top: 0;
     bottom: 0;
     overflow-y: scroll;
@@ -60,7 +60,7 @@
   }
   .view-right-column {
     position: absolute;
-    left: $product-view-sidebar-width + $product-view-details-width;
+    width: $view-right-column-width;
     right: 0;
     top: 0;
     bottom: 0;
