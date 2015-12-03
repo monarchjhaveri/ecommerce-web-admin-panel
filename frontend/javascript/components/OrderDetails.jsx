@@ -2,7 +2,6 @@ var React = require("react");
 var LinkedStateMixin = require("react-addons-linked-state-mixin");
 var jQuery = require("jquery");
 var Immutable = require("immutable");
-var moment = require("moment");
 var store = require("../store/store");
 
 var t = require('tcomb-form');
@@ -12,6 +11,10 @@ var ProductModel = require("./models/ProductModel").model;
 var productModelOptionsFactory = require("./models/ProductModel").optionsFactory;
 var OrderAC = require("../actions/OrderAC");
 var connect = require("react-redux").connect;
+
+var FrontendHelper = require("../helpers/FrontendHelper");
+
+var timestampToString = FrontendHelper.timestampToString;
 
 function fetchOrderIfNeeded(merchantOrderId) {
     var selectedOrder = store.getState().selectedOrder;
@@ -221,16 +224,6 @@ function orderItemsToDom(order_items) {
         )
     }
     return dom;
-}
-
-function timestampToString(timestamp) {
-    if (!timestamp) return null;
-    var m = moment(timestamp);
-    if (!m.isValid()) {
-        return timestamp;
-    } else {
-        return m.format('MMM Do [\']YY, h:mm:ss a');
-    }
 }
 
 function getDirectedCancelFlag(order) {

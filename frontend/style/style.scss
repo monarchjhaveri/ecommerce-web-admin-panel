@@ -183,7 +183,16 @@ fieldset {
   .control-label {
 
   }
-
-
 }
 
+.card-group {
+  .card {
+    float: left;
+    margin: 0 10px;
+    border: 1px solid $popover-border-color;
+    padding: 4px;
+    .card-block {
+
+    }
+  }
+}
