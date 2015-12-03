@@ -98,13 +98,13 @@ var ProductModel = t.struct({
     product_description: t.maybe(_lengthValidatedString(1, 2000)),
     number_units_for_price_per_unit: t.maybe(t.Number),
     type_of_unit_for_price_per_unit: t.maybe(t.Str),
-    shipping_weight_pounds: t.maybe(FloatPrecisionTwo),
-    package_length_inches: t.maybe(FloatPrecisionTwo),
-    package_width_inches: t.maybe(FloatPrecisionTwo),
-    package_height_inches: t.maybe(FloatPrecisionTwo),
-    display_length_inches: t.maybe(FloatPrecisionTwo),
-    display_width_inches: t.maybe(FloatPrecisionTwo),
-    display_height_inches: t.maybe(FloatPrecisionTwo),
+    shipping_weight_pounds: t.maybe(t.Number),
+    package_length_inches: t.maybe(t.Number),
+    package_width_inches: t.maybe(t.Number),
+    package_height_inches: t.maybe(t.Number),
+    display_length_inches: t.maybe(t.Number),
+    display_width_inches: t.maybe(t.Number),
+    display_height_inches: t.maybe(t.Number),
     prop_65: t.maybe(t.Boolean),
     legal_disclaimer_description: t.maybe(_lengthValidatedString(0, 500)),
     cpsia_cautionary_statements: t.maybe(t.list(t.enums.of([
@@ -216,13 +216,13 @@ var optionsFactory = function optionsFactory(product) {
             bullets: _helpBoxOnly("Merchant SKU feature description"),
             number_units_for_price_per_unit: _helpBoxOnly("For Price Per Unit calculations, the number of units included in the merchant SKU. The unit of measure must be specified in order to indicate what is being measured by the unit-count"),
             type_of_unit_for_price_per_unit: _helpBoxOnly("The type_of_unit_for_price_per_unit attribute is a label for the number_units_for_price_per_unit. The price per unit can then be constructed by dividing the selling price by the number of units and appending the text 'per unit value.' For example, for a six-pack of soda, number_units_for_price_per_unit= 6, type_of_unit_for_price_per_unit= can, price per unit = price per can."),
-            shipping_weight_pounds: _helpBoxOnly(<span>Weight of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
-            package_length_inches: _helpBoxOnly(<span>Length of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
-            package_width_inches: _helpBoxOnly(<span>Width of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
-            package_height_inches: _helpBoxOnly(<span>Height of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
-            display_length_inches: _helpBoxOnly(<span>Length of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
-            display_width_inches: _helpBoxOnly(<span>Width of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
-            display_height_inches: _helpBoxOnly(<span>Height of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            shipping_weight_pounds: _helpBoxAndPrecisionTwo(<span>Weight of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            package_length_inches: _helpBoxAndPrecisionTwo(<span>Length of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            package_width_inches: _helpBoxAndPrecisionTwo(<span>Width of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            package_height_inches: _helpBoxAndPrecisionTwo(<span>Height of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            display_length_inches: _helpBoxAndPrecisionTwo(<span>Length of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            display_width_inches: _helpBoxAndPrecisionTwo(<span>Width of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
+            display_height_inches: _helpBoxAndPrecisionTwo(<span>Height of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
             legal_disclaimer_description: _helpBoxOnly("Any legal language required to be displayed with the product. Max 500 characters."),
             prop_65: _helpBoxOnly('You must tell us if your product is subject to Proposition 65 rules and regulations. Proposition 65 requires merchants to provide California consumers with special warnings for products that contain chemicals known to cause cancer, birth defects, or other reproductive harm, if those products expose consumers to such materials above certain threshold levels. The default value for this is "false," so if you do not populate this column, we will assume your product is not subject to this rule. Please view this website for more information: http://www.oehha.ca.gov/.'),
             cpsia_cautionary_statements: {
@@ -284,10 +284,30 @@ function _lengthValidatedString(min, max) {
     });
 }
 
+var FloatPrecisionTwoTransformer = {
+    format: function(value){
+        return value;
+    },
+    parse: function(value) {
+        if (value) {
+            var numerical = Number.parseFloat(value);
+            return isNaN(numerical) ? value : numerical;
+        } else {
+            return null;
+        }
+    }
+};
+
 function _helpBoxOnly(content) {
     return {
         help: _renderHelpText(content)
     }
+}
+
+function _helpBoxAndPrecisionTwo(content) {
+    var o = _helpBoxOnly(content);
+    o.transformer = FloatPrecisionTwoTransformer;
+    return o;
 }
 
 
