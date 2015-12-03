@@ -1,6 +1,7 @@
 var React = require('react');
 var t = require('tcomb-form');
 var ProductValidationHelper = require("../../../../helpers/ProductValidationHelper");
+var jQuery = require("jquery");
 
 var StandardProductCodeTypes = t.enums({
     "UPC": "UPC",
@@ -79,10 +80,9 @@ var SkuAttribute = t.struct({
  * category_path
  *
  */
-
-var ProductModel = t.struct({
+var _productModel = {
     _id: t.maybe(t.Str),
-    product_title: ProductTitle,
+        product_title: ProductTitle,
     jet_browse_node_id: t.maybe(t.Number),
     amazon_item_type_keyword: t.maybe(t.String),
     category_path: t.maybe(t.String),
@@ -114,18 +114,18 @@ var ProductModel = t.struct({
         "choking hazard contains a marble",
         "choking hazard balloon"
     ]))),
-    country_of_origin: t.maybe(_lengthValidatedString(0, 50)),
-    safety_warning: t.maybe(_lengthValidatedString(0, 500)),
-    start_selling_date: t.maybe(t.Date), // ISO 8601 valid
-    fulfillment_time: t.maybe(t.Number),
-    msrp: t.maybe(t.subtype(t.Number, ProductValidationHelper.validateMsrp)),
-    map_price: t.maybe(t.subtype(t.Number, ProductValidationHelper.validateMapPrice)),
-    map_implementation: t.maybe(t.enums({
+        country_of_origin: t.maybe(_lengthValidatedString(0, 50)),
+        safety_warning: t.maybe(_lengthValidatedString(0, 500)),
+        start_selling_date: t.maybe(t.Date), // ISO 8601 valid
+        fulfillment_time: t.maybe(t.Number),
+        msrp: t.maybe(t.subtype(t.Number, ProductValidationHelper.validateMsrp)),
+        map_price: t.maybe(t.subtype(t.Number, ProductValidationHelper.validateMapPrice)),
+        map_implementation: t.maybe(t.enums({
         "103": "103: Jet member savings never applied to product",
         "102": "102: Jet member savings on product only visible to logged in Jet members",
         "101": "101: no restrictions on product based pricing"
     })),
-    product_tax_code: t.maybe(t.enums.of([
+        product_tax_code: t.maybe(t.enums.of([
         'Toilet Paper',
         'Thermometers',
         'Sweatbands',
@@ -181,11 +181,23 @@ var ProductModel = t.struct({
     main_image_url: t.maybe(t.String),
     swatch_image_url: t.maybe(t.String),
     alternate_images: t.maybe(t.list(AlternateImage))
-});
+};
+
+var ProductModel = t.struct(_productModel);
 
 var AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT = "At least one of the following must be provided for each merchant SKU: Standard Product Code (UPC, GTIN-14 etc.), ASIN, or Brand and Manufacturer Part Number.";
 
 var FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT = 'A number with 2 decimals';
+
+function _mergeUniqueLeft(array1, array2) {
+    var returnArray = jQuery.extend(true, [], array1);
+    for (var i = 0; i < array2.length; i++) {
+        if (returnArray.indexOf(array2[i]) === -1) {
+            returnArray.push(array2[i]);
+        }
+    }
+    return returnArray;
+}
 
 /**
  * @param product
@@ -193,6 +205,10 @@ var FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT = 'A number with 2 decimals';
  */
 var optionsFactory = function optionsFactory(product) {
     return {
+        order: _mergeUniqueLeft(
+            ['merchant_sku', 'product_title','multipack_quantity', 'standard_product_codes', 'main_image_url', 'swatch_image_url', 'alternate_images'],
+            Object.keys(_productModel)
+        ),
         fields: {
             _id: {
                 type: "hidden"

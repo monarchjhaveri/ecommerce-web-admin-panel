@@ -20,8 +20,8 @@
 }
 
 .view {
-  $product-view-sidebar-width: 250px;
-  $product-view-details-width: 850px;
+  $product-view-sidebar-width: 275px;
+  $product-view-details-width: 950px;
   .view-sidebar {
     display: inline-block;
     float: left;
@@ -147,6 +147,12 @@
 }
 
 fieldset {
+  & & {
+    border-left: 2px solid grey;
+    padding: 5px;
+    padding-left: 10px;
+    margin: 5px 0;
+  }
   $form-control-width: 40%;
   $help-block-width: 100% - $form-control-width - 5%;
   .form-group-depth-1 {
