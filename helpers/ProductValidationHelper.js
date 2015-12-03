@@ -1,6 +1,5 @@
 var validator = require("validator");
 
-var REGEX_FLOAT_TWO = /^\d*\.\d{2,2}$/;
 var REGEX_MSRP = /^\d{1,18}\.\d{2,2}$/;
 var REGEX_MAP_PRICE = /^\d{1,7}\.\d{2,2}$/;
 var REGEX_NO_RETURN_FEE_ADJUSTMENT = /^\d{1,1}\.\d{2,2}$/;
@@ -27,15 +26,6 @@ ProductValidationHelper.validateProduct = function validateProduct(product) {
         _validateStandardProductCodeArray(product.standard_product_codes) &&
         _validateMultipackQuantity(product.multipack_quantity)
     );
-};
-
-ProductValidationHelper.validateFloatPrecisionTwo = function _validateFloatPrecisionTwo(_num) {
-    var num = typeof _num === "number" ? _num.toString() : _num;
-    if (Math.floor(num) != num) {
-        return REGEX_FLOAT_TWO.test(num);
-    } else {
-        return true;
-    }
 };
 
 ProductValidationHelper.validateMsrp = function _validateMsrp(_num) {

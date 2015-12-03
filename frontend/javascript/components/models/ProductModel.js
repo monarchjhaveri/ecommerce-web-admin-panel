@@ -66,8 +66,6 @@ var Bullets = t.subtype(t.list, function(ls) {
     return valid;
 });
 
-var FloatPrecisionTwo = t.refinement(t.Number, ProductValidationHelper.validateFloatPrecisionTwo);
-
 var SkuAttribute = t.struct({
     attribute_id: t.Number,
     attribute_value: t.String,
