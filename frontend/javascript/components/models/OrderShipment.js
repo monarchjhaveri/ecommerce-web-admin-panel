@@ -87,36 +87,6 @@ function _orderShipment(order) {
         shipments: t.list(order_shipped_shipment(order))
     });
 }
-//
-//function _optionsFactory(order) {
-//    return {
-//        //fields: {
-//        //    shipments: {
-//        //        item: {
-//        //            fields: {
-//        //                response_shipment_date: {
-//        //                    transformer: DateTransformer
-//        //                },
-//        //                expected_delivery_date: {
-//        //                    transformer: DateTransformer
-//        //                },
-//        //                carrier_pick_up_date: {
-//        //                    transformer: DateTransformer
-//        //                }
-//        //            }
-//        //        }
-//        //    }
-//        //},
-//        i18n: {
-//            add: 'Add',
-//            down: 'Down',
-//            optional: '',
-//            required: " (REQUIRED)",
-//            remove: 'Remove',
-//            up: 'Up'
-//        }
-//    };
-//}
 
 function _optionsFactory(order) {
     return ModelsHelper.applyDefaultOptions({});

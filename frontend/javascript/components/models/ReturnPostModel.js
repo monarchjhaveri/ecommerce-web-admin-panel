@@ -27,7 +27,6 @@ function modelFactory(object){
         alt_order_id: t.maybe(t.String),
         items: t.maybe(t.list(orderReturnRefundItem(object)))
     });
-
 }
 
 function optionsFactory(object){
