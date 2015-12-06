@@ -3,6 +3,7 @@ var t = require('tcomb-form');
 var ProductValidationHelper = require("../../../../helpers/ProductValidationHelper");
 var jQuery = require("jquery");
 var ModelsHelper = require("./ModelsHelper");
+var OptionsHelper= require("./OptionsHelper");
 
 var StandardProductCodeTypes = t.enums({
     "UPC": "UPC",
@@ -205,10 +206,10 @@ function _mergeUniqueLeft(array1, array2) {
  * @returns {{}}
  */
 var optionsFactory = function optionsFactory(product) {
-    return ModelsHelper.applyDefaultOptions({
-        order: _mergeUniqueLeft(
+    return OptionsHelper.applyDefaultOptions({
+        order: OptionsHelper.generateFieldOrderArrayForModel(
             ['merchant_sku', 'product_title','multipack_quantity', 'standard_product_codes', 'main_image_url', 'swatch_image_url', 'alternate_images'],
-            Object.keys(_productModel)
+            _productModel
         ),
         fields: {
             _id: {
@@ -217,20 +218,20 @@ var optionsFactory = function optionsFactory(product) {
             merchant_sku: {
                 disabled: product._id ? true : false
             },
-            product_title: _helpBoxOnly('Short product description. 5 to 500 alphanumeric characters'),
-            jet_browse_node_id: _helpBoxOnly('The unique ID that defines where the product will be found in the Jet.com browse structure. This must be a valid jet_browse_node_id'),
-            amazon_item_type_keyword: _helpBoxOnly("ItemType allows customers to find your products as they browse to the most specific item types. Please use the exact selling from Amazon's browse tree guides"),
-            category_path: _helpBoxOnly("Please enter a category path using your own product taxonomy"),
-            standard_product_codes: _helpBoxOnly(<span>The barcode or barcode that is associated with the product <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
-            ASIN: _helpBoxOnly(<span>Amazon standard identification number for this merchant SKU if available <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
-            multipack_quantity: _helpBoxOnly(<span>Number of items with the given Standard Product Code that makes up your merchant SKU <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
-            brand: _helpBoxOnly(<span>Brand of the merchant SKU <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
-            manufacturer: _helpBoxOnly("Manufacturer of the merchant SKU"),
-            mfr_part_number: _helpBoxOnly(<span>Part number provided by the original manufacturer of the merchant SKU<br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
-            product_description: _helpBoxOnly("Long description of the merchant SKU"),
-            bullets: _helpBoxOnly("Merchant SKU feature description"),
-            number_units_for_price_per_unit: _helpBoxOnly("For Price Per Unit calculations, the number of units included in the merchant SKU. The unit of measure must be specified in order to indicate what is being measured by the unit-count"),
-            type_of_unit_for_price_per_unit: _helpBoxOnly("The type_of_unit_for_price_per_unit attribute is a label for the number_units_for_price_per_unit. The price per unit can then be constructed by dividing the selling price by the number of units and appending the text 'per unit value.' For example, for a six-pack of soda, number_units_for_price_per_unit= 6, type_of_unit_for_price_per_unit= can, price per unit = price per can."),
+            product_title: OptionsHelper.helpRenderers.helpBoxOnly('Short product description. 5 to 500 alphanumeric characters'),
+            jet_browse_node_id: OptionsHelper.helpRenderers.helpBoxOnly('The unique ID that defines where the product will be found in the Jet.com browse structure. This must be a valid jet_browse_node_id'),
+            amazon_item_type_keyword: OptionsHelper.helpRenderers.helpBoxOnly("ItemType allows customers to find your products as they browse to the most specific item types. Please use the exact selling from Amazon's browse tree guides"),
+            category_path: OptionsHelper.helpRenderers.helpBoxOnly("Please enter a category path using your own product taxonomy"),
+            standard_product_codes: OptionsHelper.helpRenderers.helpBoxOnly(<span>The barcode or barcode that is associated with the product <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
+            ASIN: OptionsHelper.helpRenderers.helpBoxOnly(<span>Amazon standard identification number for this merchant SKU if available <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
+            multipack_quantity: OptionsHelper.helpRenderers.helpBoxOnly(<span>Number of items with the given Standard Product Code that makes up your merchant SKU <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
+            brand: OptionsHelper.helpRenderers.helpBoxOnly(<span>Brand of the merchant SKU <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
+            manufacturer: OptionsHelper.helpRenderers.helpBoxOnly("Manufacturer of the merchant SKU"),
+            mfr_part_number: OptionsHelper.helpRenderers.helpBoxOnly(<span>Part number provided by the original manufacturer of the merchant SKU<br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
+            product_description: OptionsHelper.helpRenderers.helpBoxOnly("Long description of the merchant SKU"),
+            bullets: OptionsHelper.helpRenderers.helpBoxOnly("Merchant SKU feature description"),
+            number_units_for_price_per_unit: OptionsHelper.helpRenderers.helpBoxOnly("For Price Per Unit calculations, the number of units included in the merchant SKU. The unit of measure must be specified in order to indicate what is being measured by the unit-count"),
+            type_of_unit_for_price_per_unit: OptionsHelper.helpRenderers.helpBoxOnly("The type_of_unit_for_price_per_unit attribute is a label for the number_units_for_price_per_unit. The price per unit can then be constructed by dividing the selling price by the number of units and appending the text 'per unit value.' For example, for a six-pack of soda, number_units_for_price_per_unit= 6, type_of_unit_for_price_per_unit= can, price per unit = price per can."),
             shipping_weight_pounds: _helpBoxAndPrecisionTwo(<span>Weight of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
             package_length_inches: _helpBoxAndPrecisionTwo(<span>Length of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
             package_width_inches: _helpBoxAndPrecisionTwo(<span>Width of the merchant SKU when in its shippable configuration<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
@@ -238,32 +239,32 @@ var optionsFactory = function optionsFactory(product) {
             display_length_inches: _helpBoxAndPrecisionTwo(<span>Length of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
             display_width_inches: _helpBoxAndPrecisionTwo(<span>Width of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
             display_height_inches: _helpBoxAndPrecisionTwo(<span>Height of the merchant SKU when in its fully assembled/usable condition<br/> {FLOAT_PRECISION_TWO_PLACEHOLDER_TEXT}</span>),
-            legal_disclaimer_description: _helpBoxOnly("Any legal language required to be displayed with the product. Max 500 characters."),
-            prop_65: _helpBoxOnly('You must tell us if your product is subject to Proposition 65 rules and regulations. Proposition 65 requires merchants to provide California consumers with special warnings for products that contain chemicals known to cause cancer, birth defects, or other reproductive harm, if those products expose consumers to such materials above certain threshold levels. The default value for this is "false," so if you do not populate this column, we will assume your product is not subject to this rule. Please view this website for more information: http://www.oehha.ca.gov/.'),
+            legal_disclaimer_description: OptionsHelper.helpRenderers.helpBoxOnly("Any legal language required to be displayed with the product. Max 500 characters."),
+            prop_65: OptionsHelper.helpRenderers.helpBoxOnly('You must tell us if your product is subject to Proposition 65 rules and regulations. Proposition 65 requires merchants to provide California consumers with special warnings for products that contain chemicals known to cause cancer, birth defects, or other reproductive harm, if those products expose consumers to such materials above certain threshold levels. The default value for this is "false," so if you do not populate this column, we will assume your product is not subject to this rule. Please view this website for more information: http://www.oehha.ca.gov/.'),
             cpsia_cautionary_statements: {
                 help: "Use CTRL + click (CMD + click in OSX) to multiselect",
                 factory: t.form.Select
             },
-            country_of_origin: _helpBoxOnly("The country that the item was manufactured in."),
-            safety_warning: _helpBoxOnly("If applicable, use to supply any associated warnings for your product. Max 500 characters."),
-            start_selling_date: _helpBoxOnly("If updating merchant SKU that has quantity = 0 at all FCs, date that the inventory in this message should be available for sale on Jet.com. You should only use this field if the quantity for the merchant SKU is 0 at all merchant_fcs."),
+            country_of_origin: OptionsHelper.helpRenderers.helpBoxOnly("The country that the item was manufactured in."),
+            safety_warning: OptionsHelper.helpRenderers.helpBoxOnly("If applicable, use to supply any associated warnings for your product. Max 500 characters."),
+            start_selling_date: OptionsHelper.helpRenderers.helpBoxOnly("If updating merchant SKU that has quantity = 0 at all FCs, date that the inventory in this message should be available for sale on Jet.com. You should only use this field if the quantity for the merchant SKU is 0 at all merchant_fcs."),
             fulfillment_time: {
-                help: _renderHelpText('Number of business days from receipt of an order for the given merchant SKU until it will be shipped (only populate if it is different than your account default).\
+                help: OptionsHelper.helpRenderers.helpText('Number of business days from receipt of an order for the given merchant SKU until it will be shipped (only populate if it is different than your account default).\
                     Valid Values: \
                     0 = ships the day the OrderMessage is received \
                     1 = ships one business day after the "merchant_order" is received \
                     2= ships two business days after the "merchant_order" is received \
                     N = ships N business days after the "merchant_order" is received')
             },
-            msrp: _helpBoxOnly('A number with up to 18 digits allowed to the left of the decimal point and 2 digits to the right of the decimal point. Commas or currency symbols are not allowed'),
-            map_price: _helpBoxOnly('Retailer price for the product for which member savings will be applied (if applicable, see map_implementation)'),
-            map_implementation: _helpBoxOnly('The type of rule that indicates how Jet member savings are allowed to be applied to an item’s base price (which is referred to as map_price in the API documentation)'),
-            product_tax_code: _helpBoxOnly("Jet's standard code for the tax properties of a given product."),
-            no_return_fee_adjustment: _helpBoxOnly('Overides the category level setting for this fee adjustment; this is the increase in commision you are willing to pay on this product if the customer waives their ability to return it.If you want to increase the commission you are willing to pay from a base rate of 15% to 17%, then you should enter "0.02"'),
-            exclude_from_fee_adjustments: _helpBoxOnly("This SKU will not be subject to any fee adjustment rules that are set up if this field is 'true'"),
-            ships_alone: _helpBoxOnly("If this field is 'true', it indicates that this 'merchant SKU' will always ship on its own.A separate 'merchant_order' will always be placed for this 'merchant_SKU', one consequence of this will be that this merchant_sku will never contriube to any basket size fee adjustments with any other merchant_skus."),
+            msrp: OptionsHelper.helpRenderers.helpBoxOnly('A number with up to 18 digits allowed to the left of the decimal point and 2 digits to the right of the decimal point. Commas or currency symbols are not allowed'),
+            map_price: OptionsHelper.helpRenderers.helpBoxOnly('Retailer price for the product for which member savings will be applied (if applicable, see map_implementation)'),
+            map_implementation: OptionsHelper.helpRenderers.helpBoxOnly('The type of rule that indicates how Jet member savings are allowed to be applied to an item’s base price (which is referred to as map_price in the API documentation)'),
+            product_tax_code: OptionsHelper.helpRenderers.helpBoxOnly("Jet's standard code for the tax properties of a given product."),
+            no_return_fee_adjustment: OptionsHelper.helpRenderers.helpBoxOnly('Overides the category level setting for this fee adjustment; this is the increase in commision you are willing to pay on this product if the customer waives their ability to return it.If you want to increase the commission you are willing to pay from a base rate of 15% to 17%, then you should enter "0.02"'),
+            exclude_from_fee_adjustments: OptionsHelper.helpRenderers.helpBoxOnly("This SKU will not be subject to any fee adjustment rules that are set up if this field is 'true'"),
+            ships_alone: OptionsHelper.helpRenderers.helpBoxOnly("If this field is 'true', it indicates that this 'merchant SKU' will always ship on its own.A separate 'merchant_order' will always be placed for this 'merchant_SKU', one consequence of this will be that this merchant_sku will never contriube to any basket size fee adjustments with any other merchant_skus."),
             attributes_node_specific: {
-                help: _renderHelpText(
+                help: OptionsHelper.helpRenderers.helpText(
                     <span>
                         <b>Attribute ID:</b> The node attribute ID number that you get from Jet provided documentation that corresponds with the attribute you are passing. <br/>
                         <b>Attribute Value:</b> The value for the attribute. For example, if the attribute is size you may pass 'large' or if the the attribute is weight, you may pass '22'. For attributes like weight the unit will be passed in the next field. <br/>
@@ -271,9 +272,9 @@ var optionsFactory = function optionsFactory(product) {
                     </span>
                 )
             },
-            main_image_url: _helpBoxOnly("URL location where Jet.com can access the image. The images should be 1500 x 1500 pixels or larger, but anything 500 x 500 pixels or larger is acceptable. There is no limit to image size."),
-            swatch_image_url: _helpBoxOnly("URL location where Jet.com can access an image of a color or fabric for a given merchant SKU. The images should be 1500 x 1500 pixels or larger, but anything 500 x 500 pixels or larger is acceptable. There is no limit to image size."),
-            alternate_images: _helpBoxOnly(
+            main_image_url: OptionsHelper.helpRenderers.helpBoxOnly("URL location where Jet.com can access the image. The images should be 1500 x 1500 pixels or larger, but anything 500 x 500 pixels or larger is acceptable. There is no limit to image size."),
+            swatch_image_url: OptionsHelper.helpRenderers.helpBoxOnly("URL location where Jet.com can access an image of a color or fabric for a given merchant SKU. The images should be 1500 x 1500 pixels or larger, but anything 500 x 500 pixels or larger is acceptable. There is no limit to image size."),
+            alternate_images: OptionsHelper.helpRenderers.helpBoxOnly(
                 <span>
                     <b>Image Slot Id:</b> The slot that the alternate image should be uploaded to. Jet.com supports up to 8 images (or 8 image slots).<br/>
                     <b>Image Url:</b> The absolute location where Jet.com can retrieve the image<br/>
@@ -282,10 +283,6 @@ var optionsFactory = function optionsFactory(product) {
         }
     });
 };
-
-function _renderHelpText(str) {
-    return <i>{str}</i>;
-}
 
 /**
  *
@@ -313,14 +310,8 @@ var FloatPrecisionTwoTransformer = {
     }
 };
 
-function _helpBoxOnly(content) {
-    return {
-        help: _renderHelpText(content)
-    }
-}
-
 function _helpBoxAndPrecisionTwo(content) {
-    var o = _helpBoxOnly(content);
+    var o = OptionsHelper.helpRenderers.helpBoxOnly(content);
     o.transformer = FloatPrecisionTwoTransformer;
     return o;
 }
