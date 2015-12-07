@@ -1,5 +1,6 @@
 var jQuery = require("jquery");
 var ModelConstants = require("./ModelConstants");
+var React = require("react");
 
 module.exports = {
     applyDefaultOptions(object) {

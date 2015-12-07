@@ -41,57 +41,30 @@ var ReturnAC = {
     /**
      *
      * @param return_url_id
-     * @param acknowledgement_dto
+     * @param return_complete_dto
      */
-    acknowledge: function(return_url_id, acknowledgement_dto) {
+    complete: function(return_url_id, return_complete_dto) {
         store.dispatch(function(dispatch) {
             dispatch({
-                type: ActionTypes.RETURNS.ACKNOWLEDGE_STARTED
+                type: ActionTypes.RETURNS.COMPLETE_STARTED
             });
             $.ajax({
                 method: "PUT",
-                url: "api/returns/return/:return_url_id/acknowledge".replace(":return_url_id", return_url_id),
+                url: "api/returns/return/:return_url_id/complete".replace(":return_url_id", return_url_id),
                 contentType:'application/json',
                 dataType:'json',
-                data: JSON.stringify(acknowledgement_dto),
+                data: JSON.stringify(return_complete_dto),
                 error: function(request, error) {
                     dispatch({
-                        type: ActionTypes.RETURNS.ACKNOWLEDGE_FAILURE,
+                        type: ActionTypes.RETURNS.COMPLETE_FAILURE,
                         payload: error
                     });
                     PopoverAC.displayError(request);
                 },
-                success: function(data) {
+                success: function() {
                     ReturnAC.clearSelection();
                     dispatch({
-                        type: ActionTypes.RETURNS.ACKNOWLEDGE_SUCCESS
-                    });
-                }
-            });
-        });
-    },
-    ship: function(merchant_order_id, shipment_dto) {
-        store.dispatch(function(dispatch) {
-            dispatch({
-                type: ActionTypes.RETURNS.SHIP_STARTED
-            });
-            $.ajax({
-                method: "PUT",
-                url: "api/orders/order/:merchant_order_id/shipped".replace(":merchant_order_id", merchant_order_id),
-                contentType:'application/json',
-                dataType:'json',
-                data: JSON.stringify(shipment_dto),
-                error: function(request, error) {
-                    dispatch({
-                        type: ActionTypes.RETURNS.SHIP_FAILURE,
-                        payload: error
-                    });
-                    PopoverAC.displayError(request);
-                },
-                success: function(data) {
-                    ReturnAC.clearSelection();
-                    dispatch({
-                        type: ActionTypes.RETURNS.SHIP_SUCCESS
+                        type: ActionTypes.RETURNS.COMPLETE_SUCCESS
                     });
                 }
             });
@@ -126,19 +99,9 @@ var ReturnAC = {
             });
         });
     },
-    openEditorToCreate: function() {
-        store.dispatch({
-            type: ActionTypes.RETURNS.SELECT,
-            payload: {}
-        });
-    },
     clearSelection: function() {
         store.dispatch(pushState(null, "/returns"));
     }
 };
-
-function _displayError(request) {
-
-}
 
 module.exports = ReturnAC;

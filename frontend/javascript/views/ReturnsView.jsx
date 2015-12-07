@@ -55,7 +55,37 @@ var ReturnsView = React.createClass({ displayName:"ReturnsView",
         return returnsDOM;
     },
     getRightViewColumn: function() {
+        if (!this.getSelectedReturnId()) {
+            return null;
+        }
 
+        var returnStatus = this.getSelectedReturnId() && this.getSelectedReturnId().return_status;
+
+        /*
+         JET_REFUNDED: "jetRefunded",
+         COMPLETED_BY_MERCHANT: "completedByMerchant",
+         REFUND_CUSTOMER_WITHOUT_RETURN: "refundCustomerWithoutReturn",
+         ACKNOWLEDGED: "acknowledged",
+         CREATED: "created"
+         */
+
+        //TODO: find out which status can be completed
+        //if (returnStatus === Constants.RETURN_STATUS.ACKNOWLEDGED || returnStatus === Constants.RETURN_STATUS.CREATED ) {
+        //    links.push(_createLinkButton("returns/" + this.getSelectedReturnId() + "/complete", "Complete"));
+        //}
+
+        var links = [];
+
+        if (1 === 1) {
+            links.push(_createLinkButton("returns/" + this.getSelectedReturnId() + "/complete", "Complete"));
+        }
+
+        return (
+            <div className="view-right-column">
+                <h3>Options</h3>
+                {links}
+            </div>
+        )
     },
     render: function() {
         return (
@@ -105,4 +135,13 @@ function mapDispatchToProps(dispatch) {
 
     }
 }
+
+function _createLinkButton(link, label) {
+    return (
+        <Link className="btn btn-default" to={link} key={label+link}>
+            {label}
+        </Link>
+    );
+}
+
 module.exports = connect(mapStateToProps, mapDispatchToProps)(ReturnsView);

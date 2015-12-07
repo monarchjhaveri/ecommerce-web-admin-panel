@@ -146,6 +146,8 @@
   float: right;
 }
 
+$form-control-width: 40%;
+$help-block-width: 100% - $form-control-width - 5%;
 fieldset {
   & & {
     border-left: 2px solid grey;
@@ -153,8 +155,7 @@ fieldset {
     padding-left: 10px;
     margin: 5px 0;
   }
-  $form-control-width: 40%;
-  $help-block-width: 100% - $form-control-width - 5%;
+
   .form-group-depth-1 {
     .control-label, &.form-control {
       display: inline-block;
@@ -162,11 +163,6 @@ fieldset {
     }
     .form-control {
       width: $form-control-width;
-    }
-    .form-control, .nav.nav-pills {
-      &:hover + .help-block {
-        display: inline-block !important;
-      }
     }
     .nav.nav-pills {
       & li {
@@ -177,17 +173,23 @@ fieldset {
       }
     }
   }
-
-  .help-block {
-    @extend .well;
-    @extend .well-lg;
-    width: $help-block-width;
-    position: absolute;
-    display: none;
-    margin-left: 10px;
-  }
   .control-label {
 
+  }
+}
+
+.help-block {
+  @extend .well;
+  @extend .well-lg;
+  width: $help-block-width;
+  position: absolute;
+  display: none;
+  margin-left: 10px;
+}
+
+.form-control, .nav.nav-pills {
+  &:hover + .help-block {
+    display: inline-block !important;
   }
 }
 
