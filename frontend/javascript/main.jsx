@@ -28,6 +28,7 @@ var OrderAcknowledgement = require("./components/OrderAcknowledgement.jsx");
 var OrderShipment = require("./components/OrderShipment.jsx");
 
 var ReturnDetails = require("./components/ReturnDetails.jsx");
+var ReturnComplete = require("./components/ReturnComplete.jsx");
 
 var unsubscribe = store.subscribe(function() {
    
@@ -98,6 +99,7 @@ var App = React.createClass({
                             <Route path="returns" component={ReturnsView}>
                                 <Route path=":return_url_id">
                                     <IndexRoute component={ReturnDetails} />
+                                    <Route path="complete" component={ReturnComplete}/>
                                 </Route>
                             </Route>
                         </Route>

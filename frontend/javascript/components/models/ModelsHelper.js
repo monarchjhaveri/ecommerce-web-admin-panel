@@ -1,6 +1,3 @@
-var jQuery = require("jquery");
-var ModelConstants = require("./ModelConstants");
-
 module.exports = {
     getEnumsOfOrderItemsToProductTitles: function getEnumsOfOrderItemsToProductTitles(order) {
         var order_items;
@@ -34,8 +31,5 @@ module.exports = {
         if (!value) return value;
         var dateString1 = new Date(value).toISOString();
         return dateString1.substring(0, dateString1.length-1) + "0000-05:00";
-    },
-    applyDefaultOptions(object) {
-        return jQuery.extend(true, {}, ModelConstants.commonOptions, object);
     }
 };

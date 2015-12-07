@@ -2,6 +2,7 @@ var React = require('react');
 var t = require('tcomb-form');
 var ProductValidationHelper = require("../../../../helpers/ProductValidationHelper");
 var ModelsHelper = require("./ModelsHelper");
+var OptionsHelper = require("./OptionsHelper");
 
 function return_location(order) {
     return t.struct({
@@ -89,7 +90,7 @@ function _orderShipment(order) {
 }
 
 function _optionsFactory(order) {
-    return ModelsHelper.applyDefaultOptions({});
+    return OptionsHelper.applyDefaultOptions({});
 }
 
 module.exports.modelFactory = _orderShipment;
