@@ -22,9 +22,15 @@ module.exports = {
         return _mergeUniqueLeft(orderedFields, Object.keys(model));
     },
     helpRenderers: {
-        helpBoxOnly: function(content){
+        /**
+         *  Pass in an array of strings to get comma separated strings
+         * @param {String|[String]} value
+         * @returns {[Object]}
+         * @private
+         */
+        helpBoxOnly: function(value){
             return {
-                help: _renderHelpText(content)
+                help: _renderHelpText(value)
             }
         },
         helpText: _renderHelpText
@@ -41,6 +47,26 @@ function _mergeUniqueLeft(array1, array2) {
     return returnArray;
 }
 
-function _renderHelpText(str) {
-    return <i>{str}</i>;
+/**
+ *  Pass in an array of strings to get comma separated strings
+ * @param {String|[String]} value
+ * @returns {[Object]}
+ * @private
+ */
+function _renderHelpText(value) {
+    var val;
+    if (value instanceof Array) {
+        // Insert a <br/> in between all the elements.
+        var arr = [];
+        value.forEach(function(d, i) {
+            arr.push(d);
+            if (i !== value.length - 1) {
+                arr.push(<br/>);
+            }
+        });
+        return arr;
+    } else {
+        val = value;
+    }
+    return <i>{val}</i>;
 }

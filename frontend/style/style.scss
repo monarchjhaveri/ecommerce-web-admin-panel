@@ -158,7 +158,7 @@ fieldset {
 
   .form-group-depth-1 {
     .control-label, &.form-control {
-      display: inline-block;
+      visibility: inherit;
       vertical-align: top;
     }
     .form-control {
@@ -183,13 +183,14 @@ fieldset {
   @extend .well-lg;
   width: $help-block-width;
   position: absolute;
-  display: none;
+  visibility: hidden;
   margin-left: 10px;
+  z-index: 2000;
 }
 
 .form-control, .nav.nav-pills {
   &:hover + .help-block {
-    display: inline-block !important;
+    visibility: visible;
   }
 }
 
