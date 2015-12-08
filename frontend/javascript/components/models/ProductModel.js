@@ -92,7 +92,7 @@ var _productModel = {
     ASIN: t.maybe(t.Str),
     standard_product_codes: StandardProductCodeArray,
     multipack_quantity: MultipackQuantity,
-    brand: t.maybe(_lengthValidatedString(1, 50)),
+    brand: _lengthValidatedString(1, 50),
     manufacturer: t.maybe(_lengthValidatedString(1, 50)),
     mfr_part_number: t.maybe(_lengthValidatedString(0, 50)),
     product_description: t.maybe(_lengthValidatedString(1, 2000)),
@@ -208,7 +208,7 @@ function _mergeUniqueLeft(array1, array2) {
 var optionsFactory = function optionsFactory(product) {
     return OptionsHelper.applyDefaultOptions({
         order: OptionsHelper.generateFieldOrderArrayForModel(
-            ['merchant_sku', 'product_title', 'category_path', 'multipack_quantity', 'standard_product_codes', 'main_image_url', 'swatch_image_url', 'alternate_images'],
+            ['merchant_sku', 'product_title', 'category_path', 'brand', 'multipack_quantity', 'standard_product_codes', 'main_image_url', 'swatch_image_url', 'alternate_images'],
             _productModel
         ),
         fields: {
