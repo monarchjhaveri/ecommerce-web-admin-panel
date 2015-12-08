@@ -64,7 +64,7 @@ var CategoryLookupBox = React.createClass({ displayName: "CategoryLookupBox",
             return (
                 <div className="category-lookup-box">
                     <h2>Category Lookup</h2>
-                    <div className="btn btn-success" onClick={this.clearSelection}>Back to Search</div><br/>
+                    <div className="btn btn-success" onClick={this.clearSelection}>Back to Search</div><br/><br/>
                     <table className="table table-hover table-condensed category-result-table">
                         <tbody>
                             {rows}
