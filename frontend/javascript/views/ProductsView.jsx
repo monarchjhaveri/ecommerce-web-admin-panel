@@ -5,6 +5,7 @@ var ProductDetails = require ("./../components/ProductDetails.jsx");
 var ProductInventory = require ("./../components/ProductInventory.jsx");
 var ProductPrice = require ("./../components/ProductPrice.jsx");
 var ProductSelectList = require("../components/ProductSelectList.jsx");
+var CategoryLookupBox = require("../components/CategoryLookupBox.jsx");
 
 var store = require("../store/store");
 var connect = require("react-redux").connect;
@@ -68,6 +69,9 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
 
         return this.props.productPrice.get(merchant_sku);
     },
+    getCategoryLookupBox() {
+        return this.props.selectedProduct ? <CategoryLookupBox/> : null;
+    },
     render: function() {
         return (
             <div className="view">
@@ -94,6 +98,8 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
                         fulfillmentNodes={this.props.merchant.get("fulfillmentNodes")}
                         onSubmitPrice={this.submitPrice}
                     />
+                    {this.getCategoryLookupBox()}
+
                 </div>
             </div>
         );

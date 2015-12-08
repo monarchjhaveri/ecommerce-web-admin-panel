@@ -205,3 +205,12 @@ fieldset {
     }
   }
 }
+
+.category-lookup-box {
+  table {
+    border: 1px solid grey;
+    tr.clickable {
+      color: $link-color;
+    }
+  }
+}

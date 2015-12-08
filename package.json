@@ -17,6 +17,7 @@
     "dateformat": "^1.0.11",
     "debug": "~2.2.0",
     "express": "~4.13.1",
+    "fuzzy": "^0.1.1",
     "history": "^1.13.0",
     "immutable": "^3.7.5",
     "install": "^0.2.3",
