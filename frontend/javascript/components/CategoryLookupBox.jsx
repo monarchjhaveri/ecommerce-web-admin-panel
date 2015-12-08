@@ -43,7 +43,7 @@ var CategoryLookupBox = React.createClass({ displayName: "CategoryLookupBox",
       this.setState({selectedResult: null});
     },
     useSelectedCategoryId: function() {
-        var x = $("input[name=category_path]")[0];
+        var x = $("input[name=jet_browse_node_id]")[0];
         x.value = this.state.selectedResult.id;
         var event = new Event('input', { bubbles: true });
         x.dispatchEvent(event);

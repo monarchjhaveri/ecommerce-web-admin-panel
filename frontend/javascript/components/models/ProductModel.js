@@ -85,9 +85,9 @@ var SkuAttribute = t.struct({
 var _productModel = {
     _id: t.maybe(t.Str),
         product_title: ProductTitle,
-    jet_browse_node_id: t.maybe(t.Number),
+    jet_browse_node_id: t.Number,
     amazon_item_type_keyword: t.maybe(t.String),
-    category_path: t.String,
+    category_path: t.maybe(t.String),
     merchant_sku: t.Str,
     ASIN: t.maybe(t.Str),
     standard_product_codes: StandardProductCodeArray,
@@ -208,7 +208,7 @@ function _mergeUniqueLeft(array1, array2) {
 var optionsFactory = function optionsFactory(product) {
     return OptionsHelper.applyDefaultOptions({
         order: OptionsHelper.generateFieldOrderArrayForModel(
-            ['merchant_sku', 'product_title', 'category_path', 'brand', 'multipack_quantity', 'standard_product_codes', 'main_image_url', 'swatch_image_url', 'alternate_images'],
+            ['merchant_sku', 'product_title', 'jet_browse_node_id', 'brand', 'multipack_quantity', 'standard_product_codes', 'main_image_url', 'swatch_image_url', 'alternate_images'],
             _productModel
         ),
         fields: {
@@ -219,17 +219,9 @@ var optionsFactory = function optionsFactory(product) {
                 disabled: product._id ? true : false
             },
             product_title: OptionsHelper.helpRenderers.helpBoxOnly('Short product description. 5 to 500 alphanumeric characters'),
-            jet_browse_node_id: OptionsHelper.helpRenderers.helpBoxOnly('The unique ID that defines where the product will be found in the Jet.com browse structure. This must be a valid jet_browse_node_id'),
+            jet_browse_node_id: OptionsHelper.helpRenderers.helpBoxOnly('The unique ID that defines where the product will be found in the Jet.com browse structure. This must be a valid jet_browse_node_id. HINT: You can use the Category Lookup on the right to do this.'),
             amazon_item_type_keyword: OptionsHelper.helpRenderers.helpBoxOnly("ItemType allows customers to find your products as they browse to the most specific item types. Please use the exact selling from Amazon's browse tree guides"),
-            category_path: {
-                help: OptionsHelper.helpRenderers.helpText("Please enter a category path using your own product taxonomy. HINT: You can use the Category Lookup on the right to do this."),
-                label: "Category ID (REQUIRED)",
-                attrs: {
-                    onBlur: function() {
-                        console.log("Blur event caught");
-                    }
-                }
-            },
+            category_path: OptionsHelper.helpRenderers.helpBoxOnly("Please enter a category path using your own product taxonomy."),
             standard_product_codes: OptionsHelper.helpRenderers.helpBoxOnly(<span>The barcode or barcode that is associated with the product <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
             ASIN: OptionsHelper.helpRenderers.helpBoxOnly(<span>Amazon standard identification number for this merchant SKU if available <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
             multipack_quantity: OptionsHelper.helpRenderers.helpBoxOnly(<span>Number of items with the given Standard Product Code that makes up your merchant SKU <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
