@@ -223,7 +223,12 @@ var optionsFactory = function optionsFactory(product) {
             amazon_item_type_keyword: OptionsHelper.helpRenderers.helpBoxOnly("ItemType allows customers to find your products as they browse to the most specific item types. Please use the exact selling from Amazon's browse tree guides"),
             category_path: {
                 help: OptionsHelper.helpRenderers.helpText("Please enter a category path using your own product taxonomy. HINT: You can use the Category Lookup on the right to do this."),
-                label: "Category ID (REQUIRED)"
+                label: "Category ID (REQUIRED)",
+                attrs: {
+                    onBlur: function() {
+                        console.log("Blur event caught");
+                    }
+                }
             },
             standard_product_codes: OptionsHelper.helpRenderers.helpBoxOnly(<span>The barcode or barcode that is associated with the product <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),
             ASIN: OptionsHelper.helpRenderers.helpBoxOnly(<span>Amazon standard identification number for this merchant SKU if available <br/> {AT_LEAST_ONE_PER_SKU_PLACEHOLDER_TEXT}</span>),

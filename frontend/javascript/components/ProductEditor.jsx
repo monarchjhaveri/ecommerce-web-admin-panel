@@ -25,6 +25,10 @@ var ProductEditor = React.createClass({displayName:"ProductEditor",
             this.props.submitEdit(ValidationResult.value);
         }
     },
+    forceUpdateForm: function() {
+        var newValue = jQuery("input[name=category_path]")[0].value;
+        this.refs.form.refs.input.refs.category_path.setState({value: newValue});
+    },
     createForm: function(product) {
         var options = productModelOptionsFactory(product);
         return (
@@ -33,6 +37,7 @@ var ProductEditor = React.createClass({displayName:"ProductEditor",
                 value={product}
                 options={options}
                 ref="form"
+                onChange={this.forceUpdateForm}
             />
         )
     },

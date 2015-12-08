@@ -1,6 +1,8 @@
 var React = require("react");
+var ReactDom = require("react-dom");
 var CategoryLookupHelper = require("../helpers/CategoryLookupHelper/CategoryLookupHelper");
 var $ = require("jquery");
+var changeInput = require('react-addons-test-utils').Simulate.change;
 
 function _selectBoxFunctionGenerator(self, object) {
     return function() {
@@ -42,7 +44,11 @@ var CategoryLookupBox = React.createClass({ displayName: "CategoryLookupBox",
       this.setState({selectedResult: null});
     },
     useSelectedCategoryId: function() {
-        $("input[name=category_path]")[0].value = this.state.selectedResult.id;
+        var x = $("input[name=category_path]")[0];
+        x.value = this.state.selectedResult.id;
+        var event = new Event('input', { bubbles: true });
+        x.dispatchEvent(event);
+        $(x).focus();
     },
     render: function() {
         if (this.state.selectedResult) {
