@@ -2,7 +2,6 @@ var React = require("react");
 var ReactDom = require("react-dom");
 var CategoryLookupHelper = require("../helpers/CategoryLookupHelper/CategoryLookupHelper");
 var $ = require("jquery");
-var changeInput = require('react-addons-test-utils').Simulate.change;
 
 function _selectBoxFunctionGenerator(self, object) {
     return function() {
