@@ -209,8 +209,15 @@ fieldset {
 .category-lookup-box {
   table {
     border: 1px solid grey;
-    tr.clickable {
+    .clickable {
       color: $link-color;
+      cursor: pointer;
+      &.parent {
+        color: forestgreen;
+      }
+      &.children {
+        color: #ff4343;
+      }
     }
   }
 }
