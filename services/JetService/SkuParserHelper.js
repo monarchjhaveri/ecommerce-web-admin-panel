@@ -1,4 +1,4 @@
-var SKU_REGEX = /merchant_skus\/(.*)/;
+var SKU_REGEX = /merchant.skus\/(.*)/;
 
 var SkuParserHelper = {};
 
