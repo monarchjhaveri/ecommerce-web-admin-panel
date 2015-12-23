@@ -53,10 +53,10 @@ async.forever(function(next) {
 	});
 });
 
-var MIN_LIST_DELAY = 10 * 60 * 1000;
-var MAX_LIST_DELAY = 2 * 60 * 1000;
-var MAX_ACKNOWLEDGE_ORDER_DELAY = 60 * 1000;
-var MIN_ACKNOWLEDGE_ORDER_DELAY = 10 * 60 * 1000;
+var MIN_LIST_DELAY = 3 * 60 * 1000;
+var MAX_LIST_DELAY = 1 * 60 * 1000;
+var MAX_ACKNOWLEDGE_ORDER_DELAY = 10 * 1000;
+var MIN_ACKNOWLEDGE_ORDER_DELAY = 3 * 1000;
 
 function generateGetOrdersListDelay() {
 	return _getRandomIntInclusive(MIN_LIST_DELAY, MAX_LIST_DELAY);
