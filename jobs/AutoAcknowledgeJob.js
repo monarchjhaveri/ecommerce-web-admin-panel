@@ -1,47 +1,71 @@
 var JetService = require("../services/JetService/JetService");
+var async = require("async");
 
-// acknowledge every 3 minutes
-// if acknowledge fails at any point, tries to reacknowledge every 1 minute until successful
-var AUTO_ACKNOWLEDGEMENT_INTERVAL = 3 * 60 * 1000;
-var AUTO_ACKNOWLEDGEMENT_INTERVAL_IF_FAILED = 60 * 1000;
-var autoAcknowledgeLoopStarted = false;
+var queue = async.queue(function(datum, callback) {
+	var merchant_order_id = datum.merchant_order_id;
+	if (!JetService.isLoggedIn()) {
+		setTimeout(function() {
+			callback();
+		}, 1000);
+	} else {
+		async.waterfall([
+			function(callback) {
+				JetService.getOrderDetails(merchant_order_id, callback);
+			},
+			function(orderDetails, callback) {
+				var acknowledgementBody = {
+				  "acknowledgement_status": "accepted",
+				  "order_items": orderDetails.order_items.map(function(d) {
+				    return {
+				      "order_item_acknowledgement_status": "fulfillable",
+				      "order_item_id": d.order_item_id
+				    };
+				  })
+				};
+				setTimeout(function() {
+					JetService.acknowledgeOrder(acknowledgementBody, merchant_order_id, callback);
+				}, generateAcknowledgeOrderDelay());
+			}
+		], function(err, data) {
+			if (err) {
+				console.log("QUEUE: WARNING: AUTO-ACKNOWLEDGMENT DID NOT WORK!! TRYING AGAIN SOON, STACK TRACE BELOW!");
+				callback();
+			} else {
+				console.log("Successfully acknowledged order " + merchant_order_id);
+				callback();
+			}
+		});
+	}
+}, 1);
 
-function _autoAcknowledge_getOrdersLoop(callback) {
-    async.waterfall(
-        function(callback) {
-            JetService.getOrdersListByStatus("ready", callback);
-        },
-        function
-    );
+async.forever(function(next) {
+	JetService.getOrdersListByStatus("ready", function(err, data) {
+		if (!queue.idle()) {
+			console.log("AUTO-ACKNOWLEDGE-QUERY-LOOP:  Queue is still processing items. Skipping query until queue is empty.");
+		} else if (err) {
+			console.log("AUTO-ACKNOWLEDGE-QUERY-LOOP: AN ERROR OCCURRED!! TRYING AGAIN SOON, STACK TRACE BELOW!");
+			console.log(err);
+		} else {
+			queue.push(data);
+			console.log("AUTO-ACKNOWLEDGE-QUERY-LOOP: Successfully pushed " +  data.length + "items to the queue.");
+		}
+		setTimeout(next, generateGetOrdersListDelay());
+	});
+});
+
+var MIN_LIST_DELAY = 10 * 60 * 1000;
+var MAX_LIST_DELAY = 2 * 60 * 1000;
+var MAX_ACKNOWLEDGE_ORDER_DELAY = 60 * 1000;
+var MIN_ACKNOWLEDGE_ORDER_DELAY = 10 * 60 * 1000;
+
+function generateGetOrdersListDelay() {
+	return _getRandomIntInclusive(MIN_LIST_DELAY, MAX_LIST_DELAY);
 }
 
-//
-//async.forever(function(next) {
-//    if (!autoAcknowledgeLoopStarted) {
-//        var interval = AUTO_ACKNOWLEDGEMENT_INTERVAL_IF_FAILED;
-//        autoAcknowledgeLoopStarted = true;
-//        console.log("Acknowledgement job against Jet.com started. Next attempt in [%s] milliseconds"
-//            .replace("%s", interval));
-//        setTimeout(next, AUTO_ACKNOWLEDGEMENT_INTERVAL);
-//    } else {
-//        console.log("Attempting to re-auth against Jet.com.");
-//        _connect(function(err, data) {
-//            if (err) {
-//                var interval = RECONNECT_INTERVAL_IF_FAILED;
-//                _logRemoteError("Reconnect", err);
-//                console.warn(
-//                    "Re-auth attempt against Jet.com failed! Will keep retrying every [%i] milliseconds until successful, but if this keeps failing, the app WILL stop functioning."
-//                        .replace("%s", interval)
-//                );
-//                setTimeout(next, interval);
-//            } else {
-//                var interval = RECONNECT_INTERVAL;
-//                console.log("Re-auth attempt against Jet.com successful. Next attempt in [%s] milliseconds."
-//                    .replace("%s", interval));
-//                authData = data;
-//                setTimeout(next, interval);
-//            }
-//        });
-//    }
-//});
+function generateAcknowledgeOrderDelay() {
+	return _getRandomIntInclusive(MIN_ACKNOWLEDGE_ORDER_DELAY, MAX_ACKNOWLEDGE_ORDER_DELAY);
+}
 
+function _getRandomIntInclusive(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

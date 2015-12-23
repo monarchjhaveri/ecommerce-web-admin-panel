@@ -20,6 +20,7 @@ var jetProducts = require('./routes/jetProducts');
 var merchant = require('./routes/merchant');
 
 var JetService = require('./services/JetService/JetService');
+var AutoAcknowledgeJob = require('./jobs/AutoAcknowledgeJob');
 
 var app = express();
 

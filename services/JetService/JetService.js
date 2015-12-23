@@ -186,6 +186,10 @@ JetService.editOrCreate = function(productDto, callback) {
     });
 };
 
+JetService.isLoggedIn = function() {
+    return authData && authData.id_token;
+};
+
 function _editInventory(fulfillmentNodesDto, merchant_sku) {
     return function(callback) {
         if (!fulfillmentNodesDto) {
@@ -294,6 +298,8 @@ function _getOrdersListByStatus(status) {
     return function(callback) {
         if (!status || VALID_ORDER_STATUSES.indexOf(status) < 0) {
             callback(new Error("Unknown order status [%s]".replace("%s", status)));
+        } else if(!(authData && authData.id_token)) {
+            callback(new Error("Not authenticated yet."));
         } else {
             JetApi.orders.listByStatus(status, authData.id_token, function(listErr, listData){
                 if (listErr) {
