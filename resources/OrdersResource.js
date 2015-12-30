@@ -3,6 +3,7 @@ var ProductValidationHelper = require("../helpers/ProductValidationHelper");
 var MongoDbHelper = require("../database/MongoDbHelper");
 var ObjectID = require("mongodb").ObjectID;
 var async = require("async");
+var InventorySyncJob = require("../jobs/InventorySyncJob");
 
 var createErrorMessage = require("./ResourceErrorMessageHelper").createErrorMessage;
 var getAppropriateStatusCode = require("./ResourceErrorMessageHelper").getAppropriateStatusCode;
@@ -64,6 +65,8 @@ OrdersResource.acknowledge = function(req, res, next) {
 };
 
 OrdersResource.shipped = function(req, res, next) {
+    var shippedItems = [];
+
     async.waterfall([
         function(callback) {
             if (!req.params || !req.params.merchant_order_id) {
@@ -75,9 +78,25 @@ OrdersResource.shipped = function(req, res, next) {
 
             var payload = req.body;
             var merchant_order_id = req.params.merchant_order_id;
+
+            payload.shipments.forEach(function(shipment) {
+               shipment.shipment_items.forEach(function(shipment_item) {
+                   var item = {};
+                   item.merchant_sku = shipment_item.merchant_sku;
+                   item.deductible = shipment_item.response_shipment_sku_quantity;
+                  shippedItems.push(item);
+               });
+            });
+
             callback(null, payload, merchant_order_id);
         },
-        JetService.shipOrder
+        JetService.shipOrder,
+        function(data, callback) {
+            shippedItems.forEach(function(shippedItem) {
+                InventorySyncJob.deductInventory(shippedItem.merchant_sku, shippedItem.deductible);
+            });
+            callback();
+        }
     ], _responseFunctionFactory("ship order", res));
 };
 

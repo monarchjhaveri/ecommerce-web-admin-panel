@@ -20,8 +20,12 @@ var jetProducts = require('./routes/jetProducts');
 var merchant = require('./routes/merchant');
 
 var JetService = require('./services/JetService/JetService');
-var AutoAcknowledgeJob = require('./jobs/AutoAcknowledgeJob');
 
+// These requires will trigger various timed jobs
+var AutoAcknowledgeJob = require('./jobs/AutoAcknowledgeJob');
+var InventorySyncJob = require('./jobs/InventorySyncJob');
+
+// initialize express
 var app = express();
 
 // view engine setup
