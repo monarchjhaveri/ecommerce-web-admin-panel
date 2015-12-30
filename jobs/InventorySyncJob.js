@@ -60,6 +60,10 @@ var queue = async.queue(function(datum, callback) {
 	}
 }, 1);
 
+var getDeductibleFromOrderQueue = async.queue(function(datum, callback) {
+
+}, 1);
+
 var MAX_INVENTORY_SYNC_JOB_DELAY = 2 * 1000;
 var MIN_INVENTORY_SYNC_JOB_DELAY = 2 * 1000;
 
@@ -71,13 +75,41 @@ function _getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function addToQueue(merchant_sku, deductible) {
+	queue.push({merchant_sku: merchant_sku, deductible: deductible});
+}
+
+function deductInventoryAccordingToOrder(merchant_order_id) {
+	if (!JetService.isLoggedIn()) {
+		setTimeout(function() {
+			callback();
+		}, 1000);
+	} else {
+		async.waterfall([
+			function(callback) {
+				JetService.getOrderDetails(merchant_order_id, callback);
+			},
+			function (orderDetails, callback) {
+				orderDetails.order_items.forEach(function(orderItem) {
+					addToQueue(orderItem.merchant_sku, orderItem.request_order_quantity);
+				});
+			}
+		], function(err, data) {
+			if (err) {
+				console.log(IDENTIFIER + ": WARNING: deductInventoryAccordingToOrder for [" + merchant_order_id + "]  DID NOT WORK!! It will have to be manually deducted.");
+				console.error(err);
+				callback();
+			}
+		})
+	}
+}
+
 module.exports = {
 	/**
 	 * Deduct inventory from merchant sku.
 	 * @param merchant_sku
 	 * @param deductible
      */
-	deductInventory: function addToQueue(merchant_sku, deductible) {
-		queue.push({merchant_sku: merchant_sku, deductible: deductible});
-	}
+	deductInventory: addToQueue,
+	deductInventoryAccordingToOrder: deductInventoryAccordingToOrder
 };
