@@ -119,6 +119,8 @@ JetService.acknowledgeOrder = function(acknowledgeItemDto, merchant_order_id, or
             if (err) {
                 callback(err);
             } else {
+                //var InventorySyncJob = require("../../jobs/InventorySyncJob");
+                //InventorySyncJob.deductInventoryAccordingToOrder(merchant_order_id);
                 callback(null, data);
             }
         });
