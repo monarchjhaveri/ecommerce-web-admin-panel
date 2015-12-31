@@ -11,6 +11,7 @@ var MerchantAC = require("./actions/MerchantAC");
 var ProductsView = require("./views/ProductsView.jsx");
 var OrdersView = require("./views/OrdersView.jsx");
 var ReturnsView = require("./views/ReturnsView.jsx");
+var RefundsView = require("./views/RefundsView.jsx");
 var Modals = require("./modals/Modals.jsx");
 
 var ReduxRouter = require("redux-router").ReduxRouter;
@@ -54,6 +55,7 @@ var Layout = React.createClass({
                                         <li><Link to="/">Products</Link></li>
                                         <li><Link to="/orders">Orders</Link></li>
                                         <li><Link to="/returns">Returns</Link></li>
+                                        <li><Link to="/refunds">Refunds</Link></li>
                                     </ul>
                                 </div>
                             </div>
@@ -101,6 +103,9 @@ var App = React.createClass({
                                     <IndexRoute component={ReturnDetails} />
                                     <Route path="complete" component={ReturnComplete}/>
                                 </Route>
+                            </Route>
+                            <Route path="refunds" component={RefundsView}>
+
                             </Route>
                         </Route>
                     </ReduxRouter>
