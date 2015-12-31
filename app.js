@@ -16,6 +16,7 @@ var routes = require('./routes/index');
 var products = require('./routes/products');
 var orders = require('./routes/orders');
 var returns = require('./routes/returns');
+var refunds = require('./routes/refunds');
 var jetProducts = require('./routes/jetProducts');
 var merchant = require('./routes/merchant');
 
@@ -61,6 +62,7 @@ app.use('/api/orders', orders);
 app.use('/api/jet/products', jetProducts);
 app.use('/api/merchant', merchant);
 app.use('/api/returns', returns);
+app.use('/api/refunds', refunds);
 
 
 // catch 404 and forward to error handler

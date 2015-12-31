@@ -4,6 +4,7 @@ var async = require("async");
 
 var VALID_ORDER_STATUSES = _objectValuesToArray(JetApi.orders.ORDER_STATUS);
 var VALID_RETURN_STATUSES = _objectValuesToArray(JetApi.returns.RETURN_STATUS);
+var VALID_REFUND_STATUSES = _objectValuesToArray(JetApi.refunds.REFUND_STATUS);
 
 
 function _objectValuesToArray(_enum) {
@@ -91,6 +92,14 @@ JetService.getReturnsListByStatus = function(status, callback) {
 
 JetService.getReturnDetails = function(id, callback) {
     _retryIfFailed("getReturnDetails", _getReturnDetails(id), callback);
+};
+
+JetService.getRefundsListByStatus = function(status, callback) {
+    _retryIfFailed("getRefundsListByStatus", _getRefundsListByStatus(status), callback);
+};
+
+JetService.getRefundDetails = function(id, callback) {
+    _retryIfFailed("getRefundDetails", _getRefundDetails(id), callback);
 };
 
 JetService.getDetails = function(sku, callback) {
@@ -331,6 +340,22 @@ function _getReturnsListByStatus(status) {
     }
 }
 
+function _getRefundsListByStatus(status) {
+    return function(callback) {
+        if (!status || VALID_REFUND_STATUSES.indexOf(status) < 0) {
+            callback(new Error("Unknown refund status [%s]".replace("%s", status)));
+        } else {
+            JetApi.refunds.listByStatus(encodeURIComponent(status), authData.id_token, function(listErr, listData){
+                if (listErr) {
+                    callback(listErr);
+                } else {
+                    callback(null, _extractRefundIds(listData));
+                }
+            });
+        }
+    }
+}
+
 function _getOrderDetails(merchant_order_id) {
     return function (callback) {
         if (!merchant_order_id) {
@@ -353,6 +378,16 @@ function _getReturnDetails(return_url_id) {
             callback(new Error("return_url_id was undefined."));
         } else {
             JetApi.returns.getDetails(return_url_id, authData.id_token, callback);
+        }
+    }
+}
+
+function _getRefundDetails(refund_url_id) {
+    return function (callback) {
+        if (!refund_url_id) {
+            callback(new Error("refund_url_id was undefined."));
+        } else {
+            JetApi.refunds.getDetails(refund_url_id, authData.id_token, callback);
         }
     }
 }
@@ -399,6 +434,20 @@ function _extractReturnIds(returnsArray) {
         } else {
             return {
                 return_url_id: match[1]
+            };
+        }
+    });
+}
+
+var REFUND_URL_ID_REGEX = /returns\/(.*)/;
+function _extractRefundIds(returnsArray) {
+    return returnsArray.refund_urls.map(function(url) {
+        var match = url.match(REFUND_URL_ID_REGEX);
+        if (match === null || match.length <= 1) {
+            return null;
+        } else {
+            return {
+                refund_url_id: match[1]
             };
         }
     });
