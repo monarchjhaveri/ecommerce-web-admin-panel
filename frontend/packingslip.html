@@ -16,7 +16,7 @@
             overflow: visible;
         }
 
-        tr.header {
+        .header {
             background: #1f2479;
             color: white;
         }
@@ -48,6 +48,32 @@
         .grey-border {
             border: 2px solid grey;
         }
+        .black-border {
+            border: 2px solid black;
+        }
+        table.grey-inner-border {
+            border-collapse: collapse;
+        }
+        table.grey-inner-border td {
+            border: 1px solid grey;
+
+        }
+        .header-lightgrey {
+            background-color: lightgrey;
+            color: black;
+        }
+        #order-details-table {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 0.4in;
+        }
+        .full-width {
+            width: 100%;
+        }
+        .centered {
+            text-align: center;
+        }
+
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
 </head>
@@ -109,12 +135,20 @@
             </div>
             <div class="float-right">
                 <h1 class="page-header">PACKING SLIP</h1>
-                <table style="width: 100%">
+                <table class="full-width centered">
                     <tr>
                         <td>
-                            Date
+                            Packing Slip Date
                         </td>
                         <td id="packing-slip-date" class="grey-border editable">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Order Date
+                        </td>
+                        <td id="order-date" class="grey-border editable">
 
                         </td>
                     </tr>
@@ -130,23 +164,52 @@
             </div>
         </div>
 
-        <script>
-            $.get("/api/orders/order/6e09d8d138d64b6594afb07528f3607c")
-                    .then(function(response) {
-                        $("#customer-name").text(response.shipping_to.recipient.name);
-                        $("#customer-address-1").text(response.shipping_to.address.address1);
-                        $("#customer-address-2").text(response.shipping_to.address.address2);
-                        $("#customer-city-state-postal-code").text(
-                            "%city%, %state%, %zip_code%"
-                            .replace("%city%", response.shipping_to.address.city)
-                            .replace("%state%", response.shipping_to.address.state)
-                            .replace("%zip_code%", response.shipping_to.address.zip_code)
-                        );
-                        $("#customer-phone-number").text(response.shipping_to.recipient.phone_number);
-                        $("#packing-slip-date").text(new Date().toString().slice(4,15));
-                        $("#order-id").text(response.merchant_order_id);
-                    });
+    <div class="order-details">
+        <table id="order-details-table" class="black-border grey-inner-border">
+            <tr>
+                <td class="editable header">Item Sku</td>
+                <td class="editable header">Description</td>
+                <td class="editable header">Order Qty</td>
+                <td class="editable header">Ship Qty</td>
+            </tr>
+            <tr id="totals"></tr>
+        </table>
+    </div>
 
+    <div class="bottom-section">
+        <table class="full-width centered black-border">
+            <tr>
+                <td class="editable header-lightgrey">Notes</td>
+            </tr>
+            <tr>
+                <td class="editable">&zwnj;</td>
+            </tr>
+            <tr>
+                <td class="editable">&zwnj;</td>
+            </tr>
+            <tr>
+                <td class="editable">&zwnj;</td>
+            </tr>
+        </table>
+        <table class="full-width centered black-border">
+            <tr>
+                <td class="editable header-lightgrey">Comments</td>
+            </tr>
+            <tr>
+                <td class="editable">Please Contact Jet Member Services for questions about your order or to initiate a return</td>
+            </tr>
+            <tr>
+                <td class="editable">1 (855) 538 4323</td>
+            </tr>
+            <tr>
+                <td class="editable">or send them a note at help@jet.com</td>
+            </tr>
+        </table>
+        <p class="full-width centered editable">This order was fulfilled for you on behalf of our partner Jet.com</p>
+        <p class="full-width centered editable" style="font-size: 2em;font-style: oblique;">Thank You For Your Business!</p>
+    </div>
+
+        <script>
             // Inline editable via http://www.egstudio.biz/tiny-inline-edit-plugin-for-jquery/
             $.fn.inlineEdit = function(replaceWith, connectWith) {
 
@@ -185,7 +248,79 @@
             var replaceWith = $('<input name="temp" type="text" />'),
                     connectWith = $('input[name="hiddenField"]');
 
-            $('.editable').inlineEdit(replaceWith, connectWith);
+            // Main script starts
+            $.get("/api/orders/order/6e09d8d138d64b6594afb07528f3607c")
+                    .then(function(response) {
+                        $("#customer-name").text(response.shipping_to.recipient.name);
+                        $("#customer-address-1").text(response.shipping_to.address.address1);
+                        $("#customer-address-2").text(response.shipping_to.address.address2);
+                        $("#customer-city-state-postal-code").text(
+                            "%city%, %state%, %zip_code%"
+                            .replace("%city%", response.shipping_to.address.city)
+                            .replace("%state%", response.shipping_to.address.state)
+                            .replace("%zip_code%", response.shipping_to.address.zip_code)
+                        );
+                        $("#customer-phone-number").text(response.shipping_to.recipient.phone_number);
+                        $("#packing-slip-date").text(formatDate(new Date()));
+                        $("#order-id").text(response.merchant_order_id);
+                        $("#order-date").text(formatDate(new Date(response.order_placed_date)));
+
+                        var lineItems = {};
+                        response.order_items.forEach(function(orderItem) {
+                            if (!lineItems[orderItem.merchant_sku]) {
+                                lineItems[orderItem.merchant_sku] = {
+                                    merchant_sku: orderItem.merchant_sku,
+                                    description: orderItem.product_title,
+                                    orderQty: orderItem.request_order_quantity,
+                                    shipQty: 0
+                                }
+                            }
+                        });
+                        response.shipments.forEach(function(shipment) {
+                           shipment.shipment_items.forEach(function(shipmentItem) {
+                                lineItems[shipmentItem.merchant_sku].shipQty += shipmentItem.response_shipment_sku_quantity
+                            });
+                        });
+
+                        var merchant_skus = Object.keys(lineItems);
+                        merchant_skus.forEach(function(merchant_sku) {
+                            var lineItem = lineItems[merchant_sku];
+
+                            $("#order-details-table").append(makeLineItem(lineItem.merchant_sku, lineItem.description, lineItem.orderQty, lineItem.shipQty));
+                        });
+
+                        if (merchant_skus.length < 10) {
+                            for (var i = merchant_skus.length; i < 10; i ++) {
+                                $("#order-details-table").append(makeLineItem("-", "-", "-", "-"));
+                            }
+                        }
+
+                        var totalOrderQty = 0;
+                        var totalShipQty = 0;
+                        merchant_skus.forEach(function(merchant_sku) {
+                            var lineItem = lineItems[merchant_sku];
+
+                            totalOrderQty += lineItem.orderQty;
+                            totalShipQty += lineItem.shipQty;
+                        });
+
+                        $("#order-details-table").append(makeLineItem("", "TOTALS:", totalOrderQty, totalShipQty));
+
+                        $('.editable').inlineEdit(replaceWith, connectWith);
+                    });
+
+            function makeLineItem(merchant_sku, description, orderQty, shipQty) {
+                var tr = $("<tr>");
+                tr.append($("<td class='editable'>").text(merchant_sku));
+                tr.append($("<td class='editable'>").text(description));
+                tr.append($("<td class='editable'>").text(orderQty));
+                tr.append($("<td class='editable'>").text(shipQty));
+                return tr;
+            }
+
+            function formatDate(date) {
+                return date.toString().slice(4,15);
+            }
         </script>
     </body>
 </html>
