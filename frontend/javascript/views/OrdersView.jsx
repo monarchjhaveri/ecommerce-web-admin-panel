@@ -70,6 +70,14 @@ var ProductsView = React.createClass({ displayName:"getSelectedOrder",
             links.push(_createLinkButton("orders/" + this.getSelectedOrderId() + "/acknowledge", "Acknowledge"));
         } else if (orderStatus === Constants.ORDER_STATUS.ACKNOWLEDGED) {
             links.push(_createLinkButton("orders/" + this.getSelectedOrderId() + "/shipment", "Shipped"));
+        } else if (orderStatus === Constants.ORDER_STATUS.IN_PROGRESS || orderStatus === Constants.ORDER_STATUS.COMPLETE) {
+            var linkText = "/packingslip.html?merchant_order_id=" + this.getSelectedOrderId();
+            var label = "Packing Slip";
+            links.push(
+                <a className="btn btn-default" href={linkText} key={label+linkText} target="_blank">
+                    {label}
+                </a>
+            );
         }
 
         return (
