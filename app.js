@@ -56,7 +56,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
 app.use('/api/products', products);
 app.use('/api/orders', orders);
 app.use('/api/jet/products', jetProducts);

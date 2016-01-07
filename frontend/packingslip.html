@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Packing Slip</title>
+    <style>
+        /* Reset */
+        html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}
+
+        h1 {
+            font-size: 0.35in;
+        }
+
+        table {
+            margin-bottom: 0.10in;
+            overflow: visible;
+        }
+
+        tr.header {
+            background: #1f2479;
+            color: white;
+        }
+
+        @page {
+            size: 8.27in 11.69in;
+        }
+        body {
+            border: 1px solid red;
+        }
+        .top-section {
+            height: 2.5in;
+            width: 100%;
+        }
+        .float-left {
+            float: left;
+        }
+        .float-right {
+            float: right;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+</head>
+    <body>
+        <div class="top-section">
+            <div class="float-left">
+                <h1>U B U Beauty</h1>
+                <table>
+                    <tr>
+                        <td>
+                            10421 Venice blvd
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            LOS ANGELES, CA 90034
+                        </td>
+                    </tr>
+                </table>
+                <table>
+                    <tr class="header">
+                        <th class="float-left">
+                            SHIP TO:
+                        </th>
+                    </tr>
+                    <tr>
+                        <td id="customer-name"></td>
+                    </tr>
+                    <tr>
+                        <td id="customer-address-1">
+                            LOS ANGELES, CA 90034
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="customer-address-2"></td>
+                    </tr>
+                    <tr>
+                        <td id="customer-city-state-postal-code"></td>
+                    </tr>
+                    <tr>
+                        <td id="customer-phone-number"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="float-right">Test</div>
+        </div>
+
+        <script>
+            $.get("/api/orders/order/6e09d8d138d64b6594afb07528f3607c")
+                    .then(function(response) {
+                        $("#customer-name").text(response.shipping_to.recipient.name);
+                        $("#customer-address-1").text(response.shipping_to.address.address1);
+                        $("#customer-address-2").text(response.shipping_to.address.address2);
+                        $("#customer-city-state-postal-code").text(
+                            "%city%, %state%, %zip_code%"
+                            .replace("%city%", response.shipping_to.address.city)
+                            .replace("%state%", response.shipping_to.address.state)
+                            .replace("%zip_code%", response.shipping_to.address.zip_code)
+                        );
+                        $("#customer-phone-number").text(response.shipping_to.recipient.phone_number);
+                    });
+        </script>
+    </body>
+</html>
