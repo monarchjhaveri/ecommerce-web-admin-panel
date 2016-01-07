@@ -31,28 +31,54 @@
             height: 2.5in;
             width: 100%;
         }
+        .page-header {
+            color: #4e56fc;
+            font-size: 0.5in
+        }
         .float-left {
             float: left;
         }
         .float-right {
             float: right;
         }
+        .editable:hover {
+            background-color: #e8ff96;
+            cursor: pointer;
+        }
+        .grey-border {
+            border: 2px solid grey;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
 </head>
     <body>
-        <div class="top-section">
+    <!--Required for Editable to work-->
+    <form>
+        <input type="hidden" name="hiddenField" />
+    </form>
+
+    <div class="top-section">
             <div class="float-left">
                 <h1>U B U Beauty</h1>
                 <table>
                     <tr>
-                        <td>
+                        <td class="editable">
                             10421 Venice blvd
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="editable">
                             LOS ANGELES, CA 90034
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="editable">
+                            &zwnj;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="editable">
+                            &zwnj;
                         </td>
                     </tr>
                 </table>
@@ -63,25 +89,45 @@
                         </th>
                     </tr>
                     <tr>
-                        <td id="customer-name"></td>
+                        <td id="customer-name" class="editable"></td>
                     </tr>
                     <tr>
-                        <td id="customer-address-1">
-                            LOS ANGELES, CA 90034
+                        <td id="customer-address-1" class="editable">
+
                         </td>
                     </tr>
                     <tr>
-                        <td id="customer-address-2"></td>
+                        <td id="customer-address-2" class="editable"></td>
                     </tr>
                     <tr>
-                        <td id="customer-city-state-postal-code"></td>
+                        <td id="customer-city-state-postal-code" class="editable"></td>
                     </tr>
                     <tr>
-                        <td id="customer-phone-number"></td>
+                        <td id="customer-phone-number" class="editable"></td>
                     </tr>
                 </table>
             </div>
-            <div class="float-right">Test</div>
+            <div class="float-right">
+                <h1 class="page-header">PACKING SLIP</h1>
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            Date
+                        </td>
+                        <td id="packing-slip-date" class="grey-border editable">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            OrderID
+                        </td>
+                        <td id="order-id" class="grey-border editable">
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
 
         <script>
@@ -97,7 +143,49 @@
                             .replace("%zip_code%", response.shipping_to.address.zip_code)
                         );
                         $("#customer-phone-number").text(response.shipping_to.recipient.phone_number);
+                        $("#packing-slip-date").text(new Date().toString().slice(4,15));
+                        $("#order-id").text(response.merchant_order_id);
                     });
+
+            // Inline editable via http://www.egstudio.biz/tiny-inline-edit-plugin-for-jquery/
+            $.fn.inlineEdit = function(replaceWith, connectWith) {
+
+                $(this).hover(function() {
+                    $(this).addClass('hover');
+                }, function() {
+                    $(this).removeClass('hover');
+                });
+
+                $(this).click(function() {
+
+                    var sel = getSelection().toString();
+                    if(sel){
+                        return;
+                    }
+                    var elem = $(this);
+
+                    elem.hide();
+                    elem.after(replaceWith);
+                    replaceWith.val(elem.text().trim());
+                    replaceWith.focus();
+
+                    replaceWith.blur(function() {
+
+                        if ($(this).val() != "") {
+                            connectWith.val($(this).val()).change();
+                            elem.text($(this).val());
+                        }
+
+                        $(this).remove();
+                        elem.show();
+                    });
+                });
+            };
+
+            var replaceWith = $('<input name="temp" type="text" />'),
+                    connectWith = $('input[name="hiddenField"]');
+
+            $('.editable').inlineEdit(replaceWith, connectWith);
         </script>
     </body>
 </html>
