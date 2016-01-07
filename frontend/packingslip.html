@@ -293,29 +293,28 @@
                                     lineItems[shipmentItem.merchant_sku].shipQty += shipmentItem.response_shipment_sku_quantity
                                 });
                             });
-
-                            var totalOrderQty = 0;
-                            var totalShipQty = 0;
-
-                            var merchant_skus = Object.keys(lineItems);
-                            merchant_skus.forEach(function(merchant_sku) {
-                                var lineItem = lineItems[merchant_sku];
-
-                                totalOrderQty += lineItem.orderQty;
-                                totalShipQty += lineItem.shipQty;
-                                $("#order-details-table").append(makeLineItem(lineItem.merchant_sku, lineItem.description, lineItem.orderQty, lineItem.shipQty));
-
-                                printedItems++;
-                            });
-
-                            $("#order-details-table").append(makeLineItem("-", "TOTALS:", totalOrderQty, totalShipQty));
                         }
+
+                        var totalOrderQty = 0;
+                        var totalShipQty = 0;
+                        var merchant_skus = Object.keys(lineItems);
+                        merchant_skus.forEach(function(merchant_sku) {
+                            var lineItem = lineItems[merchant_sku];
+
+                            totalOrderQty += lineItem.orderQty;
+                            totalShipQty += lineItem.shipQty;
+                            $("#order-details-table").append(makeLineItem(lineItem.merchant_sku, lineItem.description, lineItem.orderQty, lineItem.shipQty));
+
+                            printedItems++;
+                        });
 
                         if (printedItems < 10) {
                             for (var i = printedItems; i < 10; i ++) {
                                 $("#order-details-table").append(makeLineItem("-", "-", "-", "-"));
                             }
                         }
+
+                        $("#order-details-table").append(makeLineItem("-", "TOTALS:", totalOrderQty, totalShipQty));
 
                         $('.editable').inlineEdit(replaceWith, connectWith);
                         window.print();
