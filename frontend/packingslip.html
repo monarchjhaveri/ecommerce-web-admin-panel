@@ -24,9 +24,6 @@
         @page {
             size: 8.27in 11.69in;
         }
-        body {
-            border: 1px solid red;
-        }
         .top-section {
             height: 2.5in;
             width: 100%;
@@ -248,8 +245,19 @@
             var replaceWith = $('<input name="temp" type="text" />'),
                     connectWith = $('input[name="hiddenField"]');
 
+            // from http://stackoverflow.com/a/25359264
+            $.urlParam = function(name){
+                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                if (results==null){
+                    return null;
+                }
+                else{
+                    return results[1] || 0;
+                }
+            };
+
             // Main script starts
-            $.get("/api/orders/order/6e09d8d138d64b6594afb07528f3607c")
+            $.get("/api/orders/order/" + $.urlParam("merchant_order_id"))
                     .then(function(response) {
                         $("#customer-name").text(response.shipping_to.recipient.name);
                         $("#customer-address-1").text(response.shipping_to.address.address1);
