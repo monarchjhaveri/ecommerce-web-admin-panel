@@ -315,6 +315,7 @@
                         $("#order-details-table").append(makeLineItem("", "TOTALS:", totalOrderQty, totalShipQty));
 
                         $('.editable').inlineEdit(replaceWith, connectWith);
+                        window.print();
                     });
 
             function makeLineItem(merchant_sku, description, orderQty, shipQty) {
