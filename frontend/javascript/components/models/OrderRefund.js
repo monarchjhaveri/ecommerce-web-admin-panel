@@ -55,53 +55,32 @@ function _optionsFactory(order) {
     return OptionsHelper.applyDefaultOptions({
         fields: {
             items: {
-                item: OptionsHelper.applyDefaultOptions({
+                item: {
                     fields: {
-                        order_item_id: {
-                            help: OptionsHelper.helpRenderers.helpBoxOnly("Jet's unique identifier for an item in a merchant order.")
-                        },
-                        alt_order_item_id: {
-
-                        },
-                        total_quantity_returned: {
-                            help: OptionsHelper.helpRenderers.helpBoxOnly("Quanitity of the given item that was cancelled. This quantity should only include the units that were returned to the merchant. Any cancelled items should not be included if the items were cancelled before the return")
-                        },
-                        order_return_refund_qty: {
-                            help: OptionsHelper.helpRenderers.helpBoxOnly("Quanitity of the given item that the merchant wants to refund to the customer. Required to indicate the quantity of the given item to be refunded.")
-                        },
-                        refund_reason: {
-                            help: OptionsHelper.helpRenderers.helpBoxOnly("The reason the customer initiated the return.")
-                        },
+                        order_item_id: OptionsHelper.helpRenderers.helpBoxOnly("Jet's unique identifier for an item in a merchant order."),
+                        total_quantity_returned: OptionsHelper.helpRenderers.helpBoxOnly("Quanitity of the given item that was cancelled. This quantity should only include the units that were returned to the merchant. Any cancelled items should not be included if the items were cancelled before the return"),
+                        order_return_refund_qty: OptionsHelper.helpRenderers.helpBoxOnly("Quanitity of the given item that the merchant wants to refund to the customer. Required to indicate the quantity of the given item to be refunded."),
+                        refund_reason: OptionsHelper.helpRenderers.helpBoxOnly("The reason the customer initiated the return."),
                         refund_feedback: {
-                            //help: OptionsHelper.helpRenderers.helpBoxOnly(
-                            //    "Number of business days from receipt of an order for the given merchant SKU until it will be shipped (only populate if it is different than your account default).\
-                            //    Valid Values\
-                            //    'other' - please give additional information in the notes field\
-                            //    'item damaged' - should only be used if the reason for the return was not that it was damaged when the customer received it\
-                            //    'not shipped in original packaging'\
-                            //    'customer opened item")
+                            help: OptionsHelper.helpRenderers.helpText([
+                                "Number of business days from receipt of an order for the given merchant SKU until it will be shipped (only populate if it is different than your account default).",
+                                "Valid Values",
+                                "'other' - please give additional information in the notes field",
+                                "'item damaged' - should only be used if the reason for the return was not that it was damaged when the customer received it",
+                                "'not shipped in original packaging'",
+                                "customer opened item"])
                         },
-                        notes: {
-                            help: OptionsHelper.helpRenderers.helpBoxOnly("Provide additional information about why the item was refunded for lower than the full amount")
-                        },
+                        notes: OptionsHelper.helpRenderers.helpBoxOnly("Provide additional information about why the item was refunded for lower than the full amount"),
                         refund_amount: {
                             fields: {
-                                principal: {
-                                    help: OptionsHelper.helpRenderers.helpBoxOnly("Amount to be refunded for the given item in USD associated with the item itself. This should be the total cost for this item not the unit cost.")
-                                },
-                                tax:{
-                                    help: OptionsHelper.helpRenderers.helpBoxOnly("Amount to be refunded for the given item in USD associated with tax that was charged for the item.")
-                                },
-                                shipping_cost:{
-                                    help: OptionsHelper.helpRenderers.helpBoxOnly("Amount to be refunded for the given item in USD associated with the shipping cost that was allocated to this item.")
-                                },
-                                shipping_tax:{
-                                    help: OptionsHelper.helpRenderers.helpBoxOnly("Amount to be refunded for the given item in USD associated with the tax that was charged on shipping.")
-                                }
+                                principal: OptionsHelper.helpRenderers.helpBoxOnly("Amount to be refunded for the given item in USD associated with the item itself. This should be the total cost for this item not the unit cost."),
+                                tax: OptionsHelper.helpRenderers.helpBoxOnly("Amount to be refunded for the given item in USD associated with tax that was charged for the item."),
+                                shipping_cost: OptionsHelper.helpRenderers.helpBoxOnly("Amount to be refunded for the given item in USD associated with the shipping cost that was allocated to this item."),
+                                shipping_tax: OptionsHelper.helpRenderers.helpBoxOnly("Amount to be refunded for the given item in USD associated with the tax that was charged on shipping.")
                             }
                         }
                     }
-                })
+                }
             }
         }
     });

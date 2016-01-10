@@ -92,7 +92,7 @@ var OrderShipment = React.createClass({ displayName: "OrderShipment",
                 <h3>Refund</h3>
                 <Form
                     type={OrderRefundModelFactory(this.props.selectedOrder)}
-                    
+                    options={OrderRefundOptionsFactory(this.props.selectedOrder)}
                     value={OrderRefundValueFactory(this.props.selectedOrder)}
                     ref="form"
                     />
