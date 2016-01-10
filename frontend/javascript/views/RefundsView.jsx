@@ -58,27 +58,8 @@ var RefundsView = React.createClass({ displayName:"RefundsView",
         if (!this.getSelectedRefundId()) {
             return null;
         }
-
-        var refundStatus = this.getSelectedRefundId() && this.getSelectedRefundId().refund_status;
-
-        /*
-         JET_REFUNDED: "jetRefunded",
-         COMPLETED_BY_MERCHANT: "completedByMerchant",
-         REFUND_CUSTOMER_WITHOUT_RETURN: "refundCustomerWithoutRefund",
-         ACKNOWLEDGED: "acknowledged",
-         CREATED: "created"
-         */
-
-        //TODO: find out which status can be completed
-        //if (refundStatus === Constants.REFUND_STATUS.ACKNOWLEDGED || refundStatus === Constants.REFUND_STATUS.CREATED ) {
-        //    links.push(_createLinkButton("refunds/" + this.getSelectedRefundId() + "/complete", "Complete"));
-        //}
-
+        
         var links = [];
-
-        if (1 === 1) {
-            links.push(_createLinkButton("refunds/" + this.getSelectedRefundId() + "/complete", "Complete"));
-        }
 
         return (
             <div className="view-right-column">
