@@ -126,6 +126,37 @@ var OrderAC = {
             });
         });
     },
+    /**
+     *
+     * @param order_id
+     * @param refund_dto
+     */
+    refund: function(order_id, refund_dto) {
+        store.dispatch(function(dispatch) {
+            dispatch({
+                type: ActionTypes.REFUNDS.COMPLETE_STARTED
+            });
+            $.ajax({
+                method: "PUT",
+                url: "api/orders/order/:order_id/refund".replace(":order_id", order_id),
+                contentType:'application/json',
+                dataType:'json',
+                data: JSON.stringify(refund_dto),
+                error: function(request, error) {
+                    dispatch({
+                        type: ActionTypes.REFUNDS.COMPLETE_FAILURE,
+                        payload: error
+                    });
+                    PopoverAC.displayError(request);
+                },
+                success: function() {
+                    dispatch({
+                        type: ActionTypes.REFUNDS.COMPLETE_SUCCESS
+                    });
+                }
+            });
+        });
+    },
     openEditorToCreate: function() {
         store.dispatch({
             type: ActionTypes.ORDERS.SELECT,

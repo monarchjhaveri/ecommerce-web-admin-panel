@@ -42,29 +42,29 @@ var OrderShipment = React.createClass({ displayName: "OrderShipment",
         }
     },
     submitAcknowledgement: function() {
-        //var ValidationResult = this.refs.form.validate();
-        //var merchant_order_id = this.props.params && this.props.params.merchant_order_id;
-        //
-        //if (!merchant_order_id) {
-        //    PopoverAC.displayErrorFromText("Merchant Order not selected.");
-        //} else if (ValidationResult.errors.length > 0) {
-        //    PopoverAC.displayErrorFromText("Validation failed.");
-        //    ValidationResult.errors.forEach(function(d) {
-        //        console.log(d.message);
-        //        PopoverAC.displayErrorFromText(d.message);
-        //    });
-        //} else {
-        //    var result = JSON.parse(JSON.stringify(this.refs.form.getValue()));
-        //
-        //    result.shipments = result.shipments.map(function(d) {
-        //        d.response_shipment_date = ModelsHelper.dateToJetDate(d.response_shipment_date);
-        //        d.expected_delivery_date = ModelsHelper.dateToJetDate(d.expected_delivery_date);
-        //        d.carrier_pick_up_date = ModelsHelper.dateToJetDate(d.carrier_pick_up_date);
-        //        return d;
-        //    });
-        //
-        //    OrderAC.ship(merchant_order_id, result);
-        //}
+        var ValidationResult = this.refs.form.validate();
+        var merchant_order_id = this.props.params && this.props.params.merchant_order_id;
+
+        if (!merchant_order_id) {
+            PopoverAC.displayErrorFromText("Order not selected.");
+        } else if (ValidationResult.errors.length > 0) {
+            PopoverAC.displayErrorFromText("Validation failed.");
+            ValidationResult.errors.forEach(function(d) {
+                console.log(d.message);
+                PopoverAC.displayErrorFromText(d.message);
+            });
+        } else {
+            var result = JSON.parse(JSON.stringify(this.refs.form.getValue()));
+
+            //result.shipments = result.shipments.map(function(d) {
+            //    d.response_shipment_date = ModelsHelper.dateToJetDate(d.response_shipment_date);
+            //    d.expected_delivery_date = ModelsHelper.dateToJetDate(d.expected_delivery_date);
+            //    d.carrier_pick_up_date = ModelsHelper.dateToJetDate(d.carrier_pick_up_date);
+            //    return d;
+            //});
+
+            OrderAC.refund(merchant_order_id, result);
+        }
     },
     render: function() {
         var merchantOrderId = this.props.params.merchant_order_id;

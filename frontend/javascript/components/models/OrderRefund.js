@@ -3,6 +3,7 @@ var t = require('tcomb-form');
 var ProductValidationHelper = require("../../../../helpers/ProductValidationHelper");
 var ModelsHelper = require("./ModelsHelper");
 var OptionsHelper = require("./OptionsHelper");
+var math = require('mathjs');
 
 function refundAmount(order) {
     return t.struct({
@@ -20,19 +21,17 @@ function order_refund_item(order) {
         total_quantity_returned: t.maybe(t.Number),
         order_return_refund_qty: t.maybe(t.Number),
         refund_reason: t.enums({
-            'wrong quantity received': 'wrong quantity received',
-            'received wrong item than what was ordered': 'received wrong item than what was ordered',
-            'accidental order': 'accidental order',
-            'item is damaged/broken': 'item is damaged/broken',
-            'item is defective/does not work properly': 'item is defective/does not work properly',
-            'shipping box and item are both damaged': 'shipping box and item are both damaged',
-            'item was different than website description': 'item was different than website description',
-            'package arrived later than promised delivery date': 'package arrived later than promised delivery date',
-            'package never arrived': 'package never arrived',
-            'unwanted gift': 'unwanted gift',
-            'unauthorized purchase': 'unauthorized purchase',
+            'no longer need/want': 'no longer need/want',
             'better price available': 'better price available',
-            'no longer need/want': 'no longer need/want'
+            'unauthorized purchase': 'unauthorized purchase',
+            'package never arrived': 'package never arrived',
+            'package arrived later than promised delivery date': 'package arrived later than promised delivery date',
+            'item was different than website description': 'item was different than website description',
+            'shipping box and item are both damaged': 'shipping box and item are both damaged',
+            'item is defective/does not work properly': 'item is defective/does not work properly',
+            'item is damaged/broken': 'item is damaged/broken',
+            'accidental order': 'accidental order',
+            'received wrong item than what was ordered': 'received wrong item than what was ordered'
         }),
         refund_feedback: t.maybe(t.enums({
             'other': 'Other - Please leave note below',
@@ -63,7 +62,7 @@ function _optionsFactory(order) {
                         refund_reason: OptionsHelper.helpRenderers.helpBoxOnly("The reason the customer initiated the return."),
                         refund_feedback: {
                             help: OptionsHelper.helpRenderers.helpText([
-                                "Number of business days from receipt of an order for the given merchant SKU until it will be shipped (only populate if it is different than your account default).",
+                                "The reason this refund is less than the full amount.",
                                 "Valid Values",
                                 "'other' - please give additional information in the notes field",
                                 "'item damaged' - should only be used if the reason for the return was not that it was damaged when the customer received it",
@@ -97,13 +96,21 @@ function _valueFactory(order) {
                 total_quantity_returned: d.request_order_quantity,
                 order_return_refund_qty: d.request_order_quantity,
                 refund_amount: {
-                    principal: d.item_price.base_price || 0,
-                    tax: d.item_price.item_tax || 0,
-                    shipping_cost: d.item_price.item_shipping_cost || 0,
-                    shipping_tax: d.item_price.item_shipping_tax || 0
+                    principal: multiplyOrZero(d.item_price.base_price, d.request_order_quantity),
+                    tax: multiplyOrZero(d.item_price.item_tax,  d.request_order_quantity),
+                    shipping_cost: multiplyOrZero(d.item_price.item_shipping_cost,  d.request_order_quantity),
+                    shipping_tax: multiplyOrZero(d.item_price.item_shipping_tax,  d.request_order_quantity)
                 }
             }
         })
+    }
+}
+
+function multiplyOrZero(x, y) {
+    if (x && y) {
+        return math.multiply(x, y);
+    } else {
+        return 0;
     }
 }
 

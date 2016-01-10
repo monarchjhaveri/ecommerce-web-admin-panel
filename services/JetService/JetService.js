@@ -154,9 +154,9 @@ JetService.completeReturn = function(completed_return_dto, return_url_id, origin
     }, originalCallback);
 };
 
-JetService.completeRefund = function(refund_dto, order_id, originalCallback) {
+JetService.completeRefund = function(refund_dto, order_id, alt_refund_id, originalCallback) {
     _retryIfFailed("completeRefund", function(callback) {
-        JetApi.refunds.post(order_id, refund_dto, authData.id_token, callback);
+        JetApi.refunds.post(order_id, alt_refund_id, refund_dto, authData.id_token, callback);
     }, originalCallback);
 };
 

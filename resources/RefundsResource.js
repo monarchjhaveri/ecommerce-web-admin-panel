@@ -30,24 +30,6 @@ RefundsResource.list = function(req, res, next) {
     ], _responseFunctionFactory("get list of refunds", res));
 };
 
-RefundsResource.post = function(req, res, next) {
-    async.waterfall([
-        function(callback) {
-            if (!req.params || !req.params.order_id) {
-                callback(new Error("Must provide an order_id"));
-            }
-            if (!req.body) {
-                callback(new Error("Must provide Refund DTO."));
-            }
-
-            var payload = req.body;
-            var order_id = req.params.order_id;
-            callback(null, payload, refund_url_id);
-        },
-        JetService.completeRefund
-    ], _responseFunctionFactory("complete refund", res));
-};
-
 function _responseFunctionFactory(action, res) {
     return function(err, data) {
         if (err) {

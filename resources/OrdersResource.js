@@ -63,6 +63,26 @@ OrdersResource.acknowledge = function(req, res, next) {
     ], _responseFunctionFactory("acknowledge order", res));
 };
 
+OrdersResource.refund = function(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            if (!req.params || !req.params.merchant_order_id) {
+                callback(new Error("Must provide an merchant_order_id"));
+            }
+            if (!req.body) {
+                callback(new Error("Must provide Refund DTO."));
+            }
+
+            var payload = req.body;
+            var order_id = req.params.merchant_order_id;
+            callback(null, payload, order_id);
+        },
+        function(payload, order_id, callback) {
+            JetService.completeRefund(payload, order_id, order_id, callback);
+        }
+    ], _responseFunctionFactory("complete refund", res));
+};
+
 OrdersResource.shipped = function(req, res, next) {
     async.waterfall([
         function(callback) {

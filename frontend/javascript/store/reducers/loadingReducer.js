@@ -19,6 +19,9 @@ module.exports = function productDetailsReducer(state, action) {
         case ActionTypes.RETURNS.GET_DETAILS_STARTED:
         case ActionTypes.RETURNS.FETCH_ALL_STARTED:
         case ActionTypes.RETURNS.COMPLETE_STARTED:
+        case ActionTypes.REFUNDS.GET_DETAILS_STARTED:
+        case ActionTypes.REFUNDS.FETCH_ALL_STARTED:
+        case ActionTypes.REFUNDS.COMPLETE_STARTED:
         case ActionTypes.PRODUCTS.INVENTORY.EDIT_STARTED:
         case ActionTypes.PRODUCTS.PRICE.EDIT_STARTED:
              return true;
@@ -40,6 +43,12 @@ module.exports = function productDetailsReducer(state, action) {
         case ActionTypes.RETURNS.COMPLETE_FAILURE:
         case ActionTypes.RETURNS.FETCH_ALL_SUCCESS:
         case ActionTypes.RETURNS.FETCH_ALL_FAILURE:
+        case ActionTypes.REFUNDS.GET_DETAILS_SUCCESS:
+        case ActionTypes.REFUNDS.GET_DETAILS_FAILURE:
+        case ActionTypes.REFUNDS.COMPLETE_SUCCESS:
+        case ActionTypes.REFUNDS.COMPLETE_FAILURE:
+        case ActionTypes.REFUNDS.FETCH_ALL_SUCCESS:
+        case ActionTypes.REFUNDS.FETCH_ALL_FAILURE:
         case ActionTypes.ORDERS.ACKNOWLEDGE_SUCCESS:
         case ActionTypes.ORDERS.ACKNOWLEDGE_FAILURE:
         case ActionTypes.ORDERS.SHIP_SUCCESS:
