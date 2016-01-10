@@ -445,7 +445,7 @@ function _extractReturnIds(returnsArray) {
     });
 }
 
-var REFUND_URL_ID_REGEX = /returns\/(.*)/;
+var REFUND_URL_ID_REGEX = /refunds\/state\/(.*)/;
 function _extractRefundIds(returnsArray) {
     return returnsArray.refund_urls.map(function(url) {
         var match = url.match(REFUND_URL_ID_REGEX);
