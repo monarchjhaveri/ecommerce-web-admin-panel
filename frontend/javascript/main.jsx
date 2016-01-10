@@ -32,8 +32,10 @@ var OrderRefund = require("./components/OrderRefund.jsx");
 var ReturnDetails = require("./components/ReturnDetails.jsx");
 var ReturnComplete = require("./components/ReturnComplete.jsx");
 
+var RefundDetails = require("./components/RefundDetails.jsx");
+
 var unsubscribe = store.subscribe(function() {
-   
+
 });
 
 window.store = store;
@@ -107,7 +109,9 @@ var App = React.createClass({
                                 </Route>
                             </Route>
                             <Route path="refunds" component={RefundsView}>
-
+                                <Route path=":refund_url_id">
+                                    <IndexRoute component={RefundDetails} />
+                                </Route>
                             </Route>
                         </Route>
                     </ReduxRouter>
