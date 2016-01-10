@@ -27,6 +27,7 @@ var IndexLink = require("react-router").IndexLink;
 var OrderDetails = require("./components/OrderDetails.jsx");
 var OrderAcknowledgement = require("./components/OrderAcknowledgement.jsx");
 var OrderShipment = require("./components/OrderShipment.jsx");
+var OrderRefund = require("./components/OrderRefund.jsx");
 
 var ReturnDetails = require("./components/ReturnDetails.jsx");
 var ReturnComplete = require("./components/ReturnComplete.jsx");
@@ -96,6 +97,7 @@ var App = React.createClass({
                                     <IndexRoute component={OrderDetails} />
                                     <Route path="acknowledge" component={OrderAcknowledgement} />
                                     <Route path="shipment" component={OrderShipment} />
+                                    <Route path="refund" component={OrderRefund} />
                                 </Route>
                             </Route>
                             <Route path="returns" component={ReturnsView}>

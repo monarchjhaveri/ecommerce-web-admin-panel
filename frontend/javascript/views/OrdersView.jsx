@@ -70,6 +70,8 @@ var ProductsView = React.createClass({ displayName:"getSelectedOrder",
             links.push(_createLinkButton("orders/" + this.getSelectedOrderId() + "/acknowledge", "Acknowledge"));
         } else if (orderStatus === Constants.ORDER_STATUS.ACKNOWLEDGED) {
             links.push(_createLinkButton("orders/" + this.getSelectedOrderId() + "/shipment", "Shipped"));
+        } else if (orderStatus === Constants.ORDER_STATUS.COMPLETE || orderStatus === Constants.ORDER_STATUS.IN_PROGRESS) {
+            links.push(_createLinkButton("orders/" + this.getSelectedOrderId() + "/refund", "Refund"));
         }
 
         var linkText = "/packingslip.html?merchant_order_id=" + this.getSelectedOrderId();

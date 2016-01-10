@@ -149,8 +149,14 @@ JetService.shipOrder = function(shipped_dto, merchant_order_id, originalCallback
 };
 
 JetService.completeReturn = function(completed_return_dto, return_url_id, originalCallback) {
-    _retryIfFailed("shipOrder", function(callback) {
+    _retryIfFailed("completeReturn", function(callback) {
         JetApi.returns.complete(return_url_id, completed_return_dto, authData.id_token, callback);
+    }, originalCallback);
+};
+
+JetService.completeRefund = function(refund_dto, order_id, originalCallback) {
+    _retryIfFailed("completeRefund", function(callback) {
+        JetApi.refunds.post(order_id, refund_dto, authData.id_token, callback);
     }, originalCallback);
 };
 
