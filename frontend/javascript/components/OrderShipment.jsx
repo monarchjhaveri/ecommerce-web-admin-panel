@@ -77,7 +77,7 @@ var OrderShipment = React.createClass({ displayName: "OrderShipment",
             );
         }
 
-        if (!selectedOrder.status || selectedOrder.status !== Constants.ORDER_STATUS.ACKNOWLEDGED || selectedOrder.status !== Constants.ORDER_STATUS.IN_PROGRESS) {
+        if (!selectedOrder.status || !(selectedOrder.status === Constants.ORDER_STATUS.ACKNOWLEDGED || selectedOrder.status === Constants.ORDER_STATUS.IN_PROGRESS)) {
             return (
                 <div className="col-xs-12">
                     Order status MUST be "acknowledged" or "in progress" in order to ship it.
