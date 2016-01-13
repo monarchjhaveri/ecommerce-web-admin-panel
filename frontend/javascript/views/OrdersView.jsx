@@ -68,7 +68,7 @@ var ProductsView = React.createClass({ displayName:"getSelectedOrder",
 
         if (orderStatus === Constants.ORDER_STATUS.READY) {
             links.push(_createLinkButton("orders/" + this.getSelectedOrderId() + "/acknowledge", "Acknowledge"));
-        } else if (orderStatus === Constants.ORDER_STATUS.ACKNOWLEDGED) {
+        } else if (orderStatus === Constants.ORDER_STATUS.ACKNOWLEDGED || orderStatus === Constants.ORDER_STATUS.IN_PROGRESS) {
             links.push(_createLinkButton("orders/" + this.getSelectedOrderId() + "/shipment", "Shipped"));
         } else if (orderStatus === Constants.ORDER_STATUS.COMPLETE || orderStatus === Constants.ORDER_STATUS.IN_PROGRESS) {
             links.push(_createLinkButton("orders/" + this.getSelectedOrderId() + "/refund", "Refund"));
