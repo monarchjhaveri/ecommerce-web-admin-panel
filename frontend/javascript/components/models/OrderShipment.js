@@ -93,5 +93,14 @@ function _optionsFactory(order) {
     return OptionsHelper.applyDefaultOptions({});
 }
 
+function _valueFactory(order) {
+    return {
+        shipments: [
+            order
+        ]
+    }
+}
+
 module.exports.modelFactory = _orderShipment;
 module.exports.optionsFactory = _optionsFactory;
+module.exports.valueFactory = _valueFactory;

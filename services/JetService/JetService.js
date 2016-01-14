@@ -128,12 +128,19 @@ JetService.acknowledgeOrder = function(acknowledgeItemDto, merchant_order_id, or
             if (err) {
                 callback(err);
             } else {
-                //var InventorySyncJob = require("../../jobs/InventorySyncJob");
-                //InventorySyncJob.deductInventoryAccordingToOrder(merchant_order_id);
                 callback(null, data);
             }
         });
-    }, originalCallback);
+    },
+    function(err, data) {
+        if (err) {
+            originalCallback(err);
+        } else {
+            var InventorySyncJob = require("../../jobs/InventorySyncJob");
+            InventorySyncJob.adjustInventoryAccordingToOrder(merchant_order_id);
+            originalCallback(null, data);
+        }
+    });
 };
 
 JetService.shipOrder = function(shipped_dto, merchant_order_id, originalCallback) {
@@ -145,7 +152,24 @@ JetService.shipOrder = function(shipped_dto, merchant_order_id, originalCallback
                 callback(null, data);
             }
         });
-    }, originalCallback);
+    },
+    function(err, data) {
+        if (err) {
+            originalCallback(err);
+        } else {
+            var InventorySyncJob = require("../../jobs/InventorySyncJob");
+            if (shipped_dto && shipped_dto.shipments) {
+                shipped_dto.shipments.forEach(function(shipment) {
+                    if (shipment.shipment_items) {
+                        shipment.shipment_items.forEach(function(shipment_item) {
+                            InventorySyncJob.adjustInventory(shipment_item.merchant_sku, shipment_item.response_shipment_cancel_qty);
+                        })
+                    }
+                })
+            }
+            originalCallback(null, data);
+        }
+    });
 };
 
 JetService.completeReturn = function(completed_return_dto, return_url_id, originalCallback) {

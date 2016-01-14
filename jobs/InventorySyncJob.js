@@ -5,7 +5,7 @@ var IDENTIFIER = "INVENTORY-SYNC-JOB-LOOP";
 
 var queue = async.queue(function(datum, callback) {
 	var merchant_sku = datum.merchant_sku;
-	var deductible = datum.deductible;
+	var adjustable = datum.adjustable;
 
 	if (!JetService.isLoggedIn()) {
 		setTimeout(function() {
@@ -17,27 +17,31 @@ var queue = async.queue(function(datum, callback) {
 				JetService.getProductInventory(merchant_sku, callback);
 			},
 			function(productInventory, callback) {
-				var oldQuantity = productInventory.fulfillment_nodes && productInventory.fulfillment_nodes[0] && productInventory.fulfillment_nodes[0].quantity;
+				var inventoryLevelWasChanged;
 
-				if (oldQuantity !== 0 && !oldQuantity) {
-					console.log(IDENTIFIER + ": product inventory JSON for merchant sku [" + merchant_sku + "] was malformed or unrecognized. JSON is below.");
-					console.log(productInventory);
-					callback(new Error(IDENTIFIER + ": JSON received for Product inventory details was malformed or unrecognized. See above for JSON."));
-				}
+				if (productInventory && productInventory.fulfillment_nodes && productInventory.fulfillment_nodes[0] && productInventory.fulfillment_nodes[0].quantity) {
+					var oldQuantity = productInventory.fulfillment_nodes && productInventory.fulfillment_nodes[0] && productInventory.fulfillment_nodes[0].quantity;
 
-				var payload = {
-					"fulfillment_nodes": [
-						{
-							"fulfillment_node_id": productInventory.fulfillment_nodes[0].fulfillment_node_id,
-							"quantity": productInventory.fulfillment_nodes[0].quantity
-						}
-					]
-				};
+					if (oldQuantity !== 0 && !oldQuantity) {
+						console.log(IDENTIFIER + ": product inventory JSON for merchant sku [" + merchant_sku + "] was malformed or unrecognized. JSON is below.");
+						console.log(productInventory);
+						callback(new Error(IDENTIFIER + ": JSON received for Product inventory details was malformed or unrecognized. See above for JSON."));
+					}
 
-				var inventoryLevelWasChanged = false;
-				if (oldQuantity - deductible >= 0) {
-					inventoryLevelWasChanged = true;
-					payload.fulfillment_nodes[0].quantity = oldQuantity - deductible;
+					var payload = {
+						"fulfillment_nodes": [
+							{
+								"fulfillment_node_id": productInventory.fulfillment_nodes[0].fulfillment_node_id,
+								"quantity": productInventory.fulfillment_nodes[0].quantity
+							}
+						]
+					};
+
+					inventoryLevelWasChanged = false;
+					if (oldQuantity + adjustable >= 0) {
+						inventoryLevelWasChanged = true;
+						payload.fulfillment_nodes[0].quantity = oldQuantity + adjustable;
+					}
 				}
 
 				setTimeout(function() {
@@ -60,7 +64,7 @@ var queue = async.queue(function(datum, callback) {
 	}
 }, 1);
 
-var getDeductibleFromOrderQueue = async.queue(function(datum, queueCallback) {
+var getAdjustableFromOrderQueue = async.queue(function(datum, queueCallback) {
 	var merchant_order_id = datum.merchant_order_id;
 
 	if (!JetService.isLoggedIn()) {
@@ -74,13 +78,13 @@ var getDeductibleFromOrderQueue = async.queue(function(datum, queueCallback) {
 			},
 			function (orderDetails, callback) {
 				orderDetails.order_items.forEach(function(orderItem) {
-					addToQueue(orderItem.merchant_sku, orderItem.request_order_quantity);
+					adjustInventory(orderItem.merchant_sku, -(orderItem.request_order_quantity));
 				});
 				callback();
 			}
 		], function(err, data) {
 			if (err) {
-				console.log(IDENTIFIER + ": WARNING: deductInventoryAccordingToOrder for [" + merchant_order_id + "]  DID NOT WORK!! It will have to be manually deducted.");
+				console.log(IDENTIFIER + ": WARNING: adjustInventoryAccordingToOrder for [" + merchant_order_id + "]  DID NOT WORK!! It will have to be manually adjusted.");
 				console.error(err);
 			}
 			queueCallback();
@@ -102,21 +106,21 @@ function _getRandomIntInclusive(min, max) {
 /**
  *
  * @param merchant_sku
- * @param deductible
+ * @param adjustable
  */
-function addToQueue(merchant_sku, deductible) {
-	queue.push({merchant_sku: merchant_sku, deductible: deductible});
+function adjustInventory(merchant_sku, adjustable) {
+	queue.push({merchant_sku: merchant_sku, adjustable: adjustable});
 }
 
 /**
  *
  * @param merchant_order_id
  */
-function deductInventoryAccordingToOrder(merchant_order_id) {
-	getDeductibleFromOrderQueue.push({merchant_order_id: merchant_order_id});
+function adjustInventoryAccordingToOrder(merchant_order_id) {
+	getAdjustableFromOrderQueue.push({merchant_order_id: merchant_order_id});
 }
 
 module.exports = {
-	deductInventory: addToQueue,
-	deductInventoryAccordingToOrder: deductInventoryAccordingToOrder
+	adjustInventory: adjustInventory,
+	adjustInventoryAccordingToOrder: adjustInventoryAccordingToOrder
 };
