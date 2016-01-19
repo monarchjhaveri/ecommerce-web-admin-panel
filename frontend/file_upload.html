@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <h1>File Upload</h1>
+    <form action="">
+        <label for="filetype">
+            File Type: <br/>
+            <label>
+                <input type="radio" name="filetype" value="inventory" checked>
+                Inventory - <a href="csv_templates/inventory_template.csv">Download Template</a>
+            </label><br/>
+            <label>
+                <input type="radio" name="filetype" value="price">
+                Price - <a href="csv_templates/price_template.csv">Download Template</a>
+            </label><br/>
+        </label><br/>
+        <input type="file" name="file"><br/>
+        <input type="submit">
+    </form>
+
+</body>
+</html>
