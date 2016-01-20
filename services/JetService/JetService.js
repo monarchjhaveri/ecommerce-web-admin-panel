@@ -106,6 +106,10 @@ JetService.getDetails = function(sku, callback) {
     _retryIfFailed("getDetails", _getDetails(sku), callback);
 };
 
+JetService.getNodeAttributes = function(nodeId, callback) {
+    _retryIfFailed("getNodeAttributes", _getNodeAttributes(nodeId), callback);
+};
+
 JetService.getProductInventory = function(sku, originalCallback) {
     _retryIfFailed("getProductInventory", function(callback) {
         JetApi.products.inventory.list(sku, authData.id_token, function(err, inventory){
@@ -418,6 +422,16 @@ function _getRefundDetails(refund_url_id) {
             callback(new Error("refund_url_id was undefined."));
         } else {
             JetApi.refunds.getDetails(refund_url_id, authData.id_token, callback);
+        }
+    }
+}
+
+function _getNodeAttributes(nodeId) {
+    return function (callback) {
+        if (!nodeId) {
+            callback(new Error("nodeId was undefined."));
+        } else {
+            JetApi.taxonomy.getNodeAttributes(nodeId, authData.id_token, callback);
         }
     }
 }
