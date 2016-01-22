@@ -11,11 +11,11 @@ module.exports = {
         var found_mapping = category_attribute_mappings.find(function(d){return d.category_id === categoryId});
         if (!found_mapping) { return null; }
 
-        var found_attributes = attributes.map(function(d){return d.id === found_mapping.attribute_id});
+        var found_attributes = attributes.filter(function(d){return d.id === found_mapping.attribute_id});
         if (!found_attributes || found_attributes.length === 0) { return null; }
 
-        found_attributes.map(function(attr) {
-            attr.values = attribute_values.map(function(d){return d.attribute_id === attr.id});
+        found_attributes.forEach(function(attr) {
+            attr.values = attribute_values.filter(function(d){return d.attribute_id === attr.id});
         });
 
         return found_attributes;

@@ -11,15 +11,21 @@ function _selectBoxFunctionGenerator(self, object) {
 }
 
 function getAttributePossibleValues(attr) {
-    if (attr.values) {
-        return attr.values.map(function(d) {
+    var domNodes = [];
+
+    if (attr.values && attr.values.length > 0) {
+        domNodes.push(attr.values.map(function(d) {
             return d.value;
-        }).join(" | ");
-    } else if(attr.free_text) {
-        return <div>{attr.free_text} free characters</div>
-    } else {
-        return (<div>Not indicated by Jet.com</div>)
+        }).join(" | "));
     }
+    if(attr.free_text) {
+        domNodes.push(<div>{attr.free_text} free characters</div>);
+    }
+
+    if (domNodes.length === 0) {
+        domNodes.push(<div>Not indicated by Jet.com</div>)
+    }
+    return domNodes;
 }
 
 var CategoryLookupBox = React.createClass({ displayName: "CategoryLookupBox",
@@ -82,9 +88,9 @@ var CategoryLookupBox = React.createClass({ displayName: "CategoryLookupBox",
                     rows.push(
                         <tr key={"attribute-details-" + attr.id}>
                             <td>
-                                ID: {attr.id}
-                                {attr.display_name}<br/>
-                                {attr.description}<br/>
+                                ID: {attr.id}<br/>
+                                Name: {attr.display_name}<br/>
+                                Desc: {attr.description}<br/>
                                 Possible Values:<br/>
                                 {getAttributePossibleValues(attr)}
                             </td>
