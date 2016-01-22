@@ -72,7 +72,7 @@ var CategoryLookupBox = React.createClass({ displayName: "CategoryLookupBox",
             );
             var attributes = AttributeLookupHelper.findByCategoryId(this.state.selectedResult.id);
 
-            if (attributes) {
+            if (attributes && attributes.length > 0) {
                 rows.push(
                     <tr key={"attributes-header"}>
                         <th>Attributes:</th>
