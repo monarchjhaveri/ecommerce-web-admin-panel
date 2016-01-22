@@ -1,12 +1,25 @@
 var React = require("react");
 var ReactDom = require("react-dom");
 var CategoryLookupHelper = require("../helpers/CategoryLookupHelper/CategoryLookupHelper");
+var AttributeLookupHelper = require("../helpers/CategoryLookupHelper/AttributeLookupHelper");
 var $ = require("jquery");
 
 function _selectBoxFunctionGenerator(self, object) {
     return function() {
         self.setResult(object);
     };
+}
+
+function getAttributePossibleValues(attr) {
+    if (attr.values) {
+        return attr.values.map(function(d) {
+            return d.value;
+        }).join(" | ");
+    } else if(attr.free_text) {
+        return <div>{attr.free_text} free characters</div>
+    } else {
+        return (<div>Not indicated by Jet.com</div>)
+    }
 }
 
 var CategoryLookupBox = React.createClass({ displayName: "CategoryLookupBox",
@@ -57,6 +70,28 @@ var CategoryLookupBox = React.createClass({ displayName: "CategoryLookupBox",
                 (<tr key={this.state.selectedResult.name}><td>Name:<br/> {this.state.selectedResult.name}</td></tr>),
                 (<tr key={this.state.selectedResult.path}><td>Path:<br/> {this.state.selectedResult.path}</td></tr>)
             );
+            var attributes = AttributeLookupHelper.findByCategoryId(this.state.selectedResult.id);
+
+            if (attributes) {
+                rows.push(
+                    <tr key={"attributes-header"}>
+                        <th>Attributes:</th>
+                    </tr>
+                );
+                attributes.forEach(function(attr) {
+                    rows.push(
+                        <tr key={"attribute-details-" + attr.id}>
+                            <td>
+                                ID: {attr.id}
+                                {attr.display_name}<br/>
+                                {attr.description}<br/>
+                                Possible Values:<br/>
+                                {getAttributePossibleValues(attr)}
+                            </td>
+                        </tr>)
+                });
+            }
+
             if (this.state.selectedResult.parent) {
                 var parent = this.state.selectedResult.parent;
                 rows.push(<tr key={"parent-header"}><th>Parent</th></tr>);

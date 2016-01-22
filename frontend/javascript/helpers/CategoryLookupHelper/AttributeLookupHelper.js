@@ -1,4 +1,4 @@
-var tree = require("./CategoryAttributesTree.js");
+var tree = require("./CategoryAttributesTree.json");
 
 module.exports = {
     findByCategoryId(categoryId) {

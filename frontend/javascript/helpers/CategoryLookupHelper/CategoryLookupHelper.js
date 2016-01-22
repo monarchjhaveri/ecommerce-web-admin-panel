@@ -3,7 +3,7 @@ var fuzzy= require("fuzzy");
 var FUZZY_INDEXES_LIST = [];
 var CATEGORIES_MAP_TO_FUZZY_INDEXES = {};
 var CATEGORIES_MAP_TO_ID_INDEXES = {};
-var CATEGORIES = require("./files/categories.json")
+var CATEGORIES = JSON.parse(JSON.stringify(require("./files/categories.json")))
     .filter(function(d) {
         // filter out inactive and retired items.
         return d.active != false && d.retired != false;
