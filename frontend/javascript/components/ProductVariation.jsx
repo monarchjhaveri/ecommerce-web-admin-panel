@@ -17,8 +17,8 @@ function getVariationForProduct(product) {
 
     return {
         relationship: product.relationship,
-        variation_refinements: product.relationship,
-        children_skus: product.children_skus
+        variation_refinements: product.variation_refinements ? product.variation_refinements : null,
+        children_skus: product.children_skus ? product.children_skus.map(function(d){return d.merchant_sku}) : null
     };
 }
 
@@ -35,17 +35,11 @@ var ProductVariation = React.createClass({ displayName: "ProductVariation",
     loadVariants: function() {
       this.setState({open: true});
     },
-    componentWillReceiveProps: function(nextProps) {
-        if (nextProps.product &&
-            this.state.editorVariation &&
-            nextProps.product.merchant_sku === this.state.editorVariation.merchant_sku) {
-            var editorVariation = jQuery.extend(true, {}, nextProps.product);
-            this.setState({editorVariation: editorVariation});
-        }
-        if (nextProps.product &&
-            this.state.loadingVariationFor &&
-            this.state.loadingVariationFor !== nextProps.product.merchant_sku) {
-            this.setState({loadingVariationFor: null, loadingVariation: false})
+    componentWillReceiveProps: function(nextProps, oldProps) {
+        var newSku = nextProps.product && nextProps.product.merchant_sku;
+        var oldSku = oldProps.product && oldProps.product.merchant_sku;
+        if (newSku != oldSku || !newSku || !oldSku) {
+            this.setState({open: false});
         }
     },
     submitEdit: function() {

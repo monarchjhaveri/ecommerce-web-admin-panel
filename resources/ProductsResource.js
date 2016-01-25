@@ -95,6 +95,23 @@ ProductsResource.editPrice = function(req, res, next) {
     ], _responseFunctionFactory("update product price", res));
 };
 
+ProductsResource.editVariation = function(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            if (!req.params && req.params.sku) {
+                callback(new Error("Must provide a merchant_sku"));
+            } else  if (!req.body) {
+                callback(new Error("Must provide variation DTO."));
+            } else {
+                var payload = req.body;
+                var merchant_sku = req.params.sku;
+                callback(null, payload, merchant_sku);
+            }
+        },
+        JetService.updateProductVariation
+    ], _responseFunctionFactory("update product variant", res));
+};
+
 function _responseFunctionFactory(action, res) {
     return function(err, data) {
         if (err) {

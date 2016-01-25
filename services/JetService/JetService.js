@@ -201,7 +201,11 @@ JetService.getProductPrice = function(sku, originalCallback) {
 };
 
 JetService.updateProductPrice = function(priceDto, sku, originalCallback) {
-    _retryIfFailed("getProductInventory", _editPrice(priceDto, sku), originalCallback);
+    _retryIfFailed("updateProductPrice", _editPrice(priceDto, sku), originalCallback);
+};
+
+JetService.updateProductVariation = function(variationDto, sku, originalCallback) {
+    _retryIfFailed("updateProductVariation", _editVariation(variationDto, sku), originalCallback);
 };
 
 
@@ -270,6 +274,26 @@ function _editPrice(priceDto, merchant_sku) {
                 callback(createErr);
             } else {
                 callback(null, priceDto);
+            }
+        });
+    }
+}
+
+function _editVariation(variationDto, merchant_sku) {
+    return function(callback) {
+        if (!variationDto) {
+            callback(new Error("variationDto was undefined"));
+            return;
+        }
+        if (!merchant_sku) {
+            callback(new Error("merchant_sku was undefined"));
+            return;
+        }
+        JetApi.products.variation.update(merchant_sku, variationDto, authData.id_token, function(createErr, createData) {
+            if (createErr) {
+                callback(createErr);
+            } else {
+                callback(null, variationDto);
             }
         });
     }
