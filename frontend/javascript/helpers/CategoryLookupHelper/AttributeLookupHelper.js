@@ -8,16 +8,11 @@ function clone(obj) {
 
 module.exports = {
     findByCategoryId(categoryId) {
-        var found_mapping = category_attribute_mappings.find(function(d){return d.category_id === categoryId});
-        if (!found_mapping) { return null; }
+        var found_attribute_ids = category_attribute_mappings
+            .filter(function(d){return d.category_id === categoryId})
+            .map(function(d){return d.attribute_id;});
+        if (found_attribute_ids.length === 0) { return null; }
 
-        var found_attributes = attributes.filter(function(d){return d.id === found_mapping.attribute_id});
-        if (!found_attributes || found_attributes.length === 0) { return null; }
-
-        found_attributes.forEach(function(attr) {
-            attr.values = attribute_values.filter(function(d){return d.attribute_id === attr.id});
-        });
-
-        return found_attributes;
+        return found_attribute_ids.map(function(attrid){return attributes.find(function(attr){return attr.id === attrid})});
     }
 };
