@@ -13,17 +13,19 @@ function _selectBoxFunctionGenerator(self, object) {
 function getAttributePossibleValues(attr) {
     var domNodes = [];
 
+    console.log(attr);
+
     if (attr.values && attr.values.length > 0) {
         domNodes.push(attr.values.map(function(d) {
             return d.value;
         }).join(" | "));
     }
     if(attr.free_text) {
-        domNodes.push(<div>{attr.free_text} free characters</div>);
+        domNodes.push(<div key={Math.random()}>{attr.free_text} free characters</div>);
     }
 
     if (domNodes.length === 0) {
-        domNodes.push(<div>Not indicated by Jet.com</div>)
+        domNodes.push(<div key={Math.random()}>Not indicated by Jet.com</div>)
     }
     return domNodes;
 }
