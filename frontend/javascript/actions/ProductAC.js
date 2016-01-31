@@ -241,6 +241,38 @@ var ProductAC = {
             });
         });
     },
+    editVariation: function(editVariationObject) {
+        var product = editVariationObject.product;
+        var merchant_sku = product &&  product.merchant_sku;
+        var payload = editVariationObject.payload;
+        store.dispatch(function (dispatch) {
+            dispatch({
+                type: ActionTypes.PRODUCTS.VARIATION.EDIT_STARTED
+            });
+            $.ajax({
+                method: "PUT",
+                url: "api/products/{id}/variation".replace("{id}", merchant_sku),
+                contentType:'application/json',
+                dataType:'json',
+                data: JSON.stringify(payload),
+                error: function(request, error) {
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.VARIATION.EDIT_FAILURE,
+                        payload: error
+                    });
+                    ProductAC.getDetails(product);
+                    PopoverAC.displayError(request);
+                },
+                success: function(data) {
+                    PopoverAC.displaySuccessFromText("Product variation successfully edited.");
+                    dispatch({
+                        type: ActionTypes.PRODUCTS.VARIATION.EDIT_SUCCESS,
+                        payload: data
+                    });
+                }
+            });
+        });
+    },
     openEditorToCreate: function() {
         store.dispatch({
             type: ActionTypes.PRODUCTS.SELECT,

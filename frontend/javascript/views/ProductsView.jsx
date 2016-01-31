@@ -4,6 +4,7 @@ var Immutable = require("immutable");
 var ProductDetails = require ("./../components/ProductDetails.jsx");
 var ProductInventory = require ("./../components/ProductInventory.jsx");
 var ProductPrice = require ("./../components/ProductPrice.jsx");
+var ProductVariation = require ("./../components/ProductVariation.jsx");
 var ProductSelectList = require("../components/ProductSelectList.jsx");
 var CategoryLookupBox = require("../components/CategoryLookupBox.jsx");
 
@@ -48,6 +49,14 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
     submitPrice: function(value) {
         if (value) {
             ProductAC.editPrice({
+                product: this.props.selectedProduct,
+                payload: value
+            });
+        }
+    },
+    submitVariation: function(value) {
+        if (value) {
+            ProductAC.editVariation({
                 product: this.props.selectedProduct,
                 payload: value
             });
@@ -98,6 +107,10 @@ var ProductsView = React.createClass({ displayName:"ProductsView",
                         fulfillmentNodes={this.props.merchant.get("fulfillmentNodes")}
                         onSubmitPrice={this.submitPrice}
                     />
+                    <ProductVariation
+                        product={this.props.selectedProduct}
+                        onSubmitVariation={this.submitVariation}
+                    />
                     {this.getCategoryLookupBox()}
 
                 </div>
@@ -114,6 +127,7 @@ function mapStateToProps(state) {
         merchant: state.merchant,
         productInventory: state.productInventory,
         productPrice: state.productPrice,
+        productVariation: state.productVariation,
         router: state.router
     }
 }

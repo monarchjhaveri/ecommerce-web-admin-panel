@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+</head>
+<body>
+    <h1>Attribute Lookup</h1>
+
+    <div id="content">Loading...</div>
+    <script>
+        // from http://stackoverflow.com/a/25359264
+        $.urlParam = function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results==null){
+                return null;
+            }
+            else{
+                return results[1] || 0;
+            }
+        };
+    </script>
+
+    <script>
+        $.get("/api/taxonomy/nodes/" + $.urlParam("node_id"))
+            .then(function(response) {
+                $("#content").text(response);
+            })
+    </script>
+</body>
+</html>

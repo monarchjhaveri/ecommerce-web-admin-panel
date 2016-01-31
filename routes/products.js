@@ -11,5 +11,6 @@ router.get('/:sku/inventory', ProductsResource.getInventory);
 router.put('/:sku/inventory', ProductsResource.editInventory);
 router.get('/:sku/price', ProductsResource.getPrice);
 router.put('/:sku/price', ProductsResource.editPrice);
+router.put('/:sku/variation', ProductsResource.editVariation);
 
 module.exports = router;
