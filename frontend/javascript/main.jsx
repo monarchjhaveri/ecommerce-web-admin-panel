@@ -59,6 +59,7 @@ var Layout = React.createClass({
                                         <li><Link to="/orders">Orders</Link></li>
                                         <li><Link to="/returns">Returns</Link></li>
                                         <li><Link to="/refunds">Refunds</Link></li>
+                                        <li><a href="/file_upload.html">File Upload</a></li>
                                     </ul>
                                 </div>
                             </div>

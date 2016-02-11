@@ -239,6 +239,12 @@ JetService.isLoggedIn = function() {
     return authData && authData.id_token;
 };
 
+JetService.getUploadToken = function(originalCallback) {
+    _retryIfFailed("getUploadToken", function(callback) {
+        JetApi.fileUpload.getUploadToken(authData.id_token, callback);
+    }, originalCallback);
+};
+
 function _editInventory(fulfillmentNodesDto, merchant_sku) {
     return function(callback) {
         if (!fulfillmentNodesDto) {

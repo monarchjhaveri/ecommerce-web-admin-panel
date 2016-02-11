@@ -4,7 +4,8 @@ var ObjectID = require('mongodb').ObjectID;
 var MongoDbHelper = {};
 
 var mongoUrl = "mongodb://localhost:27017/ecommerceWebpanel";
-var collectionName = "products";
+var PRODUCTS_COLLECTION = "products";
+var FILE_UPLOADS_COLLECTION = "fileUploads";
 
 /**
  *
@@ -17,7 +18,7 @@ MongoDbHelper.find = function(options, callback) {
             if (err){
                 callback(err);
             } else {
-                db.collection(collectionName).find(options).toArray(function(err, data){
+                db.collection(PRODUCTS_COLLECTION).find(options).toArray(function(err, data){
                     if (err) {
                         callback(err);
                     } else {
@@ -41,7 +42,7 @@ MongoDbHelper.insert = function(productDto, callback) {
             if (err){
                 callback(err);
             } else {
-                db.collection(collectionName).insertOne(
+                db.collection(PRODUCTS_COLLECTION).insertOne(
                     productDto,
                     function(err, data){
                         if (err) {
@@ -72,7 +73,7 @@ function _update(productDto, callback, _options) {
             if (err){
                 callback(err);
             } else {
-                db.collection(collectionName).findOneAndUpdate({merchant_sku: productDto.merchant_sku}, productDto, options, function(err, data){
+                db.collection(PRODUCTS_COLLECTION).findOneAndUpdate({merchant_sku: productDto.merchant_sku}, productDto, options, function(err, data){
                     if (err) {
                         callback(err);
                     } else {
@@ -96,7 +97,7 @@ MongoDbHelper.delete = function(productDto, callback) {
             if (err){
                 callback(err);
             } else {
-                db.collection(collectionName).deleteOne({_id: productDto._id}, function(err, data){
+                db.collection(PRODUCTS_COLLECTION).deleteOne({_id: productDto._id}, function(err, data){
                     if (err) {
                         callback(err);
                     } else {
@@ -119,7 +120,7 @@ MongoDbHelper.getProductsList = function(callback) {
             if (err){
                 callback(err);
             } else {
-                db.collection(collectionName).find().toArray(function(err, data){
+                db.collection(PRODUCTS_COLLECTION).find().toArray(function(err, data){
                     if (err) {
                         callback(err);
                     } else {
@@ -127,6 +128,28 @@ MongoDbHelper.getProductsList = function(callback) {
                         db.close();
                     }
                 });
+            }
+        }
+    );
+};
+
+MongoDbHelper.insertFileUploadObject = function(fileUploadDto, callback) {
+    mongoclient.connect(mongoUrl,
+        function(err, db){
+            if (err){
+                callback(err);
+            } else {
+                db.collection(PRODUCTS_COLLECTION).insertOne(
+                    productDto,
+                    function(err, data){
+                        if (err) {
+                            callback(err);
+                        } else {
+                            callback(null, data);
+                            db.close();
+                        }
+                    }
+                );
             }
         }
     );
