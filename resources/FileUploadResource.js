@@ -1,41 +1,24 @@
 var JetService = require("../services/JetService/JetService");
 var async = require("async");
+var CsvFileParserHelper = require("../services/JetService/CsvFileParserHelper");
+
+var MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB max filesize limit
 
 var createErrorMessage = require("./ResourceErrorMessageHelper").createErrorMessage;
 var getAppropriateStatusCode = require("./ResourceErrorMessageHelper").getAppropriateStatusCode;
 
 var FileUploadResource = {};
 
-function convertCsv(csvFile) {
-
-}
-
-//FileUploadResource.getNodeAttributes = function(req, res, next) {
-//    var node_id = req.params.node_id;
-//    async.waterfall([
-//        function(callback) {
-//            JetService.getNodeAttributes(node_id, callback);
-//        }
-//    ], _responseFunctionFactory("get node attributes", res));
-//};
-
 FileUploadResource.uploadFile = function(req, res, next) {
-    var csvFileData = req.file;
-    var fileType = req.body.filetype;
-    var fileSize = csvFileData.size;
-
-
-
-    
-    res.send("Uploaded successfully! <a href='/file_upload.html'>Go Back</a>");
+    CsvFileParserHelper.convertFileToObject(req.file.path, _responseFunctionFactory("uploadFile", res));
 };
 
 FileUploadResource.getUploadsList = function(req, res, next) {
-
+    res.send("Nope");
 };
 
 FileUploadResource.getUploadDetails = function(req, res, next) {
-
+    res.send("Nope");
 };
 
 function _responseFunctionFactory(action, res) {

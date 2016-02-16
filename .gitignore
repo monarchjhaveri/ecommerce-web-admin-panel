@@ -79,3 +79,4 @@ fabric.properties
 # App specific stuff
 .env
 public/
+uploads/
