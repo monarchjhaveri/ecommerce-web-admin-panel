@@ -18,6 +18,21 @@ db.products.createIndex({merchant_sku: "text"}, {unique: "true"});
 
 ##
 
+#.env file:
+
+The following content should go into `.env` in project root:
+
+```
+TEST_API_USER=BCF49468821D10963D0DDFB2BD32D1E28EC980B2
+TEST_API_SECRET=boIpR10lvm8BPlzDM2t9j0jsxxgH2wCUypCl3eCgm3/6
+
+BASIC_AUTH_USERNAME=admin2
+BASIC_AUTH_PASSWORD=password2
+
+HTTPS_KEY_PEM=~/Workspace/certificates/key.pem
+HTTPS_CERT_PEM=~/Workspace/certificates/server.crt
+
+```
 
 ###Making changes:
 
