@@ -1,6 +1,7 @@
 var JetService = require("../services/JetService/JetService");
 var async = require("async");
 var CsvFileParserHelper = require("../services/JetService/CsvFileParserHelper");
+var zlib = require('zlib');
 
 var MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB max filesize limit
 
@@ -10,7 +11,15 @@ var getAppropriateStatusCode = require("./ResourceErrorMessageHelper").getApprop
 var FileUploadResource = {};
 
 FileUploadResource.uploadFile = function(req, res, next) {
-    CsvFileParserHelper.convertFileToObject(req.file.path, _responseFunctionFactory("uploadFile", res));
+    async.waterfall([
+        // convert the file to a gzipped json string
+        function(callback) {
+            CsvFileParserHelper.convertFileToObjectGzip(req.file.path, callback);
+        },
+        function(gzippedJsonString, callback) {
+            JetService.uploadFile('file.json.gz', gzippedJsonString, callback);
+        }
+    ], _responseFunctionFactory("uploadFile", res))
 };
 
 FileUploadResource.getUploadsList = function(req, res, next) {
