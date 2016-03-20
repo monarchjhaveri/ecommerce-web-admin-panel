@@ -1,0 +1,6 @@
+## File Configuration
+{merchant_sku},{merchant_sku}.fulfillment_nodes[].fulfillment_node_id,{merchant_sku}.fulfillment_nodes.quantity#
+## IMPORTANT! Do not modify the above line,
+## Otherwise File Upload may not work as expected.
+## Column Headers:
+##SKU,Fulfillment Node,Quantity

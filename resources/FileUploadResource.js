@@ -11,13 +11,17 @@ var getAppropriateStatusCode = require("./ResourceErrorMessageHelper").getApprop
 var FileUploadResource = {};
 
 FileUploadResource.uploadFile = function(req, res, next) {
+    if (!req.file || !req.file.path || !req.body || !req.body.filetype) {
+        res.send(400, "Bad Request");
+        return;
+    }
     async.waterfall([
         // convert the file to a gzipped json string
         function(callback) {
             CsvFileParserHelper.convertFileToObjectGzip(req.file.path, callback);
         },
         function(gzippedJsonString, callback) {
-            JetService.uploadFile('file.json.gz', gzippedJsonString, callback);
+            JetService.uploadFile('file.json.gz', req.body.filetype, gzippedJsonString, callback);
         }
     ], _responseFunctionFactory("uploadFile", res))
 };

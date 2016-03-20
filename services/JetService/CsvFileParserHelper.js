@@ -2,6 +2,7 @@ var fs = require('fs');
 var csv = require('csv');
 var csvObjects = require('csv-objects');
 var async = require('async');
+var zlib = require('zlib');
 
 var CsvFileParserHelper = {
     /**

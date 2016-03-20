@@ -239,9 +239,9 @@ JetService.isLoggedIn = function() {
     return authData && authData.id_token;
 };
 
-JetService.uploadFile = function(filename, gzippedFileData, callback) {
+JetService.uploadFile = function(filename, filetype, gzippedFileData, callback) {
     _retryIfFailed("uploadFile", function(innerCb) {
-        JetApi.fileUpload.uploadFile(authData.id_token, filename, gzippedFileData, innerCb);
+        JetApi.fileUpload.uploadFile(authData.id_token, filename, filetype, gzippedFileData, innerCb);
     }, callback);
 };
 
