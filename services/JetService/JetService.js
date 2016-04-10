@@ -254,7 +254,12 @@ JetService.fileUpload = {
         _retryIfFailed("notifyJet", function(innerCb) {
             JetApi.fileUpload.notifyJet(authData.id_token, filename, filetype, uploadToken, innerCb);
         }, callback);
-    }
+    },
+    getFileUploadStatus: function getFileUploadStatus(jetFileId, callback) {
+        _retryIfFailed("getFileUploadStatus", function(innerCb) {
+            JetApi.fileUpload.status(authData.id_token, jetFileId, innerCb);
+        }, callback);
+    },
 };
 
 function _editInventory(fulfillmentNodesDto, merchant_sku) {

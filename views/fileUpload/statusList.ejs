@@ -1,1 +1,34 @@
-<h1> OK the status list page works </h1>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Upload Status</title>
+</head>
+<body>
+<style>
+    table, tr, th, td {
+        border: 1px solid black; text-align: left;
+        border-collapse: collapse;
+        padding: 5px 4px;
+    }
+</style>
+<h1>File upload status</h1>
+<table>
+    <tr>
+        <th>Jet File ID</th>
+        <th>File Type</th>
+        <th>Upload Time</th>
+        <th>Check Status</th>
+    </tr>
+    <% data.forEach(function(d){ %>
+    <tr>
+        <td><%= d.jet_file_id %></td>
+        <td><%= d.file_type %></td>
+        <td><%= new Date(d.received).toTimeString() %></td>
+        <td><a href="/pages/fileUpload/status/<%= d.jet_file_id %>">Check Status</a></td>
+    </tr>
+    <% }) %>
+</table>
+
+</body>
+</html>
