@@ -239,10 +239,22 @@ JetService.isLoggedIn = function() {
     return authData && authData.id_token;
 };
 
-JetService.uploadFile = function(filename, filetype, gzippedFileData, callback) {
-    _retryIfFailed("uploadFile", function(innerCb) {
-        JetApi.fileUpload.uploadFile(authData.id_token, filename, filetype, gzippedFileData, innerCb);
-    }, callback);
+JetService.fileUpload = {
+    getFileUploadToken: function getFileUploadToken(callback) {
+        _retryIfFailed("getFileUploadToken", function(innerCb) {
+            JetApi.fileUpload.getFileUploadToken(authData.id_token, innerCb);
+        }, callback);
+    },
+    uploadFile: function uploadFile(filename, gzippedFileData, url, callback) {
+        _retryIfFailed("uploadFile", function(innerCb) {
+            JetApi.fileUpload.uploadFile(filename, gzippedFileData, url, innerCb);
+        }, callback);
+    },
+    notifyJet: function notifyJet(filename, filetype, uploadToken, callback) {
+        _retryIfFailed("notifyJet", function(innerCb) {
+            JetApi.fileUpload.notifyJet(authData.id_token, filename, filetype, uploadToken, innerCb);
+        }, callback);
+    }
 };
 
 function _editInventory(fulfillmentNodesDto, merchant_sku) {

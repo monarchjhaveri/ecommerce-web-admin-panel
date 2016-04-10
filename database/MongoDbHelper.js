@@ -133,14 +133,19 @@ MongoDbHelper.getProductsList = function(callback) {
     );
 };
 
+/**
+ *
+ * @param fileUploadDto
+ * @param callback
+ */
 MongoDbHelper.insertFileUploadObject = function(fileUploadDto, callback) {
     mongoclient.connect(mongoUrl,
         function(err, db){
             if (err){
                 callback(err);
             } else {
-                db.collection(PRODUCTS_COLLECTION).insertOne(
-                    productDto,
+                db.collection(FILE_UPLOADS_COLLECTION).insertOne(
+                  fileUploadDto,
                     function(err, data){
                         if (err) {
                             callback(err);
@@ -153,6 +158,31 @@ MongoDbHelper.insertFileUploadObject = function(fileUploadDto, callback) {
             }
         }
     );
+};
+
+/**
+ *
+ * @param callback
+ */
+MongoDbHelper.getFileUploadList = function(callback) {
+  mongoclient.connect(mongoUrl,
+    function(err, db){
+      if (err){
+        callback(err);
+      } else {
+        db.collection(FILE_UPLOADS_COLLECTION).find().toArray(
+          function(err, data){
+            if (err) {
+              callback(err);
+            } else {
+              callback(null, data);
+              db.close();
+            }
+          }
+        );
+      }
+    }
+  );
 };
 
 module.exports = MongoDbHelper;

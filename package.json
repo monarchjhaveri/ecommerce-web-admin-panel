@@ -19,6 +19,7 @@
     "csv-objects": "2.0.0",
     "dateformat": "^1.0.11",
     "debug": "~2.2.0",
+    "ejs": "^2.4.1",
     "express": "~4.13.1",
     "fuzzy": "^0.1.1",
     "history": "^1.13.1",
