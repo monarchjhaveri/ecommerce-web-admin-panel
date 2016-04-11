@@ -26,7 +26,7 @@
     "immutable": "^3.7.5",
     "install": "^0.2.3",
     "jade": "~1.11.0",
-    "jet-api": "git+ssh://git@bitbucket.org/monarchwadia/jet-api-library.git#0.0.10",
+    "jet-api": "git@github.com:monarchjhaveri/jet-api.git#0.0.10",
     "jquery": "^2.1.4",
     "mathjs": "^2.6.0",
     "moment": "^2.10.6",

@@ -5,7 +5,55 @@
     <title>Upload Status</title>
 </head>
 <body>
+    <style>
+        table, tr, th, td {
+            border: 1px solid black; text-align: left;
+            border-collapse: collapse;
+            padding: 5px 4px;
+        }
+        ul, li {
+            text-align: left;
+        }
+    </style>
     <h1>Upload Status</h1>
-    <%= JSON.stringify(data) %>
+        <table>
+            <tr>
+                <th>Status</th>
+                <td><%= data.status %></td>
+            </tr>
+            <tr>
+                <th>Error Count</th>
+                <td><%= data.error_count || "" %></td>
+            </tr>
+            <tr>
+                <th>Errors</th>
+                <td>
+                        <% var errors = data.error_excerpt || [] %>
+                        <% errors.forEach(function(e) {%>
+                            <li><%= e %></li>
+                        <% }) %>
+                </td>
+            </tr>
+            <tr>
+                <th>Total Successful</th>
+                <td><%= data.total_successful %></td>
+            </tr>
+            <tr>
+                <th>Total Processed</th>
+                <td><%= data.total_processed %></td>
+            </tr>
+            <tr>
+                <th>Received</th>
+                <td><%= data.received %></td>
+            </tr>
+            <tr>
+                <th>Processing Started</th>
+                <td><%= data.processing_start %></td>
+            </tr>
+            <tr>
+                <th>Processing Ended</th>
+                <td><%= data.processing_end %></td>
+            </tr>
+        </table>
 </body>
 </html>
