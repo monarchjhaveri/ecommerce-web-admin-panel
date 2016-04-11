@@ -1,0 +1,9 @@
+## File Configuration
+{merchant_sku},{merchant_sku}.price
+## IMPORTANT! Do not modify the above line, Otherwise File Upload may not work as expected.
+## Column Headers:
+##SKU,Price
+atbzRGrvyW,100
+012345678905,99
+1Test,98
+pfT3rXqxuy,97
