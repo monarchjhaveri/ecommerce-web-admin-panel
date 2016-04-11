@@ -80,3 +80,4 @@ fabric.properties
 .env
 public/
 uploads/
+tmp/

@@ -19,56 +19,55 @@ FileUploadResource.uploadFile = function(req, res, next) {
     async.waterfall([
         // convert the file to a gzipped json string
         function(callback) {
-            CsvFileParserHelper.convertFileToObjectGzip(req.file.path, function(err, data) {
+            CsvFileParserHelper.convertFileToObjectGzip(req.file.path, function(err, gzippedFileContents) {
                 if (err) {
                     callback(_createCustomErrorMessage("Failed to zip file before upload. Your changes have NOT been saved.", err));
                 }
                 else {
-                    callback(null, data);
+                    callback(null, gzippedFileContents);
                 }
             });
         },
       // get a file upload token
-        function(gzippedJsonString, callback) {
+        function(gzippedFileContents, callback) {
             JetService.fileUpload.getFileUploadToken(function(err, uploadToken) {
                 if (err) {
                     callback(_createCustomErrorMessage("Could not get upload token. Your changes have NOT been saved.", err));
                 }
                 else {
-                    callback(null, gzippedJsonString, uploadToken);
+                    callback(null, gzippedFileContents, uploadToken);
                 }
             });
         },
       // upload the file
-        function(gzippedJsonString, uploadToken, callback) {
-            var filename = "file.json";
+        function(gzippedFileContents, uploadToken, callback) {
+            var filename = "file.json.gz";
             var url = uploadToken.url;
 
-            JetService.fileUpload.uploadFile(filename, gzippedJsonString, url, function(err, uploadData){
-                if (err || uploadData.statusCode !== 201) {
+            JetService.fileUpload.uploadFile(filename, gzippedFileContents, url, function(err, uploadData){
+                if (err) {
                     callback(_createCustomErrorMessage("Failure while POSTing file to Jet. Your changes have NOT been saved.", err));
                 }
                 else {
-                    callback(null, uploadData, uploadToken);
+                    callback(null, uploadData, gzippedFileContents, uploadToken);
                 }
             });
         },
         // notify jet of the upload
-        function(uploadData, uploadToken, callback) {
-            var filename = 'file.json';
+        function(uploadData, gzippedFileContents, uploadToken, callback) {
             var filetype = req.body.filetype;
 
-            JetService.fileUpload.notifyJet(filename, filetype, uploadToken, function(err, notificationData){
+            JetService.fileUpload.notifyJet("file.json.gz", filetype, uploadToken, function(err, notificationData){
                 if (err) {
                     callback(_createCustomErrorMessage("Failure while notifying JET of the uploaded file. Your changes MAY OR MAY NOT have been saved.", err));
                 }
                 else {
-                    callback(null, notificationData, uploadData, uploadToken);
+                    callback(null, notificationData, uploadToken);
                 }
             });
         },
         // save data to mongo
-        function(notificationData, uploadData, uploadToken, callback) {
+        function(notificationData, uploadToken, callback) {
             MongoDbHelper.insertFileUploadObject(notificationData, function(err, data) {
                 if (err) {
                     var refId = (uploadToken && uploadToken.jet_file_id) ? uploadToken.jet_file_id : "unknown";
@@ -119,21 +118,6 @@ function _responseFunctionFactory(action, res) {
         }
     }
 }
-
-//function _customMessageError(callback, string) {
-//    return function(err, data) {
-//        if (err) {
-//            console.log(err);
-//
-//            var e = new Error(string, err);
-//            e.customMessage = string;
-//            callback(new Error(string), err);
-//        }
-//        else {
-//            callback(null, data);
-//        }
-//    }
-//}
 
 function _createCustomErrorMessage(message, error) {
     error && console.log(error);
