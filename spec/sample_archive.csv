@@ -1,0 +1,10 @@
+## File Configuration
+{merchant_sku},{merchant_sku}.is_archived?
+## IMPORTANT! Do not modify the above line,
+## Otherwise File Upload may not work as expected.
+## Column Headers:
+##SKU,Is Archived true/false
+atbzRGrvyW,false
+012345678905,false
+1Test,false
+pfT3rXqxuy,false
