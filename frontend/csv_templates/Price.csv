@@ -1,5 +1,5 @@
 ## File Configuration
 {merchant_sku},{merchant_sku}.price#
-## IMPORTANT! Do not modify the above line, Otherwise File Upload may not work as expected.
+## IMPORTANT! Do not modify the above line; otherwise File Upload may not work as expected.
 ## Column Headers:
 ##SKU,Price

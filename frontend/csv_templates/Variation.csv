@@ -1,0 +1,5 @@
+## File Configuration
+{merchantSku},{merchantSku}.relationship,{merchantSku}.variation_refinements#[],{merchantSku}.children_skus[]
+## IMPORTANT! Do not modify the above line; otherwise File Upload may not work as expected.
+## Column Headers:
+##SKU,Relationship,Variation Refinements,Children SKUs
