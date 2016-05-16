@@ -44,7 +44,8 @@ function _createProductsArray(products, selectedProduct, onSelectChange) {
     return products.toList().sortBy(_sortProducts).map(function(d) {
         var className = "sidebar-select-list-item";
         className = selectedProduct && selectedProduct.merchant_sku === d.merchant_sku ? className + " selected" : className;
-        var key = d.merchant_sku + ":" + d.product_title;
+        var randomKey = Math.random() * 100000000000000000;
+        var key = d.merchant_sku + randomKey;
         return (
             <div key={key}
                  className={className}
