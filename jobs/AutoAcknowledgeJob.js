@@ -28,10 +28,10 @@ var queue = async.queue(function(datum, callback) {
 			}
 		], function(err, data) {
 			if (err) {
-				console.log("QUEUE: WARNING: AUTO-ACKNOWLEDGMENT DID NOT WORK!! TRYING AGAIN SOON, STACK TRACE BELOW!");
+				logError("QUEUE: WARNING: AUTO-ACKNOWLEDGMENT DID NOT WORK!! TRYING AGAIN SOON, STACK TRACE BELOW!", err);
 				callback();
 			} else {
-				console.log("Successfully acknowledged order " + merchant_order_id);
+				logMessage("Successfully acknowledged order " + merchant_order_id);
 				callback();
 			}
 		});
@@ -41,13 +41,12 @@ var queue = async.queue(function(datum, callback) {
 async.forever(function(next) {
 	JetService.getOrdersListByStatus("ready", function(err, data) {
 		if (!queue.idle()) {
-			console.log("AUTO-ACKNOWLEDGE-QUERY-LOOP:  Queue is still processing items. Skipping query until queue is empty.");
+			logMessage("AUTO-ACKNOWLEDGE-QUERY-LOOP:  Queue is still processing items. Skipping query until queue is empty.");
 		} else if (err) {
-			console.log("AUTO-ACKNOWLEDGE-QUERY-LOOP: AN ERROR OCCURRED!! TRYING AGAIN SOON, STACK TRACE BELOW!");
-			console.log(err);
+			logError("AUTO-ACKNOWLEDGE-QUERY-LOOP: AN ERROR OCCURRED!! TRYING AGAIN SOON, STACK TRACE BELOW!", err);
 		} else {
 			queue.push(data);
-			console.log("AUTO-ACKNOWLEDGE-QUERY-LOOP: Successfully pushed " +  data.length + "items to the queue.");
+			logMessage("AUTO-ACKNOWLEDGE-QUERY-LOOP: Successfully pushed " +  data.length + " items to the queue.");
 		}
 		setTimeout(next, generateGetOrdersListDelay());
 	});
@@ -68,4 +67,17 @@ function generateAcknowledgeOrderDelay() {
 
 function _getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function logMessage(message) {
+	console.log(getDateString(), message);
+}
+
+function logError(message, err) {
+	console.error(getDateString(), message, err);
+}
+
+function getDateString() {
+	var rightNow = new Date();
+	return rightNow.toISOString()
 }
