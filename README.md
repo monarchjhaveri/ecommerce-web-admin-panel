@@ -23,8 +23,8 @@ db.products.createIndex({merchant_sku: "text"}, {unique: "true"});
 The following content should go into `.env` in project root:
 
 ```
-TEST_API_USER=BCF49468821D10963D0DDFB2BD32D1E28EC980B2
-TEST_API_SECRET=boIpR10lvm8BPlzDM2t9j0jsxxgH2wCUypCl3eCgm3/6
+TEST_API_USER=YOUR_TEST_API_USER_KEY
+TEST_API_SECRET=YOUR_TEST_API_SECRET
 
 BASIC_AUTH_USERNAME=admin2
 BASIC_AUTH_PASSWORD=password2
